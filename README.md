@@ -1,3 +1,3 @@
 # P5
 
-test
+This project will pertain to data imbalance in large datasets.
