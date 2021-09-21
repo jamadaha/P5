@@ -1,3 +1,12 @@
-# P5
+# P5 - Student Project
 
-This project will pertain to data imbalance in large datasets. It is, however, a student project.
+This project is a semester project about machine learning and/orconcerning DB management. The focus will be on machine learning, specifically about generating handwritten letters.[^1] 
+
+In order to achive this we will likely use the NIST dataset, containing both handwritten letters and numbers. [^2]
+
+
+
+
+
+[^1]: Although, that is tentative and subject to change.
+[^2]: https://www.nist.gov/srd/nist-special-database-19
