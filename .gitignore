@@ -359,3 +359,6 @@ MigrationBackup/
 
 # Local History for Visual Studio Code
 .history/
+
+/DataGenerator/InputText/*
+/DataGenerator/InputLetters/*
