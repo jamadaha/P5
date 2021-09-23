@@ -25,7 +25,7 @@ textFileQueue.pop(0)
 ### Note: The indexing of the letters is in hex
 letterSuperPath = "InputLetters/by_class/"
 
-print("Checking whether text file directory exists...")
+print("Checking whether letter file directory exists...")
 
 # check that directory exists
 if not os.path.isdir(letterSuperPath):
