@@ -9,8 +9,10 @@ import os
 textPath = "InputText/"
 
 print("Checking whether text file directory exists...")
+
 if not os.path.isdir(textPath):
     raise Exception("Missing directory " + textPath)
+    
 print("It does")
 
 textFileQueue = os.listdir(textPath)
@@ -23,24 +25,29 @@ textFileQueue.pop(0)
 ### Note: The indexing of the letters is in hex
 letterSuperPath = "InputLetters/by_class/"
 
-# check that directory exists
 print("Checking whether text file directory exists...")
+
+# check that directory exists
 if not os.path.isdir(letterSuperPath):
     raise Exception("Missing directory " + letterSuperPath)
+
 print("It does")
 
 print("Gathering letter paths...")
+
 letterPath = {}
 for i in [*range(65, 91), *range(97, 122)]:
     letterPath[chr(i)] = {}
     hexLetter = hex(i).split('x')[-1]
     letterPath[chr(i)]['hex'] = hexLetter
+
 print("Done")
 
 ### Add paths to individual pictures
 
-# for each letter (lowercase/uppercase)
 print("Gathering picture paths...")
+
+# for each letter (lowercase/uppercase)
 for n in letterPath:
     letterPath[n]['paths'] = []
     # for each hsf num
@@ -51,6 +58,7 @@ for n in letterPath:
             # for each picture in directory
             for t in pictures:
                 letterPath[n]['paths'].append(hsfPath + t)
+
 print("Done")
 
 # Generate CSV file
@@ -58,16 +66,19 @@ print("Done")
 import csv
 
 print("Create CSV...")
+
 csvFile = open('data.csv', 'wt', newline='')
 fields = ('Letter', 'Path')
 writer = csv.writer(csvFile, delimiter=',')
 
 writer.writerow(fields)
+
 print("Done")
 
 
 ## Fill file with data
 print("Filling CSV with data...")
+
 while 1:
     output = textFileStream.read(1)
     if output:
@@ -88,4 +99,5 @@ while 1:
             break
 
 csvFile.close()
+
 print("Done")
