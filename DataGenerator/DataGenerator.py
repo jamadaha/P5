@@ -62,6 +62,9 @@ class FileLoader:
                         self.LetterPaths[n]['paths'].append(hsfPath + t)
         print("Done")
 
+    def Finish(self):
+        self.TextFileStream.close()
+
 class CSVGenerator:
     import csv
     FileName = ""
@@ -98,8 +101,10 @@ class CSVGenerator:
                     textFileQueue.pop(0)
                 else:
                     break
-        self.CSVFile.close()
         print("Done")
+
+    def Finish(self):
+        self.CSVFile.close()
 
 fl = FileLoader("./DataGenerator/InputText/", "./DataGenerator/InputLetters/by_class/")
 fl.CheckAndCreatePaths()
@@ -108,6 +113,9 @@ fl.GatherLetterPaths()
 
 cg = CSVGenerator("data.csv", ('Letter', 'Path'))
 cg.GenerateCSVData(fl.TextFileStream, fl.LetterPaths, fl.TextPath, fl.TextFileQueue)
+
+fl.Finish()
+cg.Finish()
 
 print("Dataset generated!")
 input("Press Enter to exit...")
