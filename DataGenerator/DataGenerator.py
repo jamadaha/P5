@@ -87,12 +87,10 @@ class CSVGenerator:
             output = textFileStream.read(1)
             if output:
                 if output in letterPaths:
-                    temp = letterPaths[output]['paths']
                     # if no more pictures for that letter
                     if len(letterPaths[output]['paths']) == 0:
                         break
                     self.CSVWriter.writerow([output, letterPaths[output]['paths'][0]])
-                    temp2 = letterPaths[output]['paths']
                     letterPaths[output]['paths'].pop(0)
             # in case that the stream reaches end of file, goto next file
             else:
