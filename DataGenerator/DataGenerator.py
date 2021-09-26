@@ -44,7 +44,11 @@ class FileLoader:
         print("Beginning extraction ... ")
         #self.os.makedirs(self.LetterPath)
         with self.zipfile.ZipFile(file, "r") as zf:
-            for file in self.tqdm(iterable=zf.namelist(), total=len(zf.namelist())):
+            fileList = []
+            for file in zf.namelist():
+                if 'train' not in file:
+                    fileList.append(file)
+            for file in self.tqdm(iterable=fileList, total=len(fileList)):
                 zf.extract(member=file, path=(self.LetterPath + "../"))
 
         # Move up one folder
