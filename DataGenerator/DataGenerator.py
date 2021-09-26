@@ -4,100 +4,110 @@
 ### Move .txt files into the folder DataGenerator/InputText/...
 ### These files should represent a valid letter sequence, not random (If true random possible, then that is fine)
 ### A good way to gather these would be to use non-copyrighted books
-import os
-
-textPath = "InputText/"
-
-print("Checking whether text file directory exists...")
-
-if not os.path.isdir(textPath):
-    raise Exception("Missing directory " + textPath)
-    
-print("It does")
-
-textFileQueue = os.listdir(textPath)
-textFileStream = open(textPath + textFileQueue[0], 'r', encoding='utf-8')
-textFileQueue.pop(0)
 
 ## Pictures
 ### Download mnist data set from https://www.nist.gov/srd/nist-special-database-19, specfically the 'by_class' one
 ### Extract it to Datagenerator/InputLetters/by_class
 ### Note: The indexing of the letters is in hex
-letterSuperPath = "InputLetters/by_class/"
 
-print("Checking whether letter file directory exists...")
+class FileLoader:
+    import os
+    TextPath = "";
+    LetterPath = "";
+    TextFileQueue = [];
+    TextFileStream = [];
+    LetterPaths = {};
 
-# check that directory exists
-if not os.path.isdir(letterSuperPath):
-    raise Exception("Missing directory " + letterSuperPath)
+    def __init__(self, textPath, letterPath):
+        self.TextPath = textPath
+        self.LetterPath = letterPath
 
-print("It does")
+    def CheckAndCreatePaths(self):
+        print("Checking and creating file paths")
+        if not self.os.path.isdir(self.TextPath):
+            self.os.makedirs(self.TextPath)
+        if not self.os.path.isdir(self.LetterPath):
+            self.os.makedirs(self.LetterPath)
+        print("Done!")
 
-print("Gathering letter paths...")
+    def LoadLetterPaths(self):
+        print("Loading letter paths")
+        self.TextFileQueue = self.os.listdir(self.TextPath)
+        if not self.TextFileQueue:
+            raise Exception("Text files not found!")
+        self.TextFileStream = open(self.TextPath + self.TextFileQueue[0], 'r', encoding='utf-8')
+        self.TextFileQueue.pop(0)
+        print("Done!")
 
-letterPath = {}
-for i in [*range(65, 91), *range(97, 122)]:
-    letterPath[chr(i)] = {}
-    hexLetter = hex(i).split('x')[-1]
-    letterPath[chr(i)]['hex'] = hexLetter
+    def GatherLetterPaths(self):
+        print("Gathering letter paths")
+        self.LetterPaths = {}
+        for i in [*range(65, 91), *range(97, 122)]:
+            self.LetterPaths[chr(i)] = {}
+            hexLetter = hex(i).split('x')[-1]
+            self.LetterPaths[chr(i)]['hex'] = hexLetter
+        print("Done")
 
-print("Done")
+        print("Bind letter paths to a letters")
+        # for each letter (lowercase/uppercase)
+        for n in self.LetterPaths:
+            self.LetterPaths[n]['paths'] = []
+            # for each hsf num
+            for i in range(0, 8):
+                hsfPath = self.LetterPath + self.LetterPaths[n]['hex'] + "/hsf_" + str(i) + "/"
+                if self.os.path.isdir(hsfPath):
+                    pictures = self.os.listdir(hsfPath)
+                    # for each picture in directory
+                    for t in pictures:
+                        self.LetterPaths[n]['paths'].append(hsfPath + t)
+        print("Done")
 
-### Add paths to individual pictures
+class CSVGenerator:
+    import csv
+    FileName = ""
+    Fields = ()
+    CSVFile = {}
+    CSVWriter = {}
 
-print("Gathering picture paths...")
+    def __init__(self, fileName, fields):
+        self.FileName = fileName
+        self.Fields = fields
+        print("Create CSV...")
+        self.CSVFile = open(self.FileName, 'wt', newline='')
+        self.CSVWriter = self.csv.writer(self.CSVFile, delimiter=',')
+        self.CSVWriter.writerow(fields)
+        print("Done")
 
-# for each letter (lowercase/uppercase)
-for n in letterPath:
-    letterPath[n]['paths'] = []
-    # for each hsf num
-    for i in range(0, 8):
-        hsfPath = letterSuperPath + letterPath[n]['hex'] + "/hsf_" + str(i) + "/"
-        if os.path.isdir(hsfPath):
-            pictures = os.listdir(hsfPath)
-            # for each picture in directory
-            for t in pictures:
-                letterPath[n]['paths'].append(hsfPath + t)
+    def GenerateCSVData(self, textFileStream, letterPaths, textPath, textFileQueue):
+        print("Filling CSV with data...")
+        while 1:
+            output = textFileStream.read(1)
+            if output:
+                if output in letterPaths:
+                    temp = letterPaths[output]['paths']
+                    # if no more pictures for that letter
+                    if len(letterPaths[output]['paths']) == 0:
+                        break
+                    self.CSVWriter.writerow([output, letterPaths[output]['paths'][0]])
+                    temp2 = letterPaths[output]['paths']
+                    letterPaths[output]['paths'].pop(0)
+            # in case that the stream reaches end of file, goto next file
+            else:
+                if len(textFileQueue) > 0:
+                    textFileStream = open(textPath + textFileQueue[0], 'r', encoding='utf-8')
+                    textFileQueue.pop(0)
+                else:
+                    break
+        self.CSVFile.close()
+        print("Done")
 
-print("Done")
+fl = FileLoader("./DataGenerator/InputText/", "./DataGenerator/InputLetters/by_class/")
+fl.CheckAndCreatePaths()
+fl.LoadLetterPaths()
+fl.GatherLetterPaths()
 
-# Generate CSV file
-## Create file
-import csv
+cg = CSVGenerator("data.csv", ('Letter', 'Path'))
+cg.GenerateCSVData(fl.TextFileStream, fl.LetterPaths, fl.TextPath, fl.TextFileQueue)
 
-print("Create CSV...")
-
-csvFile = open('data.csv', 'wt', newline='')
-fields = ('Letter', 'Path')
-writer = csv.writer(csvFile, delimiter=',')
-
-writer.writerow(fields)
-
-print("Done")
-
-
-## Fill file with data
-print("Filling CSV with data...")
-
-while 1:
-    output = textFileStream.read(1)
-    if output:
-        if output in letterPath:
-            temp = letterPath[output]['paths']
-            # if no more pictures for that letter
-            if len(letterPath[output]['paths']) == 0:
-                break
-            writer.writerow([output, letterPath[output]['paths'][0]])
-            temp2 = letterPath[output]['paths']
-            letterPath[output]['paths'].pop(0)
-    # in case that the stream reaches end of file, goto next file
-    else:
-        if len(textFileQueue) > 0:
-            textFileStream = open(textPath + textFileQueue[0], 'r', encoding='utf-8')
-            textFileQueue.pop(0)
-        else:
-            break
-
-csvFile.close()
-
-print("Done")
+print("Dataset generated!")
+input("Press Enter to exit...")
