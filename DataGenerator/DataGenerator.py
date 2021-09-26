@@ -18,39 +18,41 @@ class FileLoader:
     TextFileStream = [];
     LetterPaths = {};
 
+    from tqdm import tqdm
+
+
     def __init__(self, textPath, letterPath):
         self.TextPath = textPath
         self.LetterPath = letterPath
 
     def CheckAndCreatePaths(self):
-        print("Checking and creating file paths")
+        print("Checking and creating file paths ... ", end = "")
         if not self.os.path.isdir(self.TextPath):
             self.os.makedirs(self.TextPath)
         if not self.os.path.isdir(self.LetterPath):
             self.os.makedirs(self.LetterPath)
-        print("Done!")
+        print("Done")
 
     def LoadLetterPaths(self):
-        print("Loading letter paths")
+        print("Loading letter paths ... ", end = "")
         self.TextFileQueue = self.os.listdir(self.TextPath)
         if not self.TextFileQueue:
             raise Exception("Text files not found!")
         self.TextFileStream = open(self.TextPath + self.TextFileQueue[0], 'r', encoding='utf-8')
         self.TextFileQueue.pop(0)
-        print("Done!")
+        print("Done")
 
     def GatherLetterPaths(self):
         print("Gathering letter paths")
         self.LetterPaths = {}
-        for i in [*range(65, 91), *range(97, 122)]:
+        for i in self.tqdm([*range(65, 91), *range(97, 122)]):
             self.LetterPaths[chr(i)] = {}
             hexLetter = hex(i).split('x')[-1]
             self.LetterPaths[chr(i)]['hex'] = hexLetter
-        print("Done")
 
         print("Bind letter paths to a letters")
         # for each letter (lowercase/uppercase)
-        for n in self.LetterPaths:
+        for n in self.tqdm(self.LetterPaths):
             self.LetterPaths[n]['paths'] = []
             # for each hsf num
             for i in range(0, 8):
@@ -60,7 +62,6 @@ class FileLoader:
                     # for each picture in directory
                     for t in pictures:
                         self.LetterPaths[n]['paths'].append(hsfPath + t)
-        print("Done")
 
     def Finish(self):
         self.TextFileStream.close()
@@ -75,14 +76,14 @@ class CSVGenerator:
     def __init__(self, fileName, fields):
         self.FileName = fileName
         self.Fields = fields
-        print("Create CSV...")
+        print("Create CSV ... ", end = "")
         self.CSVFile = open(self.FileName, 'wt', newline='')
         self.CSVWriter = self.csv.writer(self.CSVFile, delimiter=',')
         self.CSVWriter.writerow(fields)
         print("Done")
 
     def GenerateCSVData(self, textFileStream, letterPaths, textPath, textFileQueue):
-        print("Filling CSV with data...")
+        print("Filling CSV with data ... ", end = "")
         while 1:
             output = textFileStream.read(1)
             if output:
@@ -117,3 +118,4 @@ cg.Finish()
 
 print("Dataset generated!")
 input("Press Enter to exit...")
+
