@@ -5,11 +5,6 @@
 ### These files should represent a valid letter sequence, not random (If true random possible, then that is fine)
 ### A good way to gather these would be to use non-copyrighted books
 
-## Pictures
-### Download mnist data set from https://www.nist.gov/srd/nist-special-database-19, specfically the 'by_class' one
-### Extract it to Datagenerator/InputLetters/by_class
-### Note: The indexing of the letters is in hex
-
 class FileLoader:
     import os
     import wget
