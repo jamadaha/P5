@@ -12,25 +12,47 @@
 
 class FileLoader:
     import os
+    import wget
+    import zipfile
+    from tqdm import tqdm
     TextPath = "";
     LetterPath = "";
+    DownloadURL = "";
+    TempDownloadLetterPath = "./letters.zip";
     TextFileQueue = [];
     TextFileStream = [];
     LetterPaths = {};
 
-    from tqdm import tqdm
-
-
-    def __init__(self, textPath, letterPath):
+    def __init__(self, textPath, letterPath, downloadURL):
         self.TextPath = textPath
         self.LetterPath = letterPath
+        self.DownloadURL = downloadURL
 
     def CheckAndCreatePaths(self):
         print("Checking and creating file paths ... ", end = "")
         if not self.os.path.isdir(self.TextPath):
             self.os.makedirs(self.TextPath)
         if not self.os.path.isdir(self.LetterPath):
-            self.os.makedirs(self.LetterPath)
+            self.ImportLetters()
+
+    def ImportLetters(self):
+        print("Letters not found ... ", end="")
+        file = None
+        if not self.os.path.isfile(self.TempDownloadLetterPath):
+            print("Letters not downloaded ... Beginning download of letters ... ")
+            file = self.wget.download(self.DownloadURL, self.TempDownloadLetterPath)
+            print(" | Letters downloaded ... ", end="")
+        else:
+            file = self.TempDownloadLetterPath
+            print("Letters zip file already downloaded ... ", end="")
+
+        print("Beginning extraction ... ")
+        #self.os.makedirs(self.LetterPath)
+        with self.zipfile.ZipFile(file, "r") as zf:
+            for file in self.tqdm(iterable=zf.namelist(), total=len(zf.namelist())):
+                zf.extract(member=file, path=self.LetterPath)
+
+        # Move up one folder
         print("Done")
 
     def LoadLetterPaths(self):
@@ -76,11 +98,9 @@ class CSVGenerator:
     def __init__(self, fileName, fields):
         self.FileName = fileName
         self.Fields = fields
-        print("Create CSV ... ", end = "")
         self.CSVFile = open(self.FileName, 'wt', newline='')
         self.CSVWriter = self.csv.writer(self.CSVFile, delimiter=',')
         self.CSVWriter.writerow(fields)
-        print("Done")
 
     def GenerateCSVData(self, textFileStream, letterPaths, textPath, textFileQueue):
         print("Filling CSV with data ... ", end = "")
@@ -105,7 +125,7 @@ class CSVGenerator:
     def Finish(self):
         self.CSVFile.close()
 
-fl = FileLoader("./DataGenerator/InputText/", "./DataGenerator/InputLetters/by_class/")
+fl = FileLoader("./DataGenerator/InputText/", "./DataGenerator/InputLetters/by_class/", "https://s3.amazonaws.com/nist-srd/SD19/by_class.zip")
 fl.CheckAndCreatePaths()
 fl.LoadLetterPaths()
 fl.GatherLetterPaths()
