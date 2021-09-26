@@ -45,7 +45,7 @@ class FileLoader:
         #self.os.makedirs(self.LetterPath)
         with self.zipfile.ZipFile(file, "r") as zf:
             for file in self.tqdm(iterable=zf.namelist(), total=len(zf.namelist())):
-                zf.extract(member=file, path=self.LetterPath)
+                zf.extract(member=file, path=(self.LetterPath + "../"))
 
         # Move up one folder
         print("Done")
