@@ -1,10 +1,3 @@
-# Get 2 flows of data - Text files and pictures
-
-# Text files
-# Move .txt files into the folder DataGenerator/InputText/...
-# These files should represent a valid letter sequence, not random (If true random possible, then that is fine)
-# A good way to gather these would be to use non-copyrighted books
-
 class FileLoader:
     import os
     import wget
@@ -158,5 +151,3 @@ cg.Finish()
 
 print("Dataset generated!")
 input("Press Enter to exit...")
-
->>>>>> > main
