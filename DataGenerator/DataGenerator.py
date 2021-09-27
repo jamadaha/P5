@@ -12,23 +12,34 @@ class FileLoader:
     from tqdm import tqdm
     TextPath = ""
     LetterPath = ""
-    DownloadURL = ""
+    TextDownloadURL = []
+    LetterDownloadURL = ""
     TempDownloadLetterPath = "./letters.zip"
     TextFileQueue = []
     TextFileStream = []
     LetterPaths = {}
 
-    def __init__(self, textPath, letterPath, downloadURL):
+    def __init__(self, textPath, letterPath, letterDownloadURL, textDownloadURL):
         self.TextPath = textPath
         self.LetterPath = letterPath
-        self.DownloadURL = downloadURL
+        self.LetterDownloadURL = letterDownloadURL
+        for URL in textDownloadURL:
+            self.TextDownloadURL.append(URL)
 
     def CheckAndCreatePaths(self):
         print("Checking and creating file paths ... ", end="")
         if not self.os.path.isdir(self.TextPath):
-            self.os.makedirs(self.TextPath)
+            self.ImportTexts()
         if not self.os.path.isdir(self.LetterPath):
             self.ImportLetters()
+
+    def ImportTexts(self):
+        print("Texts not found ...")
+        self.os.makedirs(self.TextPath)
+        for file in self.TextDownloadURL:
+            print("Downloading " + file[0])
+            self.wget.download(file[1], self.TextPath + file[0] + ".txt")
+            print()
 
     def ImportLetters(self):
         print("Letters not found ... ", end="")
@@ -36,8 +47,9 @@ class FileLoader:
         if not self.os.path.isfile(self.TempDownloadLetterPath):
             print("Letters not downloaded ... Beginning download of letters ... ")
             file = self.wget.download(
-                self.DownloadURL, self.TempDownloadLetterPath)
-            print(" | Letters downloaded ... ", end="")
+                self.LetterDownloadURL, self.TempDownloadLetterPath)
+            print()
+            print("Letters downloaded ... ", end="")
         else:
             file = self.TempDownloadLetterPath
             print("Letters zip file already downloaded ... ", end="")
@@ -131,8 +143,8 @@ class CSVGenerator:
         self.CSVFile.close()
 
 
-fl = FileLoader("./DataGenerator/InputText/", "./DataGenerator/InputLetters/by_class/",
-                "https://s3.amazonaws.com/nist-srd/SD19/by_class.zip")
+fl = FileLoader("./DataGenerator/InputText/", "./DataGenerator/InputLetters/by_class/", "https://s3.amazonaws.com/nist-srd/SD19/by_class.zip",
+                [['AChristmasCarol', 'https://www.gutenberg.org/files/46/46-0.txt'], ['PrideandPrejudice', 'https://www.gutenberg.org/files/1342/1342-0.txt']])
 fl.CheckAndCreatePaths()
 fl.LoadLetterPaths()
 fl.GatherLetterPaths()
@@ -146,3 +158,5 @@ cg.Finish()
 
 print("Dataset generated!")
 input("Press Enter to exit...")
+
+>>>>>> > main
