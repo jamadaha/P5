@@ -1,22 +1,22 @@
 # Get 2 flows of data - Text files and pictures
 
-## Text files
-### Move .txt files into the folder DataGenerator/InputText/...
-### These files should represent a valid letter sequence, not random (If true random possible, then that is fine)
-### A good way to gather these would be to use non-copyrighted books
+# Text files
+# Move .txt files into the folder DataGenerator/InputText/...
+# These files should represent a valid letter sequence, not random (If true random possible, then that is fine)
+# A good way to gather these would be to use non-copyrighted books
 
 class FileLoader:
     import os
     import wget
     import zipfile
     from tqdm import tqdm
-    TextPath = "";
-    LetterPath = "";
-    DownloadURL = "";
-    TempDownloadLetterPath = "./letters.zip";
-    TextFileQueue = [];
-    TextFileStream = [];
-    LetterPaths = {};
+    TextPath = ""
+    LetterPath = ""
+    DownloadURL = ""
+    TempDownloadLetterPath = "./letters.zip"
+    TextFileQueue = []
+    TextFileStream = []
+    LetterPaths = {}
 
     def __init__(self, textPath, letterPath, downloadURL):
         self.TextPath = textPath
@@ -24,7 +24,7 @@ class FileLoader:
         self.DownloadURL = downloadURL
 
     def CheckAndCreatePaths(self):
-        print("Checking and creating file paths ... ", end = "")
+        print("Checking and creating file paths ... ", end="")
         if not self.os.path.isdir(self.TextPath):
             self.os.makedirs(self.TextPath)
         if not self.os.path.isdir(self.LetterPath):
@@ -35,14 +35,15 @@ class FileLoader:
         file = None
         if not self.os.path.isfile(self.TempDownloadLetterPath):
             print("Letters not downloaded ... Beginning download of letters ... ")
-            file = self.wget.download(self.DownloadURL, self.TempDownloadLetterPath)
+            file = self.wget.download(
+                self.DownloadURL, self.TempDownloadLetterPath)
             print(" | Letters downloaded ... ", end="")
         else:
             file = self.TempDownloadLetterPath
             print("Letters zip file already downloaded ... ", end="")
 
         print("Beginning extraction ... ")
-        #self.os.makedirs(self.LetterPath)
+        # self.os.makedirs(self.LetterPath)
         with self.zipfile.ZipFile(file, "r") as zf:
             fileList = []
             for file in zf.namelist():
@@ -55,11 +56,12 @@ class FileLoader:
         print("Done")
 
     def LoadLetterPaths(self):
-        print("Loading letter paths ... ", end = "")
+        print("Loading letter paths ... ", end="")
         self.TextFileQueue = self.os.listdir(self.TextPath)
         if not self.TextFileQueue:
             raise Exception("Text files not found!")
-        self.TextFileStream = open(self.TextPath + self.TextFileQueue[0], 'r', encoding='utf-8')
+        self.TextFileStream = open(
+            self.TextPath + self.TextFileQueue[0], 'r', encoding='utf-8')
         self.TextFileQueue.pop(0)
         print("Done")
 
@@ -77,7 +79,8 @@ class FileLoader:
             self.LetterPaths[n]['paths'] = []
             # for each hsf num
             for i in range(0, 8):
-                hsfPath = self.LetterPath + self.LetterPaths[n]['hex'] + "/hsf_" + str(i) + "/"
+                hsfPath = self.LetterPath + \
+                    self.LetterPaths[n]['hex'] + "/hsf_" + str(i) + "/"
                 if self.os.path.isdir(hsfPath):
                     pictures = self.os.listdir(hsfPath)
                     # for each picture in directory
@@ -86,6 +89,7 @@ class FileLoader:
 
     def Finish(self):
         self.TextFileStream.close()
+
 
 class CSVGenerator:
     import csv
@@ -102,7 +106,7 @@ class CSVGenerator:
         self.CSVWriter.writerow(fields)
 
     def GenerateCSVData(self, textFileStream, letterPaths, textPath, textFileQueue):
-        print("Filling CSV with data ... ", end = "")
+        print("Filling CSV with data ... ", end="")
         while 1:
             output = textFileStream.read(1)
             if output:
@@ -110,12 +114,14 @@ class CSVGenerator:
                     # if no more pictures for that letter
                     if len(letterPaths[output]['paths']) == 0:
                         break
-                    self.CSVWriter.writerow([output, letterPaths[output]['paths'][0]])
+                    self.CSVWriter.writerow(
+                        [output, letterPaths[output]['paths'][0]])
                     letterPaths[output]['paths'].pop(0)
             # in case that the stream reaches end of file, goto next file
             else:
                 if len(textFileQueue) > 0:
-                    textFileStream = open(textPath + textFileQueue[0], 'r', encoding='utf-8')
+                    textFileStream = open(
+                        textPath + textFileQueue[0], 'r', encoding='utf-8')
                     textFileQueue.pop(0)
                 else:
                     break
@@ -124,17 +130,19 @@ class CSVGenerator:
     def Finish(self):
         self.CSVFile.close()
 
-fl = FileLoader("./DataGenerator/InputText/", "./DataGenerator/InputLetters/by_class/", "https://s3.amazonaws.com/nist-srd/SD19/by_class.zip")
+
+fl = FileLoader("./DataGenerator/InputText/", "./DataGenerator/InputLetters/by_class/",
+                "https://s3.amazonaws.com/nist-srd/SD19/by_class.zip")
 fl.CheckAndCreatePaths()
 fl.LoadLetterPaths()
 fl.GatherLetterPaths()
 
 cg = CSVGenerator("data.csv", ('Letter', 'Path'))
-cg.GenerateCSVData(fl.TextFileStream, fl.LetterPaths, fl.TextPath, fl.TextFileQueue)
+cg.GenerateCSVData(fl.TextFileStream, fl.LetterPaths,
+                   fl.TextPath, fl.TextFileQueue)
 
 fl.Finish()
 cg.Finish()
 
 print("Dataset generated!")
 input("Press Enter to exit...")
-
