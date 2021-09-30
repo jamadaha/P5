@@ -130,7 +130,47 @@ class CSVGenerator:
                     textFileQueue.pop(0)
                 else:
                     break
+        self.Finish()
         print("Done")
+
+    def Finish(self):
+        self.CSVFile.close()
+
+
+class FileTreeGenerator:
+    import pandas
+    import os
+    import shutil
+    from tqdm import tqdm
+    CSVPath = ""
+    CSVFile = None
+    OutputPath = ""
+
+    def __init__(self, csvPath, outputPath):
+        self.CSVPath = csvPath
+        self.CSVFile = open(csvPath, 'r')
+        self.OutputPath = outputPath
+
+    def Generate(self):
+        print("Checking data folder ... ", end="")
+        data = self.pandas.read_csv(self.CSVPath)
+        counts = {}
+        if not self.os.path.isdir(self.OutputPath):
+            print("Does not exist, beginning data tree generation ... ")
+            self.os.makedirs(self.OutputPath)
+        else:
+            return
+
+        for row in self.tqdm([*data.iterrows()]):
+            if not row[1][0] in counts:
+                counts[row[1][0]] = 0
+                self.os.makedirs(self.OutputPath + row[1][0] + '/')
+            else:
+                counts[row[1][0]] += 1
+            self.shutil.copyfile(
+                row[1][1], self.OutputPath + row[1][0] + '/' + str(counts[row[1][0]]) + '.png')
+        print("Done")
+        self.Finish()
 
     def Finish(self):
         self.CSVFile.close()
@@ -142,12 +182,14 @@ fl.CheckAndCreatePaths()
 fl.LoadLetterPaths()
 fl.GatherLetterPaths()
 
-cg = CSVGenerator("data.csv", ('Letter', 'Path'))
+cg = CSVGenerator("./DataGenerator/data.csv", ('Letter', 'Path'))
 cg.GenerateCSVData(fl.TextFileStream, fl.LetterPaths,
                    fl.TextPath, fl.TextFileQueue)
 
 fl.Finish()
-cg.Finish()
+
+ftg = FileTreeGenerator("./DataGenerator/data.csv", "./DataGenerator/Data/")
+ftg.Generate()
 
 print("Dataset generated!")
 input("Press Enter to exit...")
