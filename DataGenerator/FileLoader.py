@@ -1,13 +1,13 @@
 class FileLoader:
     import os
-    import wget
     import zipfile
     from tqdm import tqdm
     TextPath = ""
     LetterPath = ""
     TextDownloadURL = []
     LetterDownloadURL = ""
-    TempDownloadLetterPath = "./letters.zip"
+    TempDownloadLetterPath = "./DataGenerator/"
+    TempDownloadLetterFileName = "letters.zip"
     TextFileQueue = []
     TextFileStream = []
     LetterPaths = {}
@@ -27,27 +27,24 @@ class FileLoader:
             self.ImportLetters()
 
     def ImportTexts(self):
+        from SharedFunctions import Download
         print("Texts not found ...")
-        self.os.makedirs(self.TextPath)
+        self.os.makedirs(self.TextPath, exist_ok="True")
         for file in self.TextDownloadURL:
-            print("Downloading " + file[0])
-            self.wget.download(file[1], self.TextPath + file[0] + ".txt")
-            print()
+            Download(file[1], self.TextPath, file[0] + ".txt")
 
     def ImportLetters(self):
+        from SharedFunctions import Download
         print("Letters not found ... ", end="")
         file = None
-        if not self.os.path.isfile(self.TempDownloadLetterPath):
-            print("Letters not downloaded ... Beginning download of letters ... ")
-            file = self.wget.download(
-                self.LetterDownloadURL, self.TempDownloadLetterPath)
-            print()
-            print("Letters downloaded ... ", end="")
+        if not self.os.path.isfile(self.TempDownloadLetterPath + self.TempDownloadLetterFileName):
+            file = Download(
+                self.LetterDownloadURL, self.TempDownloadLetterPath, self.TempDownloadLetterFileName)
         else:
-            file = self.TempDownloadLetterPath
+            file = self.TempDownloadLetterPath + self.TempDownloadLetterFileName
             print("Letters zip file already downloaded ... ", end="")
 
-        print("Beginning extraction ... ")
+        print("Beginning extraction (This can take a bit to start) ... ")
         # self.os.makedirs(self.LetterPath)
         with self.zipfile.ZipFile(file, "r") as zf:
             fileList = []
@@ -57,7 +54,6 @@ class FileLoader:
             for file in self.tqdm(iterable=fileList, total=len(fileList)):
                 zf.extract(member=file, path=(self.LetterPath + "../"))
 
-        # Move up one folder
         print("Done")
 
     def LoadLetterPaths(self):
@@ -78,7 +74,7 @@ class FileLoader:
             hexLetter = hex(i).split('x')[-1]
             self.LetterPaths[chr(i)]['hex'] = hexLetter
 
-        print("Bind letter paths to a letters")
+        print("\nBind letter paths to a letters", end="")
         # for each letter (lowercase/uppercase)
         for n in self.tqdm(self.LetterPaths):
             self.LetterPaths[n]['paths'] = []
