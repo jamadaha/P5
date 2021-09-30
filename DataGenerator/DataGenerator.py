@@ -162,13 +162,18 @@ class FileTreeGenerator:
             return
 
         for row in self.tqdm([*data.iterrows()]):
-            if not row[1][0] in counts:
-                counts[row[1][0]] = 0
-                self.os.makedirs(self.OutputPath + row[1][0] + '/')
+            letter = row[1][0]
+            if str.islower(letter):
+                letter = '_' + letter
+
+            if not letter in counts:
+                counts[letter] = 0
+                self.os.makedirs(self.OutputPath + letter + '/')
             else:
-                counts[row[1][0]] += 1
-            self.shutil.copyfile(
-                row[1][1], self.OutputPath + row[1][0] + '/' + str(counts[row[1][0]]) + '.png')
+                counts[letter] += 1
+
+            self.shutil.copyfile(row[1][1], self.OutputPath + letter + '/' + str(counts[letter]) + '.png')
+
         print("Done")
         self.Finish()
 
