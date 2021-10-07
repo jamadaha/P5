@@ -25,6 +25,7 @@ class FileLoader:
             self.ImportTexts()
         if not self.os.path.isdir(self.LetterPath):
             self.ImportLetters()
+            self.ExtractLetters()
 
     def ImportTexts(self):
         from SharedFunctions import Download
@@ -44,17 +45,18 @@ class FileLoader:
         else:
             file = self.TempDownloadLetterPath + self.TempDownloadLetterFileName
             print("Letters zip file already downloaded ... ", end="")
+        print("Done")
 
+    def ExtractLetters(self):
         print("Beginning extraction (This can take a bit to start) ... ")
-        # self.os.makedirs(self.LetterPath)
+        self.os.makedirs(self.LetterPath)
         with self.zipfile.ZipFile(file, "r") as zf:
             fileList = []
             for file in zf.namelist():
-                if 'train' not in file:
-                    fileList.append(file)
+            if 'train' not in file:
+            fileList.append(file)
             for file in self.tqdm(iterable=fileList, total=len(fileList)):
-                zf.extract(member=file, path=(self.LetterPath + "../"))
-
+            zf.extract(member=file, path=(self.LetterPath + "../"))
         print("Done")
 
     def LoadLetterPaths(self):
