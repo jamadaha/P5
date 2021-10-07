@@ -4,7 +4,7 @@ class FileLoader:
     import zipfile
     from tqdm import tqdm
     TextPath = ""
-    LetterPath = ""
+    LetterPath = "" 
     TextDownloadURL = []
     LetterDownloadURL = ""
     TempDownloadLetterPath = "./letters.zip"
