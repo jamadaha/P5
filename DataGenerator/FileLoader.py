@@ -53,10 +53,10 @@ class FileLoader:
         with self.zipfile.ZipFile(file, "r") as zf:
             fileList = []
             for file in zf.namelist():
-            if 'train' not in file:
-            fileList.append(file)
+                if 'train' not in file:
+                    fileList.append(file)
             for file in self.tqdm(iterable=fileList, total=len(fileList)):
-            zf.extract(member=file, path=(self.LetterPath + "../"))
+                zf.extract(member=file, path=(self.LetterPath + "../"))
         print("Done")
 
     def LoadLetterPaths(self):
