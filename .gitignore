@@ -364,4 +364,10 @@ MigrationBackup/
 /DataGenerator/InputLetters/*
 /DataGenerator/data.csv
 /DataGenerator/Data/*
+
+
+/DataGenerator/DataGenerator/InputText/*
+/DataGenerator/DataGenerator/InputLetters/*
+/DataGenerator/DataGenerator/data.csv
+/DataGenerator/DataGenerator/Data/*
 letters.zip
