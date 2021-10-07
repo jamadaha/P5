@@ -1,7 +1,11 @@
 import configparser
 import json
+import os
 config = configparser.ConfigParser()
-config.read('config.ini')
+if os.path.exists('override-config.ini'):
+    config.read(['config.ini','override-config.ini'])
+else:
+    config.read('config.ini')
 
 from CSVGenerator import CSVGenerator
 from FileLoader import FileLoader
