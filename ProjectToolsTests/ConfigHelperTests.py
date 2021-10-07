@@ -1,8 +1,7 @@
 import unittest
 
 class ConfigHelperTests(unittest.TestCase):
-
-    def test_LoadedConfigCantLoad(self):
+    def test_CanLoadConfig(self):
         # ARRANGE
         import ProjectTools.ConfigHelper as cfg
         
@@ -10,5 +9,5 @@ class ConfigHelperTests(unittest.TestCase):
         length = len(cfg.config['DATAGENERATOR'])
 
         # ASSERT
-        self.assertLessEqual(0, length)
+        self.assertLess(0, length)
 
