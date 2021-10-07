@@ -8,7 +8,7 @@
     </StartupFile>
     <SearchPath>
     </SearchPath>
-    <WorkingDirectory>.</WorkingDirectory>
+    <WorkingDirectory>../.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>ProjectTools</Name>
     <RootNamespace>ProjectTools</RootNamespace>

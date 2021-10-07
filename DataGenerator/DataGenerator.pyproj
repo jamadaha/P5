@@ -5,7 +5,8 @@
     <ProjectGuid>59bcf16b-1620-4b42-bbd5-2be369b2db37</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>DataGenerator.py</StartupFile>
-    <SearchPath>..\ProjectTools</SearchPath>
+    <SearchPath>
+    </SearchPath>
     <WorkingDirectory>../.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>DataGenerator</Name>
