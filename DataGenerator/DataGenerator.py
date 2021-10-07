@@ -1,20 +1,33 @@
+import configparser
+import json
+config = configparser.ConfigParser()
+config.read('../config.ini')
+
 from CSVGenerator import CSVGenerator
 from FileLoader import FileLoader
 from FileTreeGenerator import FileTreeGenerator
 
-fl = FileLoader("./DataGenerator/InputText/", "./DataGenerator/InputLetters/by_class/", "https://s3.amazonaws.com/nist-srd/SD19/by_class.zip",
-                [['AChristmasCarol', 'https://www.gutenberg.org/files/46/46-0.txt'], ['PrideandPrejudice', 'https://www.gutenberg.org/files/1342/1342-0.txt']])
+fl = FileLoader(
+    config["DATAGENERATOR"]["TextPath"].strip('"'), 
+    config["DATAGENERATOR"]["LetterPath"].strip('"'), 
+    config["DATAGENERATOR"]["LetterDownloadURL"].strip('"'), 
+    json.loads(config["DATAGENERATOR"]["TextDownloadURLS"]),
+    config["DATAGENERATOR"]["TempDownloadLetterPath"].strip('"'))
 fl.CheckAndCreatePaths()
 fl.LoadLetterPaths()
 fl.GatherLetterPaths()
 
-cg = CSVGenerator("./DataGenerator/data.csv", ('Letter', 'Path'))
+cg = CSVGenerator(
+    config["DATAGENERATOR"]["CSVFileName"].strip('"'), 
+    ('Letter', 'Path'))
 cg.GenerateCSVData(fl.TextFileStream, fl.LetterPaths,
                    fl.TextPath, fl.TextFileQueue)
 
 fl.Finish()
 
-ftg = FileTreeGenerator("./DataGenerator/data.csv", "./DataGenerator/Data/")
+ftg = FileTreeGenerator(
+    config["DATAGENERATOR"]["CSVFileName"].strip('"'), 
+    config["DATAGENERATOR"]["OutputLettersPath"].strip('"'))
 ftg.Generate()
 
 print("Dataset generated!")
