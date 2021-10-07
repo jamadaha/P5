@@ -7,7 +7,7 @@
     <StartupFile>DataGenerator.py</StartupFile>
     <SearchPath>
     </SearchPath>
-    <WorkingDirectory>.</WorkingDirectory>
+    <WorkingDirectory>../.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>DataGenerator</Name>
     <RootNamespace>DataGenerator</RootNamespace>

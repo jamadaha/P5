@@ -1,7 +1,7 @@
 import configparser
 import json
 config = configparser.ConfigParser()
-config.read('../config.ini')
+config.read('config.ini')
 
 from CSVGenerator import CSVGenerator
 from FileLoader import FileLoader
