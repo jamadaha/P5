@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		override-config.ini = override-config.ini
 	EndProjectSection
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ProjectTools", "ProjectTools\ProjectTools.pyproj", "{FFF83435-A3B2-4691-BA5D-DD5CE0EA58EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{59BCF16B-1620-4B42-BBD5-2BE369B2DB37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{59BCF16B-1620-4B42-BBD5-2BE369B2DB37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFF83435-A3B2-4691-BA5D-DD5CE0EA58EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFF83435-A3B2-4691-BA5D-DD5CE0EA58EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
