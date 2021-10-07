@@ -11,5 +11,3 @@ class ConfigHelperTests(unittest.TestCase):
         # ASSERT
         self.assertLess(0, length)
 
-    def test_shouldFail(self):
-        self.assertTrue(0)
