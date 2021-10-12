@@ -6,7 +6,10 @@ class Generator(object):
 
     def Train(labels):
         print("Generator Train")
+    def ApplyTrainData():
+        print("Generator ApplyTrainData")
 
     def Generate(labels):
         print("Generator Generate")
+
 
