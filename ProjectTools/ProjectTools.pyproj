@@ -6,11 +6,14 @@
     <ProjectHome>.</ProjectHome>
     <StartupFile>
     </StartupFile>
-    <SearchPath>..\..\P5</SearchPath>
+    <SearchPath>
+    </SearchPath>
     <WorkingDirectory>../.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>ProjectTools</Name>
     <RootNamespace>ProjectTools</RootNamespace>
+    <InterpreterId>
+    </InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +25,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ConfigHelper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="__init__.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
