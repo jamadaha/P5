@@ -5,12 +5,13 @@
     <ProjectGuid>59bcf16b-1620-4b42-bbd5-2be369b2db37</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>DataGenerator.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <SearchPath>..\..\P5</SearchPath>
     <WorkingDirectory>../.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>DataGenerator</Name>
     <RootNamespace>DataGenerator</RootNamespace>
+    <InterpreterId>
+    </InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +27,9 @@
     <Compile Include="FileLoader.py" />
     <Compile Include="FileTreeGenerator.py" />
     <Compile Include="SharedFunctions.py" />
+    <Compile Include="__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

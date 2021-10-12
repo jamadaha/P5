@@ -1,4 +1,4 @@
-import ProjectTools.ConfigHelper as cfg
+from ProjectTools import ConfigHelper as cfg
 
 import json
 from CSVGenerator import CSVGenerator
