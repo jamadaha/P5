@@ -19,6 +19,11 @@ class FileLoader:
         self.TextDownloadURL = textDownloadURL
         self.TempDownloadLetterPath = tempDownloadLetterPath
 
+    def ImportAllData(self):
+        self.CheckAndCreatePaths()
+        self.LoadLetterPaths()
+        self.GatherLetterPaths()
+
     def CheckAndCreatePaths(self):
         print("Checking and creating file paths ... ", end="")
         self.ImportTexts()
