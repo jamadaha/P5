@@ -19,42 +19,39 @@ class FileLoader:
         self.TextDownloadURL = textDownloadURL
         self.TempDownloadLetterPath = tempDownloadLetterPath
 
+    def ImportAllData(self):
+        self.CheckAndCreatePaths()
+        self.LoadLetterPaths()
+        self.GatherLetterPaths()
+
     def CheckAndCreatePaths(self):
         print("Checking and creating file paths ... ", end="")
-        if not self.os.path.isdir(self.TextPath):
-            self.ImportTexts()
+        self.ImportTexts()
+        zipFile = self.ImportLetters()
         if not self.os.path.isdir(self.LetterPath):
-            self.ImportLetters()
+            self.ExtractLetters(zipFile)
 
     def ImportTexts(self):
-        from SharedFunctions import Download
-        print("Texts not found ...")
-        self.os.makedirs(self.TextPath, exist_ok="True")
+        from SharedFunctions import DownloadIfNotExist
         for file in self.TextDownloadURL:
-            Download(self.TextDownloadURL[file], self.TextPath, file + '.txt')
+            DownloadIfNotExist(
+                self.TextDownloadURL[file], self.TextPath, file + '.txt')
 
     def ImportLetters(self):
-        from SharedFunctions import Download
-        print("Letters not found ... ", end="")
-        self.os.makedirs(self.LetterPath, exist_ok="True")
-        file = None
-        if not self.os.path.isfile(self.TempDownloadLetterPath + self.TempDownloadLetterFileName):
-            file = Download(
-                self.LetterDownloadURL, self.TempDownloadLetterPath, self.TempDownloadLetterFileName)
-        else:
-            file = self.TempDownloadLetterPath + self.TempDownloadLetterFileName
-            print("Letters zip file already downloaded ... ", end="")
+        from SharedFunctions import DownloadIfNotExist
+        return DownloadIfNotExist(
+            self.LetterDownloadURL, self.TempDownloadLetterPath, self.TempDownloadLetterFileName)
 
+    def ExtractLetters(self, zipFile):
         print("Beginning extraction (This can take a bit to start) ... ")
-        # self.os.makedirs(self.LetterPath)
-        with self.zipfile.ZipFile(file, "r") as zf:
+        self.os.makedirs(self.LetterPath)
+        with self.zipfile.ZipFile(zipFile, "r") as zf:
             fileList = []
-            for file in zf.namelist():
-                if 'train' not in file:
-                    fileList.append(file)
-            for file in self.tqdm(iterable=fileList, total=len(fileList)):
-                zf.extract(member=file, path=(self.LetterPath + "../"))
-
+            for zipFile in zf.namelist():
+                if 'train' not in zipFile:
+                    fileList.append(zipFile)
+            for zipFile in self.tqdm(iterable=fileList, total=len(fileList)):
+                zf.extract(member=zipFile, path=(self.LetterPath + "../"))
         print("Done")
 
     def LoadLetterPaths(self):
