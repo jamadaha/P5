@@ -6,7 +6,7 @@ am.CheckAndInstall("tqdm")
 class FileLoader:
     import os
     import zipfile
-    import tqdm
+    from tqdm import tqdm
     TextPath = ""
     LetterPath = ""
     TextDownloadURL = []

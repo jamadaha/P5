@@ -17,7 +17,7 @@ def DownloadIfNotExist(url, path, fileName) -> str:
 def Download(url, path, fileName) -> str:
     import requests
     import os
-    import tqdm
+    from tqdm import tqdm
 
     print("Downloading " + fileName + " ... ")
 
