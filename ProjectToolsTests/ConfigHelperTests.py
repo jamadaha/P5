@@ -6,7 +6,7 @@ class ConfigHelperTests(unittest.TestCase):
         from ProjectTools import ConfigHelper as cfg
 
         # ACT
-        length : int = len(cfg.config['DATAGENERATOR'])
+        length : int = cfg.CategoryKeyCount("DATAGENERATOR")
 
         # ASSERT
         self.assertLess(0, length)
