@@ -24,7 +24,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AutoPackageInstaller.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ConfigHelper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InstallScript.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="__init__.py">

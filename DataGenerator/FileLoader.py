@@ -1,3 +1,8 @@
+from ProjectTools import AutoPackageInstaller as ap
+
+ap.CheckAndInstall("zipfile")
+ap.CheckAndInstall("tqdm")
+
 class FileLoader:
     import os
     import zipfile

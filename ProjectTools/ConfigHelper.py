@@ -1,3 +1,7 @@
+from ProjectTools import AutoPackageInstaller as ap
+ap.CheckAndInstall("configparser")
+ap.CheckAndInstall("json")
+
 import configparser
 import os
 import json
