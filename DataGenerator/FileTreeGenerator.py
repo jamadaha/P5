@@ -1,3 +1,9 @@
+from ProjectTools import AutoPackageInstaller as ap
+
+ap.CheckAndInstall("tqdm")
+ap.CheckAndInstall("pandas")
+ap.CheckAndInstall("shutil")
+
 class FileTreeGenerator:
     import pandas
     import os

@@ -17,6 +17,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "GAN", "GAN\GAN.pyproj", "{F
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Main", "Main\Main.pyproj", "{9CC2BEF2-0268-4DF1-9F69-8930AB7A0874}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ProjectToolsTests", "ProjectToolsTests\ProjectToolsTests.pyproj", "{30D1DFF7-F84F-4FC8-897B-E28809E9651C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,8 @@ Global
 		{F36E6516-8F10-4502-947B-81290C79B812}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CC2BEF2-0268-4DF1-9F69-8930AB7A0874}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9CC2BEF2-0268-4DF1-9F69-8930AB7A0874}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30D1DFF7-F84F-4FC8-897B-E28809E9651C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30D1DFF7-F84F-4FC8-897B-E28809E9651C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

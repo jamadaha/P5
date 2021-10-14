@@ -1,3 +1,19 @@
+from ProjectTools import AutoPackageInstaller as ap
+
+ap.CheckAndInstall("tqdm")
+ap.CheckAndInstall("requests")
+
+# Returns path to file
+def DownloadIfNotExist(url, path, fileName) -> str:
+    import os
+    if not os.path.isfile(path + fileName):
+        if not os.path.isdir(path):
+            os.makedirs(path)
+        return Download(url, path, fileName)
+    else:
+        print(fileName + " already exists... ")
+        return path + fileName
+
 # Returns path to file
 def Download(url, path, fileName) -> str:
     import requests
