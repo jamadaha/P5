@@ -1,8 +1,14 @@
+from ProjectTools import AutoModule as am
+
+am.CheckAndInstall("tqdm")
+am.CheckAndInstall("pandas")
+am.CheckAndInstall("shutil")
+
 class FileTreeGenerator:
     import pandas
     import os
     import shutil
-    from tqdm import tqdm
+    import tqdm
     CSVPath = ""
     CSVFile = None
     OutputPath = ""

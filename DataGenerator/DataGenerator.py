@@ -1,4 +1,6 @@
 from ProjectTools import ConfigHelper as cfg
+from ProjectTools import AutoModule as am
+am.CheckAndInstall("json")
 
 import json
 from CSVGenerator import CSVGenerator

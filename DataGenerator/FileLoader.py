@@ -1,7 +1,12 @@
+from ProjectTools import AutoModule as am
+
+am.CheckAndInstall("zipfile")
+am.CheckAndInstall("tqdm")
+
 class FileLoader:
     import os
     import zipfile
-    from tqdm import tqdm
+    import tqdm
     TextPath = ""
     LetterPath = ""
     TextDownloadURL = []

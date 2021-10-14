@@ -1,3 +1,5 @@
+from ProjectTools import AutoModule as am
+am.CheckAndInstall("csv")
 
 class CSVGenerator:
     import csv

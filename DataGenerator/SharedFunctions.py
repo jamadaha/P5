@@ -1,3 +1,7 @@
+from ProjectTools import AutoModule as am
+
+am.CheckAndInstall("tqdm")
+
 # Returns path to file
 def DownloadIfNotExist(url, path, fileName) -> str:
     import os
@@ -13,7 +17,7 @@ def DownloadIfNotExist(url, path, fileName) -> str:
 def Download(url, path, fileName) -> str:
     import requests
     import os
-    from tqdm import tqdm
+    import tqdm
 
     print("Downloading " + fileName + " ... ")
 

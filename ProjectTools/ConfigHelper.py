@@ -1,3 +1,6 @@
+from ProjectTools import AutoModule as am
+am.CheckAndInstall("configparser")
+
 import configparser
 import os
 
