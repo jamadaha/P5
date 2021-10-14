@@ -24,6 +24,7 @@
     <Compile Include="Discriminator.py" />
     <Compile Include="GAN.py" />
     <Compile Include="Generator.py" />
+    <Compile Include="__init__.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
