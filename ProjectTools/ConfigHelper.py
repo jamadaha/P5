@@ -1,5 +1,6 @@
 from ProjectTools import AutoModule as am
 am.CheckAndInstall("configparser")
+am.CheckAndInstall("json")
 
 import configparser
 import os
