@@ -3,9 +3,19 @@ am.CheckAndInstall("configparser")
 
 import configparser
 import os
+import json
 
-config = configparser.ConfigParser()
+__config = configparser.ConfigParser()
 if os.path.exists('override-config.ini'):
-    config.read(['config.ini','override-config.ini'])
+    __config.read(['config.ini','override-config.ini'])
 else:
-    config.read('config.ini')
+    __config.read('config.ini')
+
+def GetStringValue(category, key):
+    return __config[category][key].strip('"')
+
+def GetJsonValue(category, key):
+    return json.loads(__config[category][key].strip('"'))
+
+def CategoryKeyCount(category):
+    return len(__config[category])
