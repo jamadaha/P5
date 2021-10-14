@@ -1,6 +1,7 @@
 from ProjectTools import AutoModule as am
 
 am.CheckAndInstall("tqdm")
+am.CheckAndInstall("requests")
 
 # Returns path to file
 def DownloadIfNotExist(url, path, fileName) -> str:
