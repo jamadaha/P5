@@ -1,7 +1,7 @@
-from ProjectTools import AutoModule as am
+from ProjectTools import AutoPackageInstaller as ap
 
-am.CheckAndInstall("zipfile")
-am.CheckAndInstall("tqdm")
+ap.CheckAndInstall("zipfile")
+ap.CheckAndInstall("tqdm")
 
 class FileLoader:
     import os

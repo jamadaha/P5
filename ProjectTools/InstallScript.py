@@ -1,10 +1,10 @@
-from ProjectTools import AutoModule as am
+from ProjectTools import AutoPackageInstaller as ap
 
-am.CheckAndInstall("zipfile")
-am.CheckAndInstall("tqdm")
-am.CheckAndInstall("pandas")
-am.CheckAndInstall("shutil")
-am.CheckAndInstall("csv")
-am.CheckAndInstall("requests")
-am.CheckAndInstall("configparser")
-am.CheckAndInstall("json")
+ap.CheckAndInstall("zipfile")
+ap.CheckAndInstall("tqdm")
+ap.CheckAndInstall("pandas")
+ap.CheckAndInstall("shutil")
+ap.CheckAndInstall("csv")
+ap.CheckAndInstall("requests")
+ap.CheckAndInstall("configparser")
+ap.CheckAndInstall("json")
