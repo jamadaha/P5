@@ -13,3 +13,6 @@ def GetStringValue(category, key):
 
 def GetJsonValue(category, key):
     return json.loads(__config[category][key].strip('"'))
+
+def CategoryKeyCount(category):
+    return len(__config[category])
