@@ -1,29 +1,30 @@
-from ProjectTools import ConfigHelper as cfg
+import sys
+sys.path.append('./ProjectTools')
 
+import ConfigHelper as cfg
 from CSVGenerator import CSVGenerator
-from FileLoader import FileLoader
-from FileTreeGenerator import FileTreeGenerator
+from FileImporter import FileImporter
+from DataExtractor import DataExtractor
+from TextSequence import TextSequence
 
-fl = FileLoader(
+
+fl = FileImporter(
     cfg.GetStringValue("DATAGENERATOR","TextPath"),
-    cfg.GetStringValue("DATAGENERATOR","LetterPath"),
     cfg.GetStringValue("DATAGENERATOR","LetterDownloadURL"),
     cfg.GetJsonValue("DATAGENERATOR","TextDownloadURLS"),
-    cfg.GetStringValue("DATAGENERATOR","TempDownloadLetterPath"))
-fl.ImportAllData()
+    cfg.GetStringValue("DATAGENERATOR","TempDownloadLetterPath"),
+    cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"))
+fl.ImportFiles()
 
-cg = CSVGenerator(
-    cfg.GetStringValue("DATAGENERATOR","CSVFileName"),
-    ('Letter', 'Path'))
-cg.GenerateCSVData(fl.TextFileStream, fl.LetterPaths,
-                   fl.TextPath, fl.TextFileQueue)
+ts = TextSequence(
+    cfg.GetStringValue("DATAGENERATOR", "TextPath"))
 
-fl.Finish()
-
-ftg = FileTreeGenerator(
-    cfg.GetStringValue("DATAGENERATOR","CSVFileName"),
-    cfg.GetStringValue("DATAGENERATOR","OutputLettersPath"))
-ftg.Generate()
+ftg = DataExtractor(
+    cfg.GetStringValue("DATAGENERATOR", "OutputLettersPath"),
+    cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterPath") +
+    cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"),
+    ts)
+ftg.Extract()
 
 print("Dataset generated!")
 input("Press Enter to exit...")

@@ -1,4 +1,4 @@
-from ProjectTools import AutoPackageInstaller as ap
+import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tqdm")
 ap.CheckAndInstall("requests")
@@ -11,7 +11,6 @@ def DownloadIfNotExist(url, path, fileName) -> str:
             os.makedirs(path)
         return Download(url, path, fileName)
     else:
-        print(fileName + " already exists... ")
         return path + fileName
 
 # Returns path to file
@@ -20,7 +19,7 @@ def Download(url, path, fileName) -> str:
     import os
     from tqdm import tqdm
 
-    print("Downloading " + fileName + " ... ")
+    print("Downloading " + fileName)
 
     response = requests.get(url, stream=True)
 
@@ -34,9 +33,13 @@ def Download(url, path, fileName) -> str:
             writeStream.write(chunk)
     progressBar.close()
 
-    print("Done")
     return path + fileName
 
 
 def GetFileSize(response):
     return int(response.headers.get('content-length', 0))
+
+def PrintIndented(indentAmount, text):
+    for i in range(0, indentAmount + 1):
+        print("\t", end="")
+    print(text)

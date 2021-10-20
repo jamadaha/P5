@@ -1,4 +1,4 @@
-from ProjectTools import AutoPackageInstaller as ap
+import AutoPackageInstaller as ap
 ap.CheckAndInstall("csv")
 
 class CSVGenerator:
