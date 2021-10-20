@@ -1,6 +1,6 @@
 {
-    "editor.formatOnPaste": true,
-    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false,
     "editor.formatOnSaveMode": "modifications",
     "python.analysis.extraPaths": [
         "./ProjectTools"
