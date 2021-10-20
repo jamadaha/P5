@@ -4,6 +4,7 @@ import AutoPackageInstaller as ap
 ap.CheckAndInstall("tqdm")
 ap.CheckAndInstall("zipfile")
 
+
 class DataExtractor:
     OutputPath = ""
     DataPath = ""
@@ -14,7 +15,6 @@ class DataExtractor:
         self.OutputPath = outputPath
         self.DataPath = dataPath
         self.TS = textSequence
-
 
     def Extract(self):
         import zipfile
@@ -36,21 +36,19 @@ class DataExtractor:
                         break
 
                     fileInfo = zipInfos[self.Letters[extractionLetter]
-                                    ['StartIndex'] + self.Letters[extractionLetter]['Index']]
-                    fileInfo.filename = str(self.Letters[extractionLetter]['Index']) + '.png'
-                    
-                    outputPath = self.OutputPath
-                    if str.islower(extractionLetter):
-                        outputPath = outputPath + '_'
-                    outputPath += extractionLetter
+                                        ['StartIndex'] + self.Letters[extractionLetter]['Index']]
+                    fileInfo.filename = str(
+                        self.Letters[extractionLetter]['Index']) + '.png'
 
+                    outputPath = self.CreateOutputPath(
+                        outputPath, extractionLetter)
 
                     zf.extract(member=fileInfo, path=outputPath)
                     self.Letters[extractionLetter]['Index'] += 1
 
     def FilterNameList(self, zipInfos):
         from tqdm import tqdm
-        
+
         print("Filtering zip")
 
         tempInfoList = []
@@ -58,7 +56,7 @@ class DataExtractor:
             if 'train' not in i.filename:
                 if '.png' == i.filename[-4:]:
                     tempInfoList.append(i)
-        
+
         return tempInfoList
 
     def CountNames(self, infoList):
@@ -82,5 +80,13 @@ class DataExtractor:
                 # name[9:11] takes the substring from character 9 to 11
                 if self.Letters[letter]['HexLetter'] == info.filename[9:11]:
                     if self.Letters[letter]['StartIndex'] == -1:
-                        self.Letters[letter]['StartIndex'] = infoList.index(info)
+                        self.Letters[letter]['StartIndex'] = infoList.index(
+                            info)
                     self.Letters[letter]['Count'] += 1
+
+    def CreateOutputPath(self, basePath, letter):
+        outputPath = basePath
+        if str.islower(letter):
+            outputPath = basePath + '_'
+        outputPath += letter
+        return outputPath
