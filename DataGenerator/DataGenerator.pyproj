@@ -22,7 +22,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CSVGenerator.py" />
     <Compile Include="DataExtractor.py" />
     <Compile Include="DataGenerator.py" />
     <Compile Include="FileImporter.py" />
