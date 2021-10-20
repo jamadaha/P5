@@ -1,15 +1,20 @@
+import tensorflow as tf
+from tensorflow.keras import layers
+
+IMAGE_RESOLUTION = (28, 28)
+
 class Discriminator(object):
     """description of class"""
 
     def __init__(self, *args, **kwargs):
-        self.model = _MakeDiscriminatorModel(self)
+        self.model = self._MakeDiscriminatorModel()
         return super().__init__(*args, **kwargs)
 
-    def Train(labels, image):
-        print("Disciminator Train")
+    def Train(self, labels, image):
+        return self.model(image, training=True)
 
-    def Discriminator(labels, image):
-        print("Disciminator Disciminate")
+    def Discriminate(self, labels, image):
+        return self.model(image, training=False)
 
     def _MakeDiscriminatorModel(self):
         model = tf.keras.Sequential()

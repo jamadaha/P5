@@ -5,12 +5,12 @@
     <ProjectGuid>f36e6516-8f10-4502-947b-81290c79b812</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>GAN.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
-    <WorkingDirectory>.</WorkingDirectory>
+    <SearchPath>..\..\P5</SearchPath>
+    <WorkingDirectory>../.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>GAN</Name>
     <RootNamespace>GAN</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

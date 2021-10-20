@@ -6,8 +6,7 @@
     <ProjectHome>.</ProjectHome>
     <StartupFile>
     </StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <SearchPath>..\..\P5</SearchPath>
     <WorkingDirectory>../.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>ProjectTools</Name>
