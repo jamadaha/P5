@@ -1,8 +1,7 @@
+import ConfigHelper as cfg
 import sys
 sys.path.append('./ProjectTools')
 
-import ConfigHelper as cfg
-from CSVGenerator import CSVGenerator
 from FileImporter import FileImporter
 from DataExtractor import DataExtractor
 from TextSequence import TextSequence

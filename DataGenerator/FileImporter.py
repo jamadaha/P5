@@ -1,5 +1,3 @@
-import AutoPackageInstaller as ap
-
 class FileImporter:
     TextPath = ""
     TextDownloadURL = []

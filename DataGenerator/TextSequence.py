@@ -1,5 +1,3 @@
-import AutoPackageInstaller as ap
-
 class TextSequence:
     TextPath = ""
     TextFileQueue = []
@@ -16,7 +14,6 @@ class TextSequence:
         self.TextFileQueue = os.listdir(self.TextPath)
         if not self.TextFileQueue:
             raise Exception("Text files not found!")
-        
 
     def LoadNextStream(self):
         self.TextFileStream = open(

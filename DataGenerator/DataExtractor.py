@@ -1,4 +1,3 @@
-from genericpath import isdir
 import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tqdm")
