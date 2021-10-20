@@ -1,6 +1,8 @@
-import ConfigHelper as cfg
 import sys
 sys.path.append('./ProjectTools')
+
+import ConfigHelper as cfg
+
 
 from FileImporter import FileImporter
 from DataExtractor import DataExtractor

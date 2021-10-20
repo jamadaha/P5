@@ -40,7 +40,7 @@ class DataExtractor:
                         self.Letters[extractionLetter]['Index']) + '.png'
 
                     outputPath = self.CreateOutputPath(
-                        outputPath, extractionLetter)
+                        self.OutputPath, extractionLetter)
 
                     zf.extract(member=fileInfo, path=outputPath)
                     self.Letters[extractionLetter]['Index'] += 1
