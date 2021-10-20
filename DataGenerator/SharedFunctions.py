@@ -35,11 +35,5 @@ def Download(url, path, fileName) -> str:
 
     return path + fileName
 
-
 def GetFileSize(response):
     return int(response.headers.get('content-length', 0))
-
-def PrintIndented(indentAmount, text):
-    for i in range(0, indentAmount + 1):
-        print("\t", end="")
-    print(text)
