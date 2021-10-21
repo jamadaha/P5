@@ -37,14 +37,7 @@ class DataExtractor:
 
                     fileInfo = zipInfos[self.Letters[extractionLetter]
                                         ['StartIndex'] + self.Letters[extractionLetter]['Index']]
-                    fileInfo.filename = str(
-                        self.Letters[extractionLetter]['Index']) + '.png'
-
-                    outputPath = self.CreateOutputPath(
-                        self.OutputPath, extractionLetter, outputFormat)
-
-                    zf.extract(member=fileInfo, path=outputPath)
-                    self.Letters[extractionLetter]['Index'] += 1
+                    self.ExtractFile(outputFormat, zf, fileInfo, extractionLetter)
 
     def ExtractSpecifiedDistribution(self, outputFormat, minCount, maxCount):
         import zipfile
@@ -62,13 +55,17 @@ class DataExtractor:
             for letter in tqdm(iterable=self.Letters, total=len(self.Letters)):
                 letterMax = min(maxCount, self.Letters[letter]['Count'])
                 for i in range(0, letterMax):
-                    fileInfo = zipInfos[self.Letters[letter]
-                                        ['StartIndex'] + i]
-                    fileInfo.filename = str(i) + '.png'
-                    outputPath = self.CreateOutputPath(
-                        self.OutputPath, letter, outputFormat)
-                    zf.extract(member=fileInfo, path=outputPath)
-                    self.Letters[letter]['Index'] += 1
+                    fileInfo = zipInfos[self.Letters[letter]['StartIndex'] + i]
+                    self.ExtractFile(outputFormat, zf, fileInfo, letter)
+                    
+
+    
+    def ExtractFile(self, outputFormat, zipFile, fileInfo, letter):
+        fileInfo.filename = str(self.Letters[letter]['Index']) + '.png'
+        outputPath = self.CreateOutputPath(
+            self.OutputPath, letter, outputFormat)
+        zipFile.extract(member=fileInfo, path=outputPath)
+        self.Letters[letter]['Index'] += 1
 
     def FilterNameList(self, zipInfos):
         from tqdm import tqdm
