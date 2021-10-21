@@ -19,7 +19,7 @@ num_channels = 1
 num_classes = 10
 image_size = 28
 latent_dim = 128
-epoch_count = 10
+epoch_count = 5
 
 generator_in_channels = latent_dim + num_classes
 discriminator_in_channels = num_channels + num_classes
@@ -224,19 +224,19 @@ def train(allDatasets, gan, epochs):
         start = time.time()
 
         print(f"Epoch {epoch + 1} of {epochs} is in progress...")
+        epochDataset = CreateDataSet(allDatasets)
+        itemCount = tf.data.experimental.cardinality(epochDataset).numpy()
         count = 0
-        for image_batch in CreateDataSet(allDatasets):
+        for image_batch in epochDataset:
             returnVal = gan.train_step(image_batch)
-            g_loss = float(returnVal['g_loss'])
-            d_loss = float(returnVal['d_loss'])
-            print(f"Generator loss: {g_loss:.4f} Discriminator loss: {d_loss:.4f} Iteration: {count}", end="\r")
+            if count % 10 == 0:
+                g_loss = float(returnVal['g_loss'])
+                d_loss = float(returnVal['d_loss'])
+                print(f"Generator loss: {g_loss:.4f} Discriminator loss: {d_loss:.4f} Progress: {((count/itemCount)*100):2f}%", end="\r")
             count += 1
 
         print("Done!")
         print(f"Time for epoch {epoch + 1} is {time.time()-start} sec")
-
-def stack(*inputs):
-    return tf.stack(inputs)
 
 def CreateDataSet(dataArray):
     returnSet = dataArray[0]
@@ -257,6 +257,23 @@ cond_gan.compile(
 # Load dataset
 
 allDatasets = []
+
+#(trainX, trainY), (testX, testY) = keras.datasets.mnist.load_data()
+#all_digits = np.concatenate([trainX, testX])
+#all_labels = np.concatenate([trainY, testY])
+
+#all_digits = all_digits.astype("float32") / 255.0
+#all_digits = np.reshape(all_digits, (-1, 28, 28, 1))
+#all_labels = keras.utils.to_categorical(all_labels, num_classes)
+
+#dataset = tf.data.Dataset.from_tensor_slices((all_digits, all_labels))
+#dataset = dataset.shuffle(buffer_size=1024).batch(batch_size)
+
+#print(f"Shape of training images: {all_digits.shape}")
+#print(f"Shape of training labels: {all_labels.shape}")
+
+#allDatasets.append(dataset)
+
 totalImageCount = 0
 dataDir = os.listdir('../Data/Output/')
 print("Loading data...")
@@ -265,27 +282,6 @@ for dirID in tqdm(iterable=dataDir, total=len(dataDir)):
     totalImageCount += dr.trainDataSize
     allDatasets.append(dr.dataset)
 print(f"A total of {totalImageCount} have been loaded!")
-
-#cifar10 = ImageLoader('../Data/Output/', '')
-#(trainX, trainY), (testX, testY) = cifar10.load_data()
-#(trainX, trainY), (testX, testY) = keras.datasets.mnist.load_data()
-#all_digits = np.concatenate([trainX, testX])
-#all_labels = np.concatenate([trainY, testY])
-
-# Scale the pixel values to [0, 1] range, add a channel dimension to
-# the images, and one-hot encode the labels.
-#all_digits = all_digits.astype("float32") / 255.0
-#all_digits = np.reshape(all_digits, (-1, 28, 28, 1))
-#all_labels = keras.utils.to_categorical(all_labels, num_classes)
-#trainDataSize = len(all_digits)
-
-# Create tf.data.Dataset.
-#dataset = tf.data.Dataset.from_tensor_slices((all_digits, all_labels))
-#dataset = dataset.shuffle(buffer_size=1024).batch(batch_size)
-#dataset = dataset.batch(batch_size)
-
-#print(f"Shape of training images: {all_digits.shape}")
-#print(f"Shape of training labels: {all_labels.shape}")
 
 #train
 train(allDatasets,cond_gan,epoch_count)
