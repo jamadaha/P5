@@ -1,9 +1,9 @@
+import sys
+sys.path.append('./ProjectTools')
+
 import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
-
-import sys
-sys.path.append('./ProjectTools')
 
 import ConfigHelper as cfg
 
@@ -65,6 +65,10 @@ while(sentinel):
     if Question == "N":
         sentinel = False
         break
+
+    if not Question.isnumeric():
+        print("Please only write numbers or N to exit")
+        continue
 
     value = int(Question)
 
