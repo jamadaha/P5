@@ -14,12 +14,13 @@ import shutil
 import time
 
 #Constants
-batch_size = 128
+batch_size = 32
 num_channels = 1
 num_classes = 49
 image_size = 28
 latent_dim = 128
-epoch_count = 10
+epoch_count = 25
+refreshEachStep = 20
 
 generator_in_channels = latent_dim + num_classes
 discriminator_in_channels = num_channels + num_classes
@@ -227,25 +228,33 @@ def train(allDatasets, gan, epochs):
         epochDataset = CreateDataSet(allDatasets)
         itemCount = tf.data.experimental.cardinality(epochDataset).numpy()
         count = 0
+        epochTime = time.time()
         for image_batch in epochDataset:
-            if count % 20 == 0:
+            if count % refreshEachStep == 0:
                 returnVal = gan.train_step(image_batch)
                 g_loss = float(returnVal['g_loss'])
                 d_loss = float(returnVal['d_loss'])
-                print(f"Generator loss: {g_loss:.4f} Discriminator loss: {d_loss:.4f} Progress: {((count/itemCount)*100):.2f}%", end="\r")
+                now = time.time()
+                estRemainTime = ((now - epochTime) / refreshEachStep) * (itemCount - count)
+                epochTime = now
+                print(f"Generator loss: {g_loss:.4f}. Discriminator loss: {d_loss:.4f}. Progress: {((count/itemCount)*100):.2f}%. Est time left: {GetDatetimeFromSeconds(estRemainTime)}    ", end="\r")
             else:
                 gan.train_step(image_batch)
             count += 1
 
+        totalEpochTime = time.time()-start
         print("")
         print("Done!")
-        print(f"Time for epoch {epoch + 1} is {time.time()-start} sec")
+        print(f"Time for epoch {epoch + 1} is {GetDatetimeFromSeconds(totalEpochTime)}. Est time remaining for training is {GetDatetimeFromSeconds(totalEpochTime*(epochs-(epoch + 1)))}")
 
 def CreateDataSet(dataArray):
     returnSet = dataArray[0]
     for data in dataArray[1:]:
         returnSet = returnSet.concatenate(data)
     return returnSet.shuffle(buffer_size=1024)
+
+def GetDatetimeFromSeconds(seconds):
+    return time.strftime("%H:%M:%S", time.gmtime(n))
 
 # Train the gan:
 cond_gan = ConditionalGAN(
