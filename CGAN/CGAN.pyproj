@@ -10,7 +10,7 @@
     <WorkingDirectory>../.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>CGAN</Name>
-    <RootNamespace>GAN</RootNamespace>
+    <RootNamespace>CGAN</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
