@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append('./ProjectTools')
 
 class ConfigHelperTests(unittest.TestCase):
     def test_CanLoadConfig(self):

@@ -1,4 +1,4 @@
-from ProjectTools import AutoPackageInstaller as ap
+import AutoPackageInstaller as ap
 ap.CheckAndInstall("configparser")
 ap.CheckAndInstall("json")
 
@@ -11,6 +11,9 @@ if os.path.exists('override-config.ini'):
     __config.read(['config.ini','override-config.ini'])
 else:
     __config.read('config.ini')
+
+def GetIntValue(category, key):
+    return int(__config[category][key])
 
 def GetStringValue(category, key):
     return __config[category][key].strip('"')

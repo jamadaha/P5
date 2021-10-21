@@ -1,29 +1,44 @@
-from ProjectTools import ConfigHelper as cfg
+import sys
+sys.path.append('./ProjectTools')
 
-from CSVGenerator import CSVGenerator
-from FileLoader import FileLoader
-from FileTreeGenerator import FileTreeGenerator
+import ConfigHelper as cfg
 
-fl = FileLoader(
+
+from FileImporter import FileImporter
+from DataExtractor import DataExtractor
+from TextSequence import TextSequence
+
+
+fl = FileImporter(
     cfg.GetStringValue("DATAGENERATOR","TextPath"),
-    cfg.GetStringValue("DATAGENERATOR","LetterPath"),
     cfg.GetStringValue("DATAGENERATOR","LetterDownloadURL"),
     cfg.GetJsonValue("DATAGENERATOR","TextDownloadURLS"),
-    cfg.GetStringValue("DATAGENERATOR","TempDownloadLetterPath"))
-fl.ImportAllData()
+    cfg.GetStringValue("DATAGENERATOR","TempDownloadLetterPath"),
+    cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"))
+fl.ImportFiles()
 
-cg = CSVGenerator(
-    cfg.GetStringValue("DATAGENERATOR","CSVFileName"),
-    ('Letter', 'Path'))
-cg.GenerateCSVData(fl.TextFileStream, fl.LetterPaths,
-                   fl.TextPath, fl.TextFileQueue)
+ts = TextSequence(
+    cfg.GetStringValue("DATAGENERATOR", "TextPath"))
 
-fl.Finish()
+ftg = DataExtractor(
+    cfg.GetStringValue("DATAGENERATOR", "OutputLettersPath"),
+    cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterPath") +
+    cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"),
+    ts)
 
-ftg = FileTreeGenerator(
-    cfg.GetStringValue("DATAGENERATOR","CSVFileName"),
-    cfg.GetStringValue("DATAGENERATOR","OutputLettersPath"))
-ftg.Generate()
+minCount = cfg.GetIntValue("DATAGENERATOR", "MinimumLetterCount")
+maxCount = cfg.GetIntValue("DATAGENERATOR", "MaximumLetterCount")
+
+if minCount == 0 and maxCount == 0:
+    ftg.ExtractSequence(
+        cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat")
+    )
+else:
+    ftg.ExtractSpecifiedDistribution(
+        cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat"),
+        minCount,
+        maxCount
+    )
 
 print("Dataset generated!")
 input("Press Enter to exit...")

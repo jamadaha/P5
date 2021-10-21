@@ -22,11 +22,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CSVGenerator.py" />
+    <Compile Include="DataExtractor.py" />
     <Compile Include="DataGenerator.py" />
-    <Compile Include="FileLoader.py" />
-    <Compile Include="FileTreeGenerator.py" />
+    <Compile Include="FileImporter.py" />
     <Compile Include="SharedFunctions.py" />
+    <Compile Include="TextSequence.py" />
     <Compile Include="__init__.py">
       <SubType>Code</SubType>
     </Compile>
