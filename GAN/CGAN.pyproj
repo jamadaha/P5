@@ -23,10 +23,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CGAN.py" />
+    <Compile Include="CGANKerasModel.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DatasetFormatter.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DatasetLoader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LayerDefinition.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
