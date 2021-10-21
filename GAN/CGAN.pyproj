@@ -3,12 +3,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>d2b99fc9-b101-4262-8a22-77a10e88354c</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
-    <StartupFile>GAN.py</StartupFile>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>CGAN.py</StartupFile>
     <SearchPath>..\..\P5</SearchPath>
     <WorkingDirectory>../.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>GAN</Name>
+    <Name>CGAN</Name>
     <RootNamespace>GAN</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
@@ -21,7 +22,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GAN.py" />
+    <Compile Include="CGAN.py" />
+    <Compile Include="DatasetFormatter.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DatasetLoader.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

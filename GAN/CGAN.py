@@ -1,3 +1,9 @@
+import sys
+sys.path.append('./ProjectTools')
+
+import DatasetLoader as dl
+import DatasetFormatter as df
+
 from tensorflow import keras
 from tensorflow.keras import layers
 
@@ -9,14 +15,13 @@ import random
 import os
 from PIL import Image
 from tqdm import tqdm
-import cv2
 import shutil
 import time
 
 #Constants
 batch_size = 32
 num_channels = 1
-num_classes = 49
+num_classes = 10
 image_size = 28
 latent_dim = 128
 epoch_count = 25
@@ -28,69 +33,6 @@ print(generator_in_channels, discriminator_in_channels)
 
 # We'll use all the available examples from both the training and test
 # sets.
-class ImageLoader:
-    train_dir = ""
-    test_dir = ""
-    classID = ""
-    def __init__(self, train_dir, test_dir, classID):
-        self.train_dir = train_dir
-        self.test_dir = test_dir
-        self.classID = classID
-
-    def load_data(self):
-        features, labels = [], []
-
-        for source in [self.train_dir, self.test_dir]:
-            if os.path.isdir(source):
-                input, output = [], []
-                for img_name in os.listdir(source):
-                    img = cv2.imread(os.path.join(source, img_name), cv2.IMREAD_GRAYSCALE)
-                    img = cv2.bitwise_not(img)
-                    img = cv2.resize(img, (image_size,image_size))
-                    input.append(img)
-                    output.append(self.classID)
-
-        features.append(input)
-        labels.append(output)
-
-        if len(features) == 1:
-            features.append(input)
-            labels.append(output)
-
-        return [[np.array(features[0], dtype=np.float32),
-                    np.array(labels[0], dtype=np.float32)],
-                [np.array(features[1], dtype=np.float32),
-                    np.array(labels[1], dtype=np.float32)]]
-
-
-class DataReader():
-    dir = ""
-    lableID = -1
-    dataset = None
-    trainDataSize = 0
-
-    def __init__(self, dir, dirId):
-        self.dir = dir
-        self.lableID = dirId
-
-        imageLoader = ImageLoader(dir, '', dirId)
-        (trainX, trainY), (testX, testY) = imageLoader.load_data()
-        all_digits = np.concatenate([trainX, testX])
-        all_labels = np.concatenate([trainY, testY])
-
-        # Scale the pixel values to [0, 1] range, add a channel dimension to
-        # the images, and one-hot encode the labels.
-        all_digits = all_digits.astype("float32") / 255.0
-        all_digits = np.reshape(all_digits, (-1, 28, 28, 1))
-        all_labels = keras.utils.to_categorical(all_labels, num_classes)
-        self.trainDataSize = len(all_digits)
-
-        # Create tf.data.Dataset.
-        dataset = tf.data.Dataset.from_tensor_slices((all_digits, all_labels))
-        dataset = dataset.shuffle(buffer_size=1024).batch(batch_size)
-
-        self.dataset = dataset
-
 
 # setup the class
 class ConditionalGAN(keras.Model):
@@ -268,8 +210,6 @@ cond_gan.compile(
 
 # Load dataset
 
-allDatasets = []
-
 #(trainX, trainY), (testX, testY) = keras.datasets.mnist.load_data()
 #all_digits = np.concatenate([trainX, testX])
 #all_labels = np.concatenate([trainY, testY])
@@ -286,17 +226,24 @@ allDatasets = []
 
 #allDatasets.append(dataset)
 
-totalImageCount = 0
-dataDir = os.listdir('../Data/Output/')
-print("Loading data...")
-for dirID in tqdm(iterable=dataDir, total=len(dataDir)):
-    dr = DataReader('../Data/Output/' + dirID, dirID)
-    totalImageCount += dr.trainDataSize
-    allDatasets.append(dr.dataset)
-print(f"A total of {totalImageCount} have been loaded!")
+#totalImageCount = 0
+#dataDir = os.listdir('../Data/Output/')
+#print("Loading data...")
+#for dirID in tqdm(iterable=dataDir, total=len(dataDir)):
+#    dr = DataReader('../Data/Output/' + dirID, dirID)
+#    totalImageCount += dr.trainDataSize
+#    allDatasets.append(dr.dataset)
+#print(f"A total of {totalImageCount} have been loaded!")
+
+dataLoader = dl.DatasetLoader('../Data/Output/','')
+dataLoader.LoadTrainDatasets()
+dataArray = dataLoader.DataSets
+
+bulkDatasetFormatter = df.BulkDatasetFormatter(dataArray, num_classes,batch_size,(image_size,image_size))
+tensorDatasets = bulkDatasetFormatter.ProcessData();
 
 #train
-train(allDatasets,cond_gan,epoch_count)
+train(tensorDatasets,cond_gan,epoch_count)
 #cond_gan.fit(dataset, epochs=epoch_count)
 trained_gen = cond_gan.generator
 
