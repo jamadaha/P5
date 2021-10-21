@@ -26,6 +26,9 @@
     <Compile Include="CGANKerasModel.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CGANTrainer.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DatasetFormatter.py">
       <SubType>Code</SubType>
     </Compile>
