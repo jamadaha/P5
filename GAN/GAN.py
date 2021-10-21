@@ -14,12 +14,12 @@ import shutil
 import time
 
 #Constants
-batch_size = 32
+batch_size = 128
 num_channels = 1
-num_classes = 10
+num_classes = 49
 image_size = 28
 latent_dim = 128
-epoch_count = 5
+epoch_count = 10
 
 generator_in_channels = latent_dim + num_classes
 discriminator_in_channels = num_channels + num_classes
@@ -228,13 +228,16 @@ def train(allDatasets, gan, epochs):
         itemCount = tf.data.experimental.cardinality(epochDataset).numpy()
         count = 0
         for image_batch in epochDataset:
-            returnVal = gan.train_step(image_batch)
-            if count % 10 == 0:
+            if count % 20 == 0:
+                returnVal = gan.train_step(image_batch)
                 g_loss = float(returnVal['g_loss'])
                 d_loss = float(returnVal['d_loss'])
-                print(f"Generator loss: {g_loss:.4f} Discriminator loss: {d_loss:.4f} Progress: {((count/itemCount)*100):2f}%", end="\r")
+                print(f"Generator loss: {g_loss:.4f} Discriminator loss: {d_loss:.4f} Progress: {((count/itemCount)*100):.2f}%", end="\r")
+            else:
+                gan.train_step(image_batch)
             count += 1
 
+        print("")
         print("Done!")
         print(f"Time for epoch {epoch + 1} is {time.time()-start} sec")
 
