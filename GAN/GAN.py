@@ -10,9 +10,11 @@ import os
 from PIL import Image
 from tqdm import tqdm
 import cv2
+import shutil
+import time
 
 #Constants
-batch_size = 32
+batch_size = 64
 num_channels = 1
 num_classes = 10
 image_size = 28
@@ -26,33 +28,26 @@ print(generator_in_channels, discriminator_in_channels)
 # We'll use all the available examples from both the training and test
 # sets.
 class ImageLoader:
-    """Load images in arrays without batches."""
-
-    def __init__(self, train_dir, test_dir):
-        """Create class."""
+    train_dir = ""
+    test_dir = ""
+    classID = ""
+    def __init__(self, train_dir, test_dir, classID):
         self.train_dir = train_dir
         self.test_dir = test_dir
+        self.classID = classID
 
     def load_data(self):
-        """Load the data."""
         features, labels = [], []
 
         for source in [self.train_dir, self.test_dir]:
             if os.path.isdir(source):
-                classCount = 0
                 input, output = [], []
-                folderContent = os.listdir(source)
-                folderContent = folderContent.sort()
-                for class_name in tqdm(iterable=folderContent, total=len(folderContent)):
-                    if classCount > num_classes:
-                        break
-                    classCount += 1
-                    if os.path.isdir(source + class_name):
-                        for img_name in os.listdir(source + class_name):
-                            img = cv2.imread(os.path.join(source, class_name, img_name), cv2.IMREAD_GRAYSCALE)
-                            img = cv2.resize(img, (image_size,image_size))
-                            input.append(img)
-                            output.append(class_name)  # or other method to convert label
+                for img_name in os.listdir(source):
+                    img = cv2.imread(os.path.join(source, img_name), cv2.IMREAD_GRAYSCALE)
+                    img = cv2.bitwise_not(img)
+                    img = cv2.resize(img, (image_size,image_size))
+                    input.append(img)
+                    output.append(self.classID)
 
         features.append(input)
         labels.append(output)
@@ -65,6 +60,35 @@ class ImageLoader:
                     np.array(labels[0], dtype=np.float32)],
                 [np.array(features[1], dtype=np.float32),
                     np.array(labels[1], dtype=np.float32)]]
+
+
+class DataReader():
+    dir = ""
+    lableID = -1
+    dataset = None
+    trainDataSize = 0
+
+    def __init__(self, dir, dirId):
+        self.dir = dir
+        self.lableID = dirId
+
+        imageLoader = ImageLoader(dir, '', dirId)
+        (trainX, trainY), (testX, testY) = imageLoader.load_data()
+        all_digits = np.concatenate([trainX, testX])
+        all_labels = np.concatenate([trainY, testY])
+
+        # Scale the pixel values to [0, 1] range, add a channel dimension to
+        # the images, and one-hot encode the labels.
+        all_digits = all_digits.astype("float32") / 255.0
+        all_digits = np.reshape(all_digits, (-1, 28, 28, 1))
+        all_labels = keras.utils.to_categorical(all_labels, num_classes)
+        self.trainDataSize = len(all_digits)
+
+        # Create tf.data.Dataset.
+        dataset = tf.data.Dataset.from_tensor_slices((all_digits, all_labels))
+        dataset = dataset.shuffle(buffer_size=1024).batch(batch_size)
+
+        self.dataset = dataset
 
 
 # setup the class
@@ -161,8 +185,6 @@ class ConditionalGAN(keras.Model):
             "d_loss": self.disc_loss_tracker.result(),
         }
 
-
-
 # Generator and Discriminator:
 # Create the discriminator.
 discriminator = keras.Sequential(
@@ -196,6 +218,32 @@ generator = keras.Sequential(
     name="generator",
 )
 
+def train(allDatasets, gan, epochs):
+    print("Training started")
+    for epoch in range(epochs):
+        start = time.time()
+
+        print(f"Epoch {epoch + 1} of {epochs} is in progress...")
+        count = 0
+        for image_batch in CreateDataSet(allDatasets):
+            returnVal = gan.train_step(image_batch)
+            g_loss = float(returnVal['g_loss'])
+            d_loss = float(returnVal['d_loss'])
+            print(f"Generator loss: {g_loss:.4f} Discriminator loss: {d_loss:.4f} Iteration: {count}", end="\r")
+            count += 1
+
+        print("Done!")
+        print(f"Time for epoch {epoch + 1} is {time.time()-start} sec")
+
+def stack(*inputs):
+    return tf.stack(inputs)
+
+def CreateDataSet(dataArray):
+    returnSet = dataArray[0]
+    for data in dataArray[1:]:
+        returnSet = returnSet.concatenate(data)
+    return returnSet
+
 # Train the gan:
 cond_gan = ConditionalGAN(
     discriminator=discriminator, generator=generator, latent_dim=latent_dim
@@ -207,27 +255,39 @@ cond_gan.compile(
 )
 
 # Load dataset
+
+allDatasets = []
+dataDir = os.listdir('../Data/Output/')
+print("Loading data...")
+for dirID in tqdm(iterable=dataDir, total=len(dataDir)):
+    dr = DataReader('../Data/Output/' + dirID, dirID)
+    allDatasets.append(dr.dataset)
+
 #cifar10 = ImageLoader('../Data/Output/', '')
 #(trainX, trainY), (testX, testY) = cifar10.load_data()
-(trainX, trainY), (testX, testY) = keras.datasets.mnist.load_data()
-all_digits = np.concatenate([trainX, testX])
-all_labels = np.concatenate([trainY, testY])
+#(trainX, trainY), (testX, testY) = keras.datasets.mnist.load_data()
+#all_digits = np.concatenate([trainX, testX])
+#all_labels = np.concatenate([trainY, testY])
 
 # Scale the pixel values to [0, 1] range, add a channel dimension to
 # the images, and one-hot encode the labels.
-all_digits = all_digits.astype("float32") / 255.0
-all_digits = np.reshape(all_digits, (-1, 28, 28, 1))
-all_labels = keras.utils.to_categorical(all_labels, num_classes)
+#all_digits = all_digits.astype("float32") / 255.0
+#all_digits = np.reshape(all_digits, (-1, 28, 28, 1))
+#all_labels = keras.utils.to_categorical(all_labels, num_classes)
+#trainDataSize = len(all_digits)
 
 # Create tf.data.Dataset.
-dataset = tf.data.Dataset.from_tensor_slices((all_digits, all_labels))
-dataset = dataset.shuffle(buffer_size=1024).batch(batch_size)
+#dataset = tf.data.Dataset.from_tensor_slices((all_digits, all_labels))
+#dataset = dataset.shuffle(buffer_size=1024).batch(batch_size)
+#dataset = dataset.batch(batch_size)
 
-print(f"Shape of training images: {all_digits.shape}")
-print(f"Shape of training labels: {all_labels.shape}")
+#print(f"Shape of training images: {all_digits.shape}")
+#print(f"Shape of training labels: {all_labels.shape}")
 
 #train
-cond_gan.fit(dataset, epochs=epoch_count)
+train(allDatasets,cond_gan,epoch_count)
+#cond_gan.fit(dataset, epochs=epoch_count)
+trained_gen = cond_gan.generator
 
 
 
@@ -258,9 +318,6 @@ cond_gan.fit(dataset, epochs=epoch_count)
 
 
 # interpolate
-# We first extract the trained generator from our Conditiona GAN.
-trained_gen = cond_gan.generator
-
 sentinel = True
 while(sentinel):
     Question = input("Enter a new index to generate (0-" + str(num_classes)+ ")(type N to exit):")
