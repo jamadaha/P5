@@ -196,7 +196,7 @@ def CreateDataSet(dataArray):
     return returnSet.shuffle(buffer_size=1024)
 
 def GetDatetimeFromSeconds(seconds):
-    return time.strftime("%H:%M:%S", time.gmtime(n))
+    return time.strftime("%H:%M:%S", time.gmtime(seconds))
 
 # Train the gan:
 cond_gan = ConditionalGAN(
@@ -209,42 +209,15 @@ cond_gan.compile(
 )
 
 # Load dataset
-
-#(trainX, trainY), (testX, testY) = keras.datasets.mnist.load_data()
-#all_digits = np.concatenate([trainX, testX])
-#all_labels = np.concatenate([trainY, testY])
-
-#all_digits = all_digits.astype("float32") / 255.0
-#all_digits = np.reshape(all_digits, (-1, 28, 28, 1))
-#all_labels = keras.utils.to_categorical(all_labels, num_classes)
-
-#dataset = tf.data.Dataset.from_tensor_slices((all_digits, all_labels))
-#dataset = dataset.shuffle(buffer_size=1024).batch(batch_size)
-
-#print(f"Shape of training images: {all_digits.shape}")
-#print(f"Shape of training labels: {all_labels.shape}")
-
-#allDatasets.append(dataset)
-
-#totalImageCount = 0
-#dataDir = os.listdir('../Data/Output/')
-#print("Loading data...")
-#for dirID in tqdm(iterable=dataDir, total=len(dataDir)):
-#    dr = DataReader('../Data/Output/' + dirID, dirID)
-#    totalImageCount += dr.trainDataSize
-#    allDatasets.append(dr.dataset)
-#print(f"A total of {totalImageCount} have been loaded!")
-
-dataLoader = dl.DatasetLoader('../Data/Output/','')
+dataLoader = dl.DatasetLoader('../Data/Output/','',(image_size,image_size))
 dataLoader.LoadTrainDatasets()
 dataArray = dataLoader.DataSets
 
-bulkDatasetFormatter = df.BulkDatasetFormatter(dataArray, num_classes,batch_size,(image_size,image_size))
+bulkDatasetFormatter = df.BulkDatasetFormatter(dataArray, num_classes,batch_size)
 tensorDatasets = bulkDatasetFormatter.ProcessData();
 
 #train
 train(tensorDatasets,cond_gan,epoch_count)
-#cond_gan.fit(dataset, epochs=epoch_count)
 trained_gen = cond_gan.generator
 
 
