@@ -9,6 +9,7 @@ class DataExtractor:
     DataPath = ""
     Letters = {}
     TS = None
+    LetterOutputIndex = {}
 
     def __init__(self, outputPath, dataPath, textSequence):
         self.OutputPath = outputPath
@@ -60,7 +61,6 @@ class DataExtractor:
 
     def CountNames(self, infoList):
         from tqdm import tqdm
-        import os
         print("Counting letters")
 
         # Populate lettercount with zeros
@@ -89,9 +89,13 @@ class DataExtractor:
             if str.islower(letter):
                 outputPath = basePath + '_'
             outputPath += letter
+        elif format == 'Number':
+            outputPath += str(ord(letter))
+        elif format == 'ZeroIndexed':
+            if not letter in self.LetterOutputIndex:
+                self.LetterOutputIndex[letter] = {}
+                self.LetterOutputIndex[letter]['index'] = len(self.LetterOutputIndex) - 1
+            outputPath += str(self.LetterOutputIndex[letter]['index'])
         else:
-            if format == 'Number':
-                outputPath += str(ord(letter))
-            else:
-                raise Exception("Invalid output format: " + format + " Should be 'Letter' or 'Number'")
+            raise Exception("Invalid output format: " + format + " Should be 'Letter' or 'Number'")
         return outputPath
