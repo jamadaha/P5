@@ -11,6 +11,7 @@ import os
 import PIL
 from tensorflow.keras import layers
 import time
+import math
 
 from IPython import display
 
@@ -52,10 +53,11 @@ def normalizeImage(jpg):
     jpgMatrix = (jpgMatrix - 127.5) / 127.5  # Normalize the images to [-1, 1]
 
 def process_csv_data(row):
-    return {
-        "image": normalizeImage(ImageFromRow(row)),
-        "labels": LabelsFromRow(row)
-    }
+    return normalizeImage(ImageFromRow(row));
+    #return {
+    #    "image": normalizeImage(ImageFromRow(row)),
+    #    "labels": LabelsFromRow(row)
+    #}
 
 trainData = np.array([ImageFromRow(row[1]) for row in csvData.iterrows()])
 
@@ -92,21 +94,24 @@ def generateAndSaveImage(epoch):
 
 
 def train(dataset, epochs):
-  for epoch in range(epochs):
-    start = time.time()
+    epoch = 0
+    while epoch < epochs:
+    #for epoch in range(epochs):
+        start = time.time()
 
-    for image_batch in dataset:
-        gan.Train(image_batch, image_batch)
-        #train_step(image_batch)
+        for image_batch in dataset:
+            gan.Train(image_batch, image_batch)
+            #train_step(image_batch)
 
 
-    print('Time for epoch {} is {} sec'.format(epoch + 1, time.time() - start))
+        print('Time for epoch {} is {} sec'.format(epoch + 1, time.time() - start))
 
-    # Save the model every 15 epochs
-    if (epoch + 1) % 15 == 0:
-        gan.SaveCheckpoint('ckpt_at_epoch_{:04d}'.format(epoch))
-        generateAndSaveImage(epoch)
+        # Save the model every 15 epochs
+        if (epoch + 1) % 15 == 0:
+            gan.SaveCheckpoint('ckpt_at_epoch_{:04d}'.format(epoch))
+            generateAndSaveImage(epoch)
+        epoch = epoch + 1
 
 #Train Model
-train(dataset=train_dataset, epochs=2000)
+train(dataset=train_dataset, epochs=math.inf)
 

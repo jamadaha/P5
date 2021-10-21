@@ -30,6 +30,11 @@ def generator_loss(fake_output):
 class GAN(object):
     """description of class"""
 
+    Generator: Generator.Generator
+    GeneratorOptimizer: tf.keras.optimizers
+    Discriminator: Discriminator.Discriminator
+    DiscriminatorOptimizer: tf.keras.optimizers
+
     def __init__(self, checkpointDir):
         self.Generator = Generator.Generator()
         self.GeneratorOptimizer = tf.keras.optimizers.Adam(1e-4)
@@ -42,7 +47,7 @@ class GAN(object):
                                          generator=self.Generator.model,
                                          discriminator=self.Discriminator.model)
 
-    #@tf.function
+    @tf.function
     def Train(self, image, label):
 
         BATCH_SIZE = 256
