@@ -12,6 +12,9 @@ if os.path.exists('override-config.ini'):
 else:
     __config.read('config.ini')
 
+def GetIntValue(category, key):
+    return int(__config[category][key])
+
 def GetStringValue(category, key):
     return __config[category][key].strip('"')
 

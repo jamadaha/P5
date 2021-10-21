@@ -16,7 +16,7 @@ class DataExtractor:
         self.DataPath = dataPath
         self.TS = textSequence
 
-    def Extract(self, outputFormat):
+    def ExtractSequence(self, outputFormat):
         import zipfile
         import os
         from tqdm import tqdm
@@ -46,6 +46,30 @@ class DataExtractor:
                     zf.extract(member=fileInfo, path=outputPath)
                     self.Letters[extractionLetter]['Index'] += 1
 
+    def ExtractSpecifiedDistribution(self, outputFormat, minCount, maxCount):
+        import zipfile
+        import os
+        from tqdm import tqdm
+        if os.path.isdir(self.OutputPath):
+            return
+        print("Beginning extraction (This can take a bit to start)")
+        os.makedirs(self.OutputPath)
+        with zipfile.ZipFile(self.DataPath, "r") as zf:
+            zipInfos = self.FilterNameList(zf.infolist())
+            self.CountNames(zipInfos)
+            self.RemoveLettersBelowLimit(minCount)
+            print("Extracting")
+            for letter in tqdm(iterable=self.Letters, total=len(self.Letters)):
+                letterMax = min(maxCount, self.Letters[letter]['Count'])
+                for i in range(0, letterMax):
+                    fileInfo = zipInfos[self.Letters[letter]
+                                        ['StartIndex'] + i]
+                    fileInfo.filename = str(i) + '.png'
+                    outputPath = self.CreateOutputPath(
+                        self.OutputPath, letter, outputFormat)
+                    zf.extract(member=fileInfo, path=outputPath)
+                    self.Letters[letter]['Index'] += 1
+
     def FilterNameList(self, zipInfos):
         from tqdm import tqdm
 
@@ -58,6 +82,15 @@ class DataExtractor:
                     tempInfoList.append(i)
 
         return tempInfoList
+
+    def RemoveLettersBelowLimit(self, minCount):
+        tempLetters = {}
+        for letter in self.Letters:
+            if self.Letters[letter]['Count'] > minCount:
+                tempLetters[letter] = self.Letters[letter]
+
+
+        self.Letters = tempLetters
 
     def CountNames(self, infoList):
         from tqdm import tqdm

@@ -25,9 +25,20 @@ ftg = DataExtractor(
     cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterPath") +
     cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"),
     ts)
-ftg.Extract(
-    cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat")
-)
+
+minCount = cfg.GetIntValue("DATAGENERATOR", "MinimumLetterCount")
+maxCount = cfg.GetIntValue("DATAGENERATOR", "MaximumLetterCount")
+
+if minCount == 0 and maxCount == 0:
+    ftg.ExtractSequence(
+        cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat")
+    )
+else:
+    ftg.ExtractSpecifiedDistribution(
+        cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat"),
+        minCount,
+        maxCount
+    )
 
 print("Dataset generated!")
 input("Press Enter to exit...")
