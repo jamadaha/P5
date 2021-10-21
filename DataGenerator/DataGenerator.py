@@ -25,7 +25,9 @@ ftg = DataExtractor(
     cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterPath") +
     cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"),
     ts)
-ftg.Extract()
+ftg.Extract(
+    cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat")
+)
 
 print("Dataset generated!")
 input("Press Enter to exit...")

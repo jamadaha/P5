@@ -15,7 +15,7 @@ class DataExtractor:
         self.DataPath = dataPath
         self.TS = textSequence
 
-    def Extract(self):
+    def Extract(self, outputFormat):
         import zipfile
         import os
         from tqdm import tqdm
@@ -40,7 +40,7 @@ class DataExtractor:
                         self.Letters[extractionLetter]['Index']) + '.png'
 
                     outputPath = self.CreateOutputPath(
-                        self.OutputPath, extractionLetter)
+                        self.OutputPath, extractionLetter, outputFormat)
 
                     zf.extract(member=fileInfo, path=outputPath)
                     self.Letters[extractionLetter]['Index'] += 1
@@ -83,9 +83,15 @@ class DataExtractor:
                             info)
                     self.Letters[letter]['Count'] += 1
 
-    def CreateOutputPath(self, basePath, letter):
+    def CreateOutputPath(self, basePath, letter, format):
         outputPath = basePath
-        if str.islower(letter):
-            outputPath = basePath + '_'
-        outputPath += letter
+        if format == 'Letter':
+            if str.islower(letter):
+                outputPath = basePath + '_'
+            outputPath += letter
+        else:
+            if format == 'Number':
+                outputPath += str(ord(letter))
+            else:
+                raise Exception("Invalid output format: " + format + " Should be 'Letter' or 'Number'")
         return outputPath
