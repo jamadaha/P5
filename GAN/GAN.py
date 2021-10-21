@@ -14,12 +14,12 @@ import shutil
 import time
 
 #Constants
-batch_size = 64
+batch_size = 32
 num_channels = 1
 num_classes = 10
 image_size = 28
 latent_dim = 128
-epoch_count = 5
+epoch_count = 10
 
 generator_in_channels = latent_dim + num_classes
 discriminator_in_channels = num_channels + num_classes
@@ -242,7 +242,7 @@ def CreateDataSet(dataArray):
     returnSet = dataArray[0]
     for data in dataArray[1:]:
         returnSet = returnSet.concatenate(data)
-    return returnSet
+    return returnSet.shuffle(buffer_size=1024)
 
 # Train the gan:
 cond_gan = ConditionalGAN(
@@ -257,11 +257,14 @@ cond_gan.compile(
 # Load dataset
 
 allDatasets = []
+totalImageCount = 0
 dataDir = os.listdir('../Data/Output/')
 print("Loading data...")
 for dirID in tqdm(iterable=dataDir, total=len(dataDir)):
     dr = DataReader('../Data/Output/' + dirID, dirID)
+    totalImageCount += dr.trainDataSize
     allDatasets.append(dr.dataset)
+print(f"A total of {totalImageCount} have been loaded!")
 
 #cifar10 = ImageLoader('../Data/Output/', '')
 #(trainX, trainY), (testX, testY) = cifar10.load_data()
