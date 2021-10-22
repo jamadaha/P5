@@ -9,7 +9,7 @@ def CheckAndInstall(packageName, installName = None):
         if not installName:
             installName = packageName
 
-        if not os.environ["AutoPackageInstaller_YesToAllModules"]:
+        if not os.getenv("AutoPackageInstaller_YesToAllModules"):
             os.environ["AutoPackageInstaller_YesToAllModules"] = "False"
 
         if os.environ["AutoPackageInstaller_YesToAllModules"] == "True":
