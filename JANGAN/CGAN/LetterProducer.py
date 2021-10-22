@@ -1,4 +1,4 @@
-import AutoPackageInstaller as ap
+from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")

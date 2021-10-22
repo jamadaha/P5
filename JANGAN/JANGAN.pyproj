@@ -21,7 +21,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CGAN\CGAN.py" />
     <Compile Include="CGAN\CGANKerasModel.py" />
     <Compile Include="CGAN\CGANTrainer.py" />
     <Compile Include="CGAN\DatasetFormatter.py" />
@@ -32,7 +31,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataGenerator\DataExtractor.py" />
-    <Compile Include="DataGenerator\DataGenerator.py" />
     <Compile Include="DataGenerator\FileImporter.py" />
     <Compile Include="DataGenerator\SharedFunctions.py" />
     <Compile Include="DataGenerator\TextSequence.py" />

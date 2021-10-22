@@ -18,14 +18,14 @@ class FileImporter:
         self.ImportLetters()
 
     def ImportTexts(self):
-        from SharedFunctions import DownloadIfNotExist
+        from . import SharedFunctions as sf
         print("Importing texts")
         for file in self.TextDownloadURL:
-            DownloadIfNotExist(
+            sf.DownloadIfNotExist(
                 self.TextDownloadURL[file], self.TextPath, file + '.txt')
 
     def ImportLetters(self):
-        from SharedFunctions import DownloadIfNotExist
+        from . import SharedFunctions as sf
         print("Importing data")
-        return DownloadIfNotExist(
+        return sf.DownloadIfNotExist(
             self.LetterDownloadURL, self.TempDownloadLetterPath, self.TempDownloadLetterFileName)

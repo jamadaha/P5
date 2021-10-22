@@ -1,4 +1,4 @@
-import AutoPackageInstaller as ap
+from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
 
@@ -9,11 +9,11 @@ class ConditionalGAN(keras.Model):
     ImageSize = 0
     NumberOfClasses = 0
 
-    def __init__(self, discriminator, generator, latent_dim, imageSize, numberOfClasses):
+    def __init__(self, discriminator, generator, latentDimension, imageSize, numberOfClasses):
         super(ConditionalGAN, self).__init__()
         self.discriminator = discriminator
         self.generator = generator
-        self.latent_dim = latent_dim
+        self.latent_dim = latentDimension
         self.gen_loss_tracker = keras.metrics.Mean(name="generator_loss")
         self.disc_loss_tracker = keras.metrics.Mean(name="discriminator_loss")
         self.ImageSize = imageSize

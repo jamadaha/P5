@@ -1,4 +1,4 @@
-import AutoPackageInstaller as ap
+from . import AutoPackageInstaller as ap
 ap.CheckAndInstall("configparser")
 ap.CheckAndInstall("json")
 
