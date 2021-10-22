@@ -23,11 +23,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-    - name: Set Environment Variables
-      run: |
-        import os
-        os.environ["AutoPackageInstaller_YesToAllModules"] = "True"
     - name: Test with unittest
       run: |
         cd JANGAN
         python -m unittest discover -p *Tests.py
+      env:
+        AutoPackageInstaller_YesToAllModules: "True"
