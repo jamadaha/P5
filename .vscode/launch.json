@@ -10,9 +10,8 @@
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
-      "env": { "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}" },
-      "cwd": "${fileDirname}"
-
+      "cwd": "${workspaceFolder}/JANGAN",
+      "env": { "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}" }
     }
   ]
 }

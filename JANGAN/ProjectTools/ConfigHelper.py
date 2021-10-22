@@ -1,4 +1,4 @@
-from . import AutoPackageInstaller as ap
+from ProjectTools import AutoPackageInstaller as ap
 ap.CheckAndInstall("configparser")
 ap.CheckAndInstall("json")
 

@@ -4,12 +4,12 @@ ap.CheckAndInstall("tensorflow")
 
 from tensorflow import keras
 
-from . import DatasetLoader as dl
-from . import DatasetFormatter as df
-from . import CGANKerasModel as km
-from . import LayerDefinition as ld
-from . import LetterProducer as lp
-from . import CGANTrainer as ct
+from CGAN import DatasetLoader as dl
+from CGAN import DatasetFormatter as df
+from CGAN import CGANKerasModel as km
+from CGAN import LayerDefinition as ld
+from CGAN import LetterProducer as lp
+from CGAN import CGANTrainer as ct
 
 class CGAN():
     BatchSize = -1

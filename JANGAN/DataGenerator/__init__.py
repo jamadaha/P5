@@ -1,6 +1,6 @@
-from . import FileImporter as fi
-from . import DataExtractor as de
-from . import TextSequence as ts
+from DataGenerator import FileImporter as fi
+from DataGenerator import DataExtractor as de
+from DataGenerator import TextSequence as ts
 
 class DataGenerator():
     FileImporter_TextPath = ""
