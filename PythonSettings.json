@@ -1,6 +1,0 @@
-{
-  "TestFramework": "pytest",
-  "UnitTestRootDirectory": "testing",
-  "UnitTestPattern": "*Tests.py",
-  "SearchPaths": [ ".\\ProjectToolsTests" ]
-}
