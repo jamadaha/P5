@@ -7,6 +7,8 @@ import os
 import json
 
 __config = configparser.ConfigParser()
+if not os.path.exists('config.ini'):
+    raise Exception('config.ini not found!', os.path)
 if os.path.exists('override-config.ini'):
     __config.read(['config.ini','override-config.ini'])
 else:
