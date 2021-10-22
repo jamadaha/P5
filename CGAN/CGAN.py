@@ -46,7 +46,10 @@ cond_gan.compile(
 )
 
 # Load dataset
-dataLoader = dl.DatasetLoader('../Data/Output/','',(image_size,image_size))
+dataLoader = dl.DatasetLoader(
+    cfg.GetStringValue("CGAN", "TrainDatasetDir"),
+    cfg.GetStringValue("CGAN", "TestDatasetDir"),
+    (image_size,image_size))
 dataLoader.LoadTrainDatasets()
 dataArray = dataLoader.DataSets
 
@@ -81,5 +84,5 @@ while(sentinel):
 
     letterProducer = lp.LetterProducer(trained_gen, num_classes, latent_dim)
 
-    images = letterProducer.GenerateLetter(value, 10)
+    images = letterProducer.GenerateLetter(value, imageCountToProduce)
     letterProducer.SaveImagesAsGif(images)
