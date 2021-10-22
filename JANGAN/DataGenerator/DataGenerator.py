@@ -1,6 +1,3 @@
-import sys
-sys.path.append('./ProjectTools')
-
 import ConfigHelper as cfg
 
 
