@@ -25,5 +25,6 @@ jobs:
         python -m pip install --upgrade pip
     - name: Test with unittest
       run: |
+        os.environ["AutoPackageInstaller_YesToAllModules"] = "True"
         cd JANGAN
         python -m unittest discover -p *Tests.py
