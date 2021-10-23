@@ -1,8 +1,7 @@
-import AutoPackageInstaller as ap
+from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tqdm")
 ap.CheckAndInstall("zipfile")
-
 
 class DataExtractor:
     OutputPath = ""

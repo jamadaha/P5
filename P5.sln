@@ -3,19 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "DataGenerator", "DataGenerator\DataGenerator.pyproj", "{59BCF16B-1620-4B42-BBD5-2BE369B2DB37}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A81B976-0638-435E-A185-05BA44516EF7}"
-	ProjectSection(SolutionItems) = preProject
-		config.ini = config.ini
-		override-config.ini = override-config.ini
-	EndProjectSection
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ProjectTools", "ProjectTools\ProjectTools.pyproj", "{FFF83435-A3B2-4691-BA5D-DD5CE0EA58EB}"
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ProjectToolsTests", "ProjectToolsTests\ProjectToolsTests.pyproj", "{30D1DFF7-F84F-4FC8-897B-E28809E9651C}"
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "CGAN", "CGAN\CGAN.pyproj", "{D2B99FC9-B101-4262-8A22-77A10E88354C}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "JANGAN", "JANGAN\JANGAN.pyproj", "{D4E30B41-8BE9-4594-925B-4B04BA96C32E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +11,8 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{59BCF16B-1620-4B42-BBD5-2BE369B2DB37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59BCF16B-1620-4B42-BBD5-2BE369B2DB37}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFF83435-A3B2-4691-BA5D-DD5CE0EA58EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFF83435-A3B2-4691-BA5D-DD5CE0EA58EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30D1DFF7-F84F-4FC8-897B-E28809E9651C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30D1DFF7-F84F-4FC8-897B-E28809E9651C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2B99FC9-B101-4262-8A22-77A10E88354C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2B99FC9-B101-4262-8A22-77A10E88354C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4E30B41-8BE9-4594-925B-4B04BA96C32E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E30B41-8BE9-4594-925B-4B04BA96C32E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

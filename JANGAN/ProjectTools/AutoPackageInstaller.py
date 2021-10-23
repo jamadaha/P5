@@ -2,14 +2,15 @@ import sys
 import subprocess
 import os
 
-os.environ["AutoPackageInstaller_YesToAllModules"] = "False"
-
 def CheckAndInstall(packageName, installName = None):
     try:
         return __import__(packageName)
     except ImportError:
         if not installName:
             installName = packageName
+
+        if not os.getenv("AutoPackageInstaller_YesToAllModules"):
+            os.environ["AutoPackageInstaller_YesToAllModules"] = "False"
 
         if os.environ["AutoPackageInstaller_YesToAllModules"] == "True":
             print(" --- Installing package " + installName + " ---")
