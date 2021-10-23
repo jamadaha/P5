@@ -6,22 +6,32 @@ import configparser
 import os
 import json
 
-__config = configparser.ConfigParser()
-if not os.path.exists('config.ini'):
-    raise Exception('config.ini not found!', os.path)
-if os.path.exists('override-config.ini'):
-    __config.read(['config.ini','override-config.ini'])
-else:
-    __config.read('config.ini')
+class ConfigHelper():
+    __config = None
+    ConfigDir = ""
+    ConfigOverrideDir = ""
 
-def GetIntValue(category, key):
-    return int(__config[category][key])
+    def __init__(self, configDir = "config.ini", configOverrideDir = "override-config.ini"):
+        self.ConfigDir = configDir;
+        self.ConfigOverrideDir = configOverrideDir
 
-def GetStringValue(category, key):
-    return __config[category][key].strip('"')
+    def LoadConfig(self):
+        self.__config = configparser.ConfigParser()
+        if not os.path.exists(self.ConfigDir):
+            raise Exception(f"'{ConfigDir}' not found!", os.path)
+        if os.path.exists(self.ConfigOverrideDir):
+            self.__config.read([self.ConfigDir, self.ConfigOverrideDir])
+        else:
+            self.__config.read(self.ConfigDir)
 
-def GetJsonValue(category, key):
-    return json.loads(__config[category][key].strip('"'))
+    def GetIntValue(self, category, key):
+        return int(self.__config[category][key])
 
-def CategoryKeyCount(category):
-    return len(__config[category])
+    def GetStringValue(self, category, key):
+        return self.__config[category][key].strip('"')
+
+    def GetJsonValue(self, category, key):
+        return json.loads(self.__config[category][key].strip('"'))
+
+    def CategoryKeyCount(self, category):
+        return len(self.__config[category])
