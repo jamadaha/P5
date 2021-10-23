@@ -18,7 +18,7 @@ class ConfigHelper():
     def LoadConfig(self):
         self.__config = configparser.ConfigParser()
         if not os.path.exists(self.ConfigDir):
-            raise Exception(f"'{ConfigDir}' not found!", os.path)
+            raise Exception(f"'{os.path.abspath(os.getcwd())}\{self.ConfigDir}' not found!")
         if os.path.exists(self.ConfigOverrideDir):
             self.__config.read([self.ConfigDir, self.ConfigOverrideDir])
         else:
