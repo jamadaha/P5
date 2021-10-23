@@ -18,7 +18,7 @@ class ConfigHelper():
     def LoadConfig(self):
         self.__config = configparser.ConfigParser()
         if not os.path.exists(self.ConfigDir):
-            raise Exception(f"'{os.path.abspath(os.getcwd())}\{self.ConfigDir}' not found!")
+            raise ConfigFileNotFoundException(f"'{os.path.abspath(os.getcwd())}\{self.ConfigDir}' not found!")
         if os.path.exists(self.ConfigOverrideDir):
             self.__config.read([self.ConfigDir, self.ConfigOverrideDir])
         else:
@@ -26,12 +26,12 @@ class ConfigHelper():
 
     def CheckIfCategoryExists(self, category):
         if not self.__config.has_section(category):
-            raise Exception(f"Error! Category '{category}' not found in the config file!")
+            raise CategoryNotFoundException(f"Error! Category '{category}' not found in the config file!")
 
     def CheckIfKeyExists(self, category, key):
         self.CheckIfCategoryExists(category)
         if not self.__config.has_option(category, key):
-            raise Exception(f"Error! Key '{key}' not found in the category '{category}' from the config file!")
+            raise KeyNotFoundException(f"Error! Key '{key}' not found in the category '{category}' from the config file!")
 
     def GetIntValue(self, category, key):
         self.CheckIfKeyExists(category,key)
@@ -48,3 +48,12 @@ class ConfigHelper():
     def CategoryKeyCount(self, category):
         self.CheckIfCategoryExists(category)
         return len(self.__config[category])
+
+class CategoryNotFoundException(Exception):
+    pass
+
+class KeyNotFoundException(Exception):
+    pass
+
+class ConfigFileNotFoundException(Exception):
+    pass
