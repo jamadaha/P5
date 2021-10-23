@@ -24,14 +24,27 @@ class ConfigHelper():
         else:
             self.__config.read(self.ConfigDir)
 
+    def CheckIfCategoryExists(self, category):
+        if not self.__config.has_section(category):
+            raise Exception(f"Error! Category '{category}' not found in the config file!")
+
+    def CheckIfKeyExists(self, category, key):
+        self.CheckIfCategoryExists(category)
+        if not self.__config.has_option(category, key):
+            raise Exception(f"Error! Key '{key}' not found in the category '{category}' from the config file!")
+
     def GetIntValue(self, category, key):
+        self.CheckIfKeyExists(category,key)
         return int(self.__config[category][key])
 
     def GetStringValue(self, category, key):
+        self.CheckIfKeyExists(category,key)
         return self.__config[category][key].strip('"')
 
     def GetJsonValue(self, category, key):
+        self.CheckIfKeyExists(category,key)
         return json.loads(self.__config[category][key].strip('"'))
 
     def CategoryKeyCount(self, category):
+        self.CheckIfCategoryExists(category)
         return len(self.__config[category])
