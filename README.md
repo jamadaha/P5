@@ -1,4 +1,5 @@
-[![Python Tests](https://github.com/jamadaha/P5/actions/workflows/python-app.yml/badge.svg)](https://github.com/jamadaha/P5/actions/workflows/python-app.yml)
+[![Python Windows Tests](https://github.com/jamadaha/P5/actions/workflows/windowsTests.yml/badge.svg?branch=main&event=push)](https://github.com/jamadaha/P5/actions/workflows/windowsTests.yml)
+[![Python Linux Tests](https://github.com/jamadaha/P5/actions/workflows/linuxTests.yml/badge.svg?branch=main&event=push)](https://github.com/jamadaha/P5/actions/workflows/linuxTests.yml)
 
 # P5 - Student Project
 

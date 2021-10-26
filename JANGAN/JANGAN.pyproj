@@ -52,9 +52,12 @@
     <Folder Include="CGAN\" />
     <Folder Include="DataGenerator\" />
     <Folder Include="ProjectTools\" />
+    <Folder Include="ProjectTools\TestFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.ini" />
+    <Content Include="ProjectTools\TestFiles\override-test-config.ini" />
+    <Content Include="ProjectTools\TestFiles\test-config.ini" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
