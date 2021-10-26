@@ -40,6 +40,9 @@
     <Compile Include="DataGenerator\__init__.py" />
     <Compile Include="JANGAN.py" />
     <Compile Include="ProjectTools\AutoPackageInstaller.py" />
+    <Compile Include="ProjectTools\AutoPackageInstallerTests.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ProjectTools\ConfigHelper.py" />
     <Compile Include="ProjectTools\InstallScript.py" />
     <Compile Include="ProjectTools\ConfigHelperTests.py" />

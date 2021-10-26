@@ -13,19 +13,24 @@ def CheckAndInstall(packageName, installName = None):
             os.environ["AutoPackageInstaller_YesToAllModules"] = "False"
 
         if os.environ["AutoPackageInstaller_YesToAllModules"] == "True":
-            print(" --- Installing package " + installName + " ---")
-            subprocess.check_call([sys.executable, "-m", "pip", "install", installName])
+            InstallPackage(installName)
         else:
             while True:
-                Question = input("Package '" + installName + "' is missing. Wanna install it? (y/n)(type Y to say yes to all):")
+                Question = GetInput()
                 if Question == "Y":
                     os.environ["AutoPackageInstaller_YesToAllModules"] = "True";
-                    CheckAndInstall(packageName)
+                    CheckAndInstall(installName)
                     break
                 elif Question == "y":
-                    print(" --- Installing package " + installName + " ---")
-                    subprocess.check_call([sys.executable, "-m", "pip", "install", installName])
+                    InstallPackage(installName)
                     break
                 elif Question == "n":
-                    print("Exiting application.")
-                    sys.exit()
+                    break
+
+def GetInput():
+    return input("Package '" + installName + "' is missing. Wanna install it? (y/n)(type Y to say yes to all):")
+
+def InstallPackage(packageName):
+    print(f" --- Installing package '{packageName}' ---")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", packageName])
+    print(f" --- Package '{packageName}' installed! ---")
