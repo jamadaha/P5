@@ -87,7 +87,7 @@ class ConfigHelperTests(unittest.TestCase):
         cfg.LoadConfig()
 
         # ACT
-        length : int = cfg.CategoryKeyCount("TESTCATEGORY1")
+        length : int = cfg.CategoryKeyCount("CATEGORY_WITH_3_ITEMS")
 
         # ASSERT
         self.assertEqual(3, length)
