@@ -2,27 +2,37 @@ import sys
 import subprocess
 import os
 
+AutoUpdate = False
+InstallAllMissingModules = False
+UpdateAllModules = False
+
+__CheckedModules_Updates = {}
+__CheckedModules_Installed = {}
+
 def CheckAndInstall(packageName, installName = None):
-    if not os.getenv("AutoPackageInstaller_AutoUpdate"):
-        os.environ["AutoPackageInstaller_AutoUpdate"] = "False"
+    __CheckForUpdate("pip")
 
     try:
-        mod = __import__(packageName)
-        __CheckForUpdate(mod.__package__)
+        if not packageName in __CheckedModules_Installed:
+            __CheckedModules_Installed[packageName] = True
+            print(f"Checking if package '{packageName}' is installed: ", end='')
+            mod = __import__(packageName)
+            print("GOOD")
+            if AutoUpdate == True:
+                __CheckForUpdate(mod.__package__)
     except ImportError:
+        print("ERROR")
+
         if not installName:
             installName = packageName
 
-        if not os.getenv("AutoPackageInstaller_YesToAllModules"):
-            os.environ["AutoPackageInstaller_YesToAllModules"] = "False"
-
-        if os.environ["AutoPackageInstaller_YesToAllModules"] == "True":
+        if InstallAllMissingModules == True:
             __InstallPackage(installName)
         else:
             while True:
                 Question = input("Package '" + installName + "' is missing. Wanna install it? (y/n)(type Y to say yes to all):")
                 if Question == "Y":
-                    os.environ["AutoPackageInstaller_YesToAllModules"] = "True";
+                    InstallAllMissingModules = True
                     __InstallPackage(installName)
                     break
                 elif Question == "y":
@@ -32,35 +42,33 @@ def CheckAndInstall(packageName, installName = None):
                     break
 
 def __CheckForUpdate(packageName):
-    if os.getenv("AutoPackageInstaller_AutoUpdate") == "True":
-        if packageName != "":
-            if not os.getenv(f"AutoPackageInstaller_HaveCheckedForUpdates_{packageName}"):
-                print(f"Checking package {packageName} for updates...")
+    if packageName != "":
+        if not packageName in __CheckedModules_Updates:
+            __CheckedModules_Updates[packageName] = True
+            print(f"Checking package '{packageName}' for updates: ", end='')
 
-                current_version = __GetCurrentPackageVersion(packageName)
-                latest_version = __GetLatestPackageVersion(packageName)
+            current_version = __GetCurrentPackageVersion(packageName)
+            latest_version = __GetLatestPackageVersion(packageName)
 
-                if latest_version != current_version:
-                    print(f"Warning! A newer version of the '{packageName}' is available! Installed: {current_version}, latest: {latest_version}")
-                    if not os.getenv("AutoPackageInstaller_YesToAllUpdates"):
-                        os.environ["AutoPackageInstaller_YesToAllUpdates"] = "False"
-
-                    if os.environ["AutoPackageInstaller_YesToAllUpdates"] == "True":
-                        __UpdatePackage(packageName)
-                    else:
-                        while True:
-                            Question = input("Package '" + packageName + "' can be updated. Wanna update it? (y/n)(type Y to say yes to all):")
-                            if Question == "Y":
-                                os.environ["AutoPackageInstaller_YesToAllUpdates"] = "True";
-                                __UpdatePackage(packageName)
-                                break
-                            elif Question == "y":
-                                __UpdatePackage(packageName)
-                                break
-                            elif Question == "n":
-                                break
-
-                os.environ[f"AutoPackageInstaller_HaveCheckedForUpdates_{packageName}"] = "True"
+            if latest_version != current_version:
+                print("WARN")
+                print(f"Warning! A newer version of the '{packageName}' is available! Installed: {current_version}, latest: {latest_version}")
+                if UpdateAllModules == True:
+                    __UpdatePackage(packageName)
+                else:
+                    while True:
+                        Question = input("Package '" + packageName + "' can be updated. Wanna update it? (y/n)(type Y to say yes to all):")
+                        if Question == "Y":
+                            UpdateAllModules = True
+                            __UpdatePackage(packageName)
+                            break
+                        elif Question == "y":
+                            __UpdatePackage(packageName)
+                            break
+                        elif Question == "n":
+                            break
+            else:
+                print("GOOD")
 
 def __InstallPackage(packageName):
     print(f" --- Installing package '{packageName}' ---")
@@ -91,5 +99,3 @@ def __GetLatestPackageVersion(packageName):
     latest_version = latest_version.replace(' ','').split(',')[-1]
 
     return latest_version;
-
-CheckAndInstall("pip")

@@ -9,10 +9,18 @@ print("")
 
 print(" --- Checking, installing and updating packages --- ")
 
+from ProjectTools import AutoPackageInstaller as ap
+
 if cfg.GetStringValue("GENERAL","AutoUpdatePackages") == "True":
+    ap.AutoUpdate = True
     os.environ["AutoPackageInstaller_AutoUpdate"] = "True"
 else:
+    ap.AutoUpdate = False
     os.environ["AutoPackageInstaller_AutoUpdate"] = "False"
+
+if os.getenv("AutoPackageInstaller_YesToAllModules"):
+    if os.environ["AutoPackageInstaller_YesToAllModules"] == "True":
+        ap.InstallAllMissingModules = True
 
 import CGAN as cg
 import DataGenerator as dg
