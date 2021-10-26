@@ -2,6 +2,8 @@ import sys
 import subprocess
 import os
 
+this = sys.modules[__name__]
+
 AutoUpdate = False
 InstallAllMissingModules = False
 UpdateAllModules = False
@@ -26,13 +28,13 @@ def CheckAndInstall(packageName, installName = None):
         if not installName:
             installName = packageName
 
-        if InstallAllMissingModules == True:
+        if this.InstallAllMissingModules == True:
             __InstallPackage(installName)
         else:
             while True:
                 Question = input("Package '" + installName + "' is missing. Wanna install it? (y/n)(type Y to say yes to all):")
                 if Question == "Y":
-                    InstallAllMissingModules = True
+                    this.InstallAllMissingModules = True
                     __InstallPackage(installName)
                     break
                 elif Question == "y":
