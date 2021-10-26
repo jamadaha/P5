@@ -15,7 +15,10 @@ else:
     __config.read('config.ini')
 
 def GetIntValue(category, key):
-    return int(__config[category][key])
+    return __config.getint(category, key)
+
+def GetBoolValue(category, key):
+    return __config.getboolean(category, key)
 
 def GetStringValue(category, key):
     return __config[category][key].strip('"')
