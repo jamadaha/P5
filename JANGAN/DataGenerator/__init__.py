@@ -17,6 +17,8 @@ class DataGenerator():
     DataExtractor_MinimumLetterCount = 0
     DataExtractor_MaximumLetterCount = 0
     DataExtractor_OutputLetterFormat = ""
+    DataExtractor_IncludeNumbers = False
+    DataExtractor_IncludeLetters = False
 
     __FileImporter = None
     __DataExtractor = None
@@ -36,7 +38,7 @@ class DataGenerator():
 
         self.TextSequence_TextPath = ts_textPath
 
-    def ConfigureDataExtractor(self, de_OutputLettersPath, de_TempDownloadLetterPath, de_TempDownloadLetterFileName, de_MinimumLetterCount, de_MaximumLetterCount, de_OutputLetterFormat):
+    def ConfigureDataExtractor(self, de_OutputLettersPath, de_TempDownloadLetterPath, de_TempDownloadLetterFileName, de_MinimumLetterCount, de_MaximumLetterCount, de_OutputLetterFormat, de_IncludeNumbers, de_IncludeLetters):
         print("Configuring Data Extractor")
 
         self.DataExtractor_OutputLetterPath = de_OutputLettersPath
@@ -45,6 +47,8 @@ class DataGenerator():
         self.DataExtractor_MinimumLetterCount = de_MinimumLetterCount
         self.DataExtractor_MaximumLetterCount = de_MaximumLetterCount
         self.DataExtractor_OutputLetterFormat = de_OutputLetterFormat
+        self.DataExtractor_IncludeNumbers = de_IncludeNumbers
+        self.DataExtractor_IncludeLetters = de_IncludeLetters
 
     def GenerateData(self):
         print("Generating dataset...")
@@ -65,7 +69,9 @@ class DataGenerator():
             self.DataExtractor_OutputLetterPath,
             self.DataExtractor_TempDownloadLetterPath +
             self.DataExtractor_TempDownloadLetterFileName,
-            self.__TextSequence)
+            self.__TextSequence,
+            self.DataExtractor_IncludeNumbers,
+            self.DataExtractor_IncludeLetters)
 
         if self.DataExtractor_MinimumLetterCount == 0 and self.DataExtractor_MaximumLetterCount == 0:
             self.__DataExtractor.ExtractSequence(
