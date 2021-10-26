@@ -8,7 +8,7 @@ class AutoPackageInstallerTests(unittest.TestCase):
         from ProjectTools import AutoPackageInstaller as ap
 
         # ACT
-        with patch.object(ap, 'GetInput', return_value = 'n') as inputObj:
+        with patch('builtins.input', return_value = 'n'):
             ap.CheckAndInstall("nonexistentpackage")
 
         # ASSERT
@@ -21,8 +21,8 @@ class AutoPackageInstallerTests(unittest.TestCase):
         from ProjectTools import AutoPackageInstaller as ap
 
         # ACT
-        with patch.object(ap, 'InstallPackage', return_value = None) as insPackObj:
-            with patch.object(ap, 'GetInput', return_value = 'Y') as inputObj:
+        with patch.object(ap, '__InstallPackage', return_value = None) as insPackObj:
+            with patch('builtins.input', return_value = 'Y'):
                 ap.CheckAndInstall("nonexistentpackage")
 
         # ASSERT
@@ -35,8 +35,8 @@ class AutoPackageInstallerTests(unittest.TestCase):
         from ProjectTools import AutoPackageInstaller as ap
 
         # ACT
-        with patch.object(ap, 'InstallPackage', return_value = None) as insPackObj:
-            with patch.object(ap, 'GetInput', return_value = 'y') as inputObj:
+        with patch.object(ap, '__InstallPackage', return_value = None) as insPackObj:
+            with patch('builtins.input', return_value = 'y'):
                 ap.CheckAndInstall("nonexistentpackage")
 
         # ASSERT
