@@ -4,16 +4,24 @@ ap.CheckAndInstall("tqdm")
 ap.CheckAndInstall("zipfile")
 
 class DataExtractor:
+    LETTER_RANGE = [*range(65, 91), *range(97, 122)]
+    NUMBER_RANGE = [*range(48, 58)]
+
     OutputPath = ""
     DataPath = ""
     Letters = {}
     TS = None
     LetterOutputIndex = {}
+    IncludeNumbers = 0
+    IncludeLetters = 0
 
-    def __init__(self, outputPath, dataPath, textSequence):
+
+    def __init__(self, outputPath, dataPath, textSequence, includeNumbers, includeLetters):
         self.OutputPath = outputPath
         self.DataPath = dataPath
         self.TS = textSequence
+        self.IncludeNumbers = includeNumbers
+        self.IncludeLetters = includeLetters
 
     def ExtractSequence(self, outputFormat):
         import zipfile
@@ -93,7 +101,12 @@ class DataExtractor:
         print("Counting letters")
 
         # Populate lettercount with zeros
-        for i in [*range(65, 91), *range(97, 122)]:
+        allowedRange = []
+        if (bool(self.IncludeNumbers)):
+            allowedRange += self.NUMBER_RANGE 
+        if (bool(self.IncludeLetters)):
+            allowedRange += self.LETTER_RANGE
+        for i in allowedRange:
             hexLetter = hex(i).split('x')[-1]
             self.Letters[chr(i)] = {}
             self.Letters[chr(i)]['HexLetter'] = hexLetter

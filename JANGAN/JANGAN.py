@@ -20,7 +20,11 @@ datagen.ConfigureDataExtractor(
     cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"),
     cfg.GetIntValue("DATAGENERATOR", "MinimumLetterCount"),
     cfg.GetIntValue("DATAGENERATOR", "MaximumLetterCount"),
-    cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat"))
+    cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat"),
+    cfg.GetIntValue("DATAGENERATOR", "IncludeNumbers"),
+    cfg.GetIntValue("DATAGENERATOR", "IncludeLetters"))
+    
+
 datagen.GenerateData()
 
 print(" --- Done! --- ")
