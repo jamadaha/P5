@@ -17,8 +17,8 @@ class DataGenerator():
     DataExtractor_MinimumLetterCount = 0
     DataExtractor_MaximumLetterCount = 0
     DataExtractor_OutputLetterFormat = ""
-    DataExtractor_IncludeNumbers = 0
-    DataExtractor_IncludeLetters = 0
+    DataExtractor_IncludeNumbers = False
+    DataExtractor_IncludeLetters = False
 
     __FileImporter = None
     __DataExtractor = None

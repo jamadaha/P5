@@ -21,8 +21,8 @@ datagen.ConfigureDataExtractor(
     cfg.GetIntValue("DATAGENERATOR", "MinimumLetterCount"),
     cfg.GetIntValue("DATAGENERATOR", "MaximumLetterCount"),
     cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat"),
-    cfg.GetIntValue("DATAGENERATOR", "IncludeNumbers"),
-    cfg.GetIntValue("DATAGENERATOR", "IncludeLetters"))
+    cfg.GetBoolValue("DATAGENERATOR", "IncludeNumbers"),
+    cfg.GetBoolValue("DATAGENERATOR", "IncludeLetters"))
     
 
 datagen.GenerateData()

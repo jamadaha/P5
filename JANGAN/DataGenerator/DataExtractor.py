@@ -12,8 +12,8 @@ class DataExtractor:
     Letters = {}
     TS = None
     LetterOutputIndex = {}
-    IncludeNumbers = 0
-    IncludeLetters = 0
+    IncludeNumbers = False
+    IncludeLetters = False
 
 
     def __init__(self, outputPath, dataPath, textSequence, includeNumbers, includeLetters):
@@ -102,9 +102,9 @@ class DataExtractor:
 
         # Populate lettercount with zeros
         allowedRange = []
-        if (bool(self.IncludeNumbers)):
+        if (self.IncludeNumbers):
             allowedRange += self.NUMBER_RANGE 
-        if (bool(self.IncludeLetters)):
+        if (self.IncludeLetters):
             allowedRange += self.LETTER_RANGE
         for i in allowedRange:
             hexLetter = hex(i).split('x')[-1]
