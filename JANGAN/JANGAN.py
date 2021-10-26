@@ -1,11 +1,22 @@
 from ProjectTools import ConfigHelper
-
-import CGAN as cg
-import DataGenerator as dg
+import os
 
 print(" --- Loading config files --- ")
 cfg = ConfigHelper.ConfigHelper()
 cfg.LoadConfig()
+print(" --- Done! --- ")
+print("")
+
+print(" --- Checking, installing and updating packages --- ")
+
+if cfg.GetStringValue("GENERAL","AutoUpdatePackages") == "True":
+    os.environ["AutoPackageInstaller_AutoUpdate"] = "True"
+else:
+    os.environ["AutoPackageInstaller_AutoUpdate"] = "False"
+
+import CGAN as cg
+import DataGenerator as dg
+
 print(" --- Done! --- ")
 print("")
 
