@@ -4,7 +4,7 @@ ap.CheckAndInstall("tqdm")
 ap.CheckAndInstall("zipfile")
 
 class DataExtractor:
-    LETTER_RANGE = [*range(65, 91), *range(97, 122)]
+    LETTER_RANGE = [*range(65, 91), *range(97, 123)]
     NUMBER_RANGE = [*range(48, 58)]
 
     OutputPath = ""
