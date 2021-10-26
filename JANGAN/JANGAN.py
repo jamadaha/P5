@@ -1,7 +1,13 @@
-from ProjectTools import ConfigHelper as cfg
+from ProjectTools import ConfigHelper
 
 import CGAN as cg
 import DataGenerator as dg
+
+print(" --- Loading config files --- ")
+cfg = ConfigHelper.ConfigHelper()
+cfg.LoadConfig()
+print(" --- Done! --- ")
+print("")
 
 print(" --- Generating dataset if not there --- ")
 
