@@ -2,40 +2,45 @@ import sys
 import subprocess
 import os
 
-this = sys.modules[__name__]
-
 AutoUpdate = False
-InstallAllMissingModules = False
-UpdateAllModules = False
+InstallAllMissingModules = "Ask"
+UpdateAllModules = "Ask"
 
 __CheckedModules_Updates = {}
 __CheckedModules_Installed = {}
 
 def CheckAndInstall(packageName, installName = None):
-    __CheckForUpdate("pip")
-
     try:
         if not packageName in __CheckedModules_Installed:
             __CheckedModules_Installed[packageName] = True
+
             print(f"Checking if package '{packageName}' is installed: ", end='')
             mod = __import__(packageName)
-            print("GOOD")
+            print("OK")
+
             if AutoUpdate == True:
                 __CheckForUpdate(mod.__package__)
     except ImportError:
-        print("ERROR")
+        print("WARN")
 
         if not installName:
             installName = packageName
 
-        if this.InstallAllMissingModules == True:
+        global InstallAllMissingModules
+
+        if InstallAllMissingModules == "True":
             __InstallPackage(installName)
-        else:
+        elif InstallAllMissingModules == "False":
+            print("Not installing module")
+        elif InstallAllMissingModules == "Ask":
             while True:
-                Question = input("Package '" + installName + "' is missing. Wanna install it? (y/n)(type Y to say yes to all):")
+                Question = input("Package '" + installName + "' is missing. Wanna install it? (y/n)(Do for all Y/N):")
                 if Question == "Y":
-                    this.InstallAllMissingModules = True
+                    InstallAllMissingModules = "True"
                     __InstallPackage(installName)
+                    break
+                if Question == "N":
+                    InstallAllMissingModules = "False"
                     break
                 elif Question == "y":
                     __InstallPackage(installName)
@@ -43,7 +48,7 @@ def CheckAndInstall(packageName, installName = None):
                 elif Question == "n":
                     break
 
-def __CheckForUpdate(packageName):
+def CheckForUpdate(packageName):
     if packageName != "":
         if not packageName in __CheckedModules_Updates:
             __CheckedModules_Updates[packageName] = True
@@ -55,14 +60,22 @@ def __CheckForUpdate(packageName):
             if latest_version != current_version:
                 print("WARN")
                 print(f"Warning! A newer version of the '{packageName}' is available! Installed: {current_version}, latest: {latest_version}")
-                if UpdateAllModules == True:
+
+                global UpdateAllModules
+
+                if UpdateAllModules == "True":
                     __UpdatePackage(packageName)
-                else:
+                elif UpdateAllModules == "False":
+                    print("Not updating")
+                elif UpdateAllModules == "Ask":
                     while True:
-                        Question = input("Package '" + packageName + "' can be updated. Wanna update it? (y/n)(type Y to say yes to all):")
+                        Question = input("Package '" + packageName + "' can be updated. Wanna update it? (y/n)(Do for all Y/N):")
                         if Question == "Y":
-                            UpdateAllModules = True
+                            UpdateAllModules = "True"
                             __UpdatePackage(packageName)
+                            break
+                        if Question == "N":
+                            UpdateAllModules = "False"
                             break
                         elif Question == "y":
                             __UpdatePackage(packageName)
@@ -70,7 +83,7 @@ def __CheckForUpdate(packageName):
                         elif Question == "n":
                             break
             else:
-                print("GOOD")
+                print("OK")
 
 def __InstallPackage(packageName):
     print(f" --- Installing package '{packageName}' ---")

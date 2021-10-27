@@ -7,23 +7,26 @@ cfg.LoadConfig()
 print(" --- Done! --- ")
 print("")
 
-print(" --- Checking, installing and updating packages --- ")
+print(" --- Setting up Auto Package Installer --- ")
 
 from ProjectTools import AutoPackageInstaller as ap
 
-if cfg.GetStringValue("GENERAL","AutoUpdatePackages") == "True":
+if cfg.GetStringValue("AUTOPACKAGEINSTALLER","AutoUpdatePackages") == "True":
     ap.AutoUpdate = True
+
+ap.InstallAllMissingModules = cfg.GetStringValue("AUTOPACKAGEINSTALLER","YesToAllInstalls")
+ap.UpdateAllModules = cfg.GetStringValue("AUTOPACKAGEINSTALLER","YesToAllUpdates")
 
 # This is for GitHub Actions
 if os.getenv("AutoPackageInstaller_YesToAllModules"):
     if os.environ["AutoPackageInstaller_YesToAllModules"] == "True":
         ap.InstallAllMissingModules = True
 
-import CGAN as cg
-import DataGenerator as dg
-
 print(" --- Done! --- ")
 print("")
+
+import CGAN as cg
+import DataGenerator as dg
 
 print(" --- Generating dataset if not there --- ")
 
