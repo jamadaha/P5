@@ -15,8 +15,6 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ProjectTools", "ProjectTool
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ProjectToolsTests", "ProjectToolsTests\ProjectToolsTests.pyproj", "{30D1DFF7-F84F-4FC8-897B-E28809E9651C}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Classifier", "Classifier\Classifier.pyproj", "{736DE8A0-E1F8-4586-846E-37C1994995DB}"
-EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "NumberClassifier", "NumberClassifier\NumberClassifier.pyproj", "{ABF43A01-B03B-4F02-9297-0CA5DA326F5D}"
 EndProject
 Global
@@ -31,8 +29,6 @@ Global
 		{FFF83435-A3B2-4691-BA5D-DD5CE0EA58EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30D1DFF7-F84F-4FC8-897B-E28809E9651C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30D1DFF7-F84F-4FC8-897B-E28809E9651C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{736DE8A0-E1F8-4586-846E-37C1994995DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{736DE8A0-E1F8-4586-846E-37C1994995DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABF43A01-B03B-4F02-9297-0CA5DA326F5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ABF43A01-B03B-4F02-9297-0CA5DA326F5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
