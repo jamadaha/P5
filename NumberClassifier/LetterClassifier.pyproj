@@ -1,0 +1,65 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>abf43a01-b03b-4f02-9297-0ca5da326f5d</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>NumberClassifier.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>LetterClassifier</Name>
+    <RootNamespace>NumberClassifier</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Classifier\CompilerConfigObject.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\LayerConfigObject.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\LetterModel.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataLoader\FittingData.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plotter\PlotData.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plotter\Plotter.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\Classifier.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataLoader\DataLoader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NumberClassifier.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classifier\" />
+    <Folder Include="DataLoader\" />
+    <Folder Include="Plotter\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
