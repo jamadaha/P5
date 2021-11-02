@@ -19,8 +19,7 @@ ap.UpdateAllModules = cfg.GetStringValue("AUTOPACKAGEINSTALLER","YesToAllUpdates
 
 # This is for GitHub Actions
 if os.getenv("AutoPackageInstaller_YesToAllModules"):
-    if os.environ["AutoPackageInstaller_YesToAllModules"] == "True":
-        ap.InstallAllMissingModules = True
+    ap.InstallAllMissingModules = True
 
 print(" --- Done! --- ")
 print("")
