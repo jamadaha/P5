@@ -38,7 +38,9 @@
     <Compile Include="DataGenerator\SharedFunctions.py" />
     <Compile Include="DataGenerator\TextSequence.py" />
     <Compile Include="DataGenerator\__init__.py" />
-    <Compile Include="ExperimentQueue\TestExperiment2.py" />
+    <Compile Include="ExperimentQueue\BaseRun.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ExperimentQueue\TestExperiment.py">
       <SubType>Code</SubType>
     </Compile>
@@ -63,8 +65,10 @@
     <Folder Include="ProjectTools\TestFiles\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config.ini" />
     <Content Include="ExperimentQueueConfig.ini" />
+    <Content Include="ExperimentQueue\BaseRunConfig.ini">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="ExperimentQueue\TestExperimentConfig.ini" />
     <Content Include="ProjectTools\TestFiles\override-test-config.ini" />
     <Content Include="ProjectTools\TestFiles\test-config.ini" />

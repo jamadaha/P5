@@ -39,7 +39,7 @@ class JANGAN():
             self.cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"),
             self.cfg.GetIntValue("DATAGENERATOR", "MinimumLetterCount"),
             self.cfg.GetIntValue("DATAGENERATOR", "MaximumLetterCount"),
-            self.cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat")),
+            self.cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat"),
             self.cfg.GetBoolValue("DATAGENERATOR", "IncludeNumbers"),
             self.cfg.GetBoolValue("DATAGENERATOR", "IncludeLetters"))
         datagen.GenerateData()
