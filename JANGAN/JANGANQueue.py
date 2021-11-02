@@ -24,25 +24,6 @@ def ReloadAllModules():
 
     print(" --- Done! --- ")
 
-def PurgeRunDataFolder(folder):
-    print(" --- Purging training data folder --- ")
-    import os, shutil
-
-    if os.path.exists(folder):
-        for filename in os.listdir(folder):
-            file_path = os.path.join(folder, filename)
-            try:
-                if os.path.isfile(file_path) or os.path.islink(file_path):
-                    os.unlink(file_path)
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
-            except Exception as e:
-                print('Failed to delete %s. Reason: %s' % (file_path, e))
-        shutil.rmtree(folder)
-
-    print(f" --- Done! --- ")
-
-
 from ProjectTools import ConfigHelper    
 
 print(" --- Loading queue config file --- ")
@@ -60,12 +41,11 @@ for key in expDict:
         print(f" --- Iteration {n + 1} out of {count} --- ")
         print("")
 
-        PurgeRunDataFolder(cfg.GetStringValue("DATAGENERATOR","BasePath"));
-
         try:
             import JANGAN as jg
 
             expJANGAN = jg.JANGAN(expDict[key]['ModuleName'], expDict[key]['ConfigFile'])
+            expJANGAN.PurgeRunDataFolder()
             expJANGAN.Run()
             expJANGAN.ProduceOutput()
 
@@ -77,8 +57,6 @@ for key in expDict:
         print("")
         print(f" --- Experiment iteration '{n + 1}' done! --- ")
         print("")
-
-        ReloadAllModules();
 
     print("")
     print(f" --- Experiment '{key}' done! --- ")
