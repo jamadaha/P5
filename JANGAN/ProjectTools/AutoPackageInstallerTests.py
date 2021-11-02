@@ -3,13 +3,17 @@ from unittest.mock import patch
 import os
 from importlib import reload
 
+from ProjectTools import AutoPackageInstaller as ap
+if os.getenv("AutoPackageInstaller_YesToAllModules"):
+    ap.InstallAllMissingModules = True
+
 class AutoPackageInstallerTests(unittest.TestCase):
 
     # Initialization of Module
     #region Initialization of Module
     def test_SetsDefaultOf_AutoUpdate(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
+        reload(ap)
 
         # ACT
         # ASSERT
@@ -17,7 +21,7 @@ class AutoPackageInstallerTests(unittest.TestCase):
 
     def test_SetsDefaultOf_InstallAllMissingModules(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
+        reload(ap)
 
         # ACT
         # ASSERT
@@ -25,7 +29,7 @@ class AutoPackageInstallerTests(unittest.TestCase):
 
     def test_SetsDefaultOf_UpdateAllModules(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
+        reload(ap)
 
         # ACT
         # ASSERT
@@ -37,7 +41,6 @@ class AutoPackageInstallerTests(unittest.TestCase):
 
     def test_CheckAndInstall_IfAsk_SetsInstallAllMissingModulesToTrueIfY(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
         reload(ap)
 
         # ACT
@@ -50,7 +53,6 @@ class AutoPackageInstallerTests(unittest.TestCase):
 
     def test_CheckAndInstall_IfAsk_SetsInstallAllMissingModulesToFalseIfN(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
         reload(ap)
 
         # ACT
@@ -62,7 +64,6 @@ class AutoPackageInstallerTests(unittest.TestCase):
 
     def test_CheckAndInstall_IfAsk_SetsInstallAllMissingModulesUnchangedIfSmallY(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
         reload(ap)
 
         # ACT
@@ -75,7 +76,6 @@ class AutoPackageInstallerTests(unittest.TestCase):
 
     def test_CheckAndInstall_IfAsk_SetsInstallAllMissingModulesUnchangedIfSmallN(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
         reload(ap)
 
         # ACT
@@ -91,7 +91,6 @@ class AutoPackageInstallerTests(unittest.TestCase):
 
     def test_CheckAndInstall_IfAsk_SetsUpdateAllModulesToTrueIfY(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
         reload(ap)
 
         # ACT
@@ -106,7 +105,6 @@ class AutoPackageInstallerTests(unittest.TestCase):
 
     def test_CheckAndInstall_IfAsk_SetsUpdateAllModulesToFalseIfN(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
         reload(ap)
 
         # ACT
@@ -121,7 +119,6 @@ class AutoPackageInstallerTests(unittest.TestCase):
 
     def test_CheckAndInstall_IfAsk_SetsUpdateAllModulesUnchangedIfSmallY(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
         reload(ap)
 
         # ACT
@@ -136,7 +133,6 @@ class AutoPackageInstallerTests(unittest.TestCase):
 
     def test_CheckAndInstall_IfAsk_SetsUpdateAllModulesUnchangedIfSmallN(self):
         # ARRANGE
-        from ProjectTools import AutoPackageInstaller as ap
         reload(ap)
 
         # ACT
