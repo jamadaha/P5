@@ -8,6 +8,7 @@ import DataGenerator as dg
 
 class JANGAN():
     cfg = None
+    cgan = None
 
     def __init__(self, expFile, configFile):
         importlib.import_module(expFile)
@@ -45,7 +46,7 @@ class JANGAN():
         print("")
         print(" --- Training CGAN --- ")
 
-        cgan = cg.CGAN(
+        self.cgan = cg.CGAN(
             self.cfg.GetIntValue("CGAN", "BatchSize"),
             1,
             self.cfg.GetIntValue("CGAN", "NumberOfClasses"),
@@ -57,9 +58,15 @@ class JANGAN():
             self.cfg.GetStringValue("CGAN", "TrainDatasetDir"),
             self.cfg.GetStringValue("CGAN", "TestDatasetDir"))
 
-        cgan.SetupCGAN()
-        cgan.LoadDataset()
-        cgan.TrainGAN()
-        cgan.ProduceLetters()
+        self.cgan.SetupCGAN()
+        self.cgan.LoadDataset()
+        self.cgan.TrainGAN()
+
+        print(" --- Done! --- ")
+
+    def ProduceOutput(self):
+        print(" --- Producing output --- ")
+
+        self.cgan.ProduceLetters()
 
         print(" --- Done! --- ")

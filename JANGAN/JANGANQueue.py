@@ -59,19 +59,27 @@ for key in expDict:
         print(f" --- Iteration {n + 1} out of {count} --- ")
         print("      ")
 
+        PurgeRunDataFolder(cfg.GetStringValue("DATAGENERATOR","BasePath"));
+
         try:
             import JANGAN as jg
 
-            expJANGAN = jg.JANGAN(expDict[key]['ModuleName'], f"ExperimentQueue/{expDict[key]['ConfigFile']}")
+            expJANGAN = jg.JANGAN(expDict[key]['ModuleName'], expDict[key]['ConfigFile'])
             expJANGAN.Run()
+            expJANGAN.ProduceOutput()
+
         except Exception as e:
             print("      ")
             print(f"      ERROR! Experiment '{key}' failed with error '{e}'")
             print("      ")
 
         print("      ")
-        print(f" --- Experiment '{key}' done! --- ")
+        print(f" --- Experiment iteration '{n + 1}' done! --- ")
         print("      ")
 
         ReloadAllModules();
-        PurgeRunDataFolder(cfg.GetStringValue("DATAGENERATOR","BasePath"));
+
+    print("      ")
+    print(f" --- Experiment '{key}' done! --- ")
+    print("      ")
+        
