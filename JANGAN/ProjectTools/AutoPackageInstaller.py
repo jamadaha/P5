@@ -21,7 +21,7 @@ def CheckAndInstall(packageName, installName = None):
             if AutoUpdate == True:
                 __CheckForUpdate(mod.__package__)
     except ImportError:
-        print("WARN")
+        print("ERR")
 
         if not installName:
             installName = packageName
