@@ -47,7 +47,8 @@ cgan = cg.CGAN(
     cfg.GetIntValue("CGAN", "RefreshUIEachXIteration"),
     cfg.GetIntValue("CGAN", "NumberOfFakeImagesToOutput"),
     cfg.GetStringValue("CGAN", "TrainDatasetDir"),
-    cfg.GetStringValue("CGAN", "TestDatasetDir"))
+    cfg.GetStringValue("CGAN", "TestDatasetDir"),
+    cfg.GetStringValue("CGAN", "OutputDir"))
 
 cgan.SetupCGAN()
 cgan.LoadDataset()

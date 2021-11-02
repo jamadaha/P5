@@ -4,15 +4,21 @@ ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
 
 from tensorflow import keras
+from keras_preprocessing.image import array_to_img, save_img
 import tensorflow as tf
 import imageio
+import numpy as np
+from PIL import Image
+import os
 
 class LetterProducer():
+    OutputPath = ""
     TrainedGenerator = None
     NumberOfClasses = 0
     LatentDimension = 0
 
-    def __init__(self, trainedGenerator, numberOfClasses, latentDimension):
+    def __init__(self, outputPath, trainedGenerator, numberOfClasses, latentDimension):
+        self.OutputPath = outputPath
         self.TrainedGenerator = trainedGenerator
         self.NumberOfClasses = numberOfClasses
         self.LatentDimension = latentDimension
@@ -45,3 +51,18 @@ class LetterProducer():
 
         #Generate Gif
         imageio.mimsave('out.gif', images)
+
+    def SaveImages(self, id, images):
+        images *= 255.0
+
+        path = self.OutputPath + str(id) + '/'
+
+        if not os.path.isdir(path):
+            os.makedirs(path)
+
+        # Save images
+        index = 0
+        for image in images:
+            img = Image.fromarray(np.squeeze(image), mode="1")
+            img.save(path + str(index) + ".png", "png")
+            index += 1
