@@ -5,6 +5,7 @@ ap.CheckAndInstall("time")
 
 import tensorflow as tf
 import time
+import os
 
 class CGANTrainer():
     CGAN = None
@@ -49,6 +50,9 @@ class CGANTrainer():
             print(f"Time for epoch {epoch + 1} is {self.GetDatetimeFromSeconds(totalEpochTime)}. Est time remaining for training is {self.GetDatetimeFromSeconds(totalEpochTime*(self.Epochs-(epoch + 1)))}")
 
             if self.SaveCheckpoints:
+                if os.path.exists('checkpoints/cgan_checkpoint.index'):
+                    from ProjectTools import HelperFunctions as hf
+                    hf.DeleteFolderAndAllContents('checkpoints/cgan_checkpoint')
                 self.CGAN.save_weights('checkpoints/cgan_checkpoint')
 
     def CreateDataSet(self, dataArray):
