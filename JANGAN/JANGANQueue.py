@@ -54,10 +54,10 @@ expDict = cfg.GetJsonValue("EXPERIMENTS","ExperimentList");
 for key in expDict:
     count = expDict[key]['AmountOfTimesToRun']
     for n in range(count):
-        print("      ")
+        print("")
         print(f" --- Running experiment '{key}' --- ")
         print(f" --- Iteration {n + 1} out of {count} --- ")
-        print("      ")
+        print("")
 
         PurgeRunDataFolder(cfg.GetStringValue("DATAGENERATOR","BasePath"));
 
@@ -69,17 +69,17 @@ for key in expDict:
             expJANGAN.ProduceOutput()
 
         except Exception as e:
-            print("      ")
+            print("")
             print(f"      ERROR! Experiment '{key}' failed with error '{e}'")
-            print("      ")
+            print("")
 
-        print("      ")
+        print("")
         print(f" --- Experiment iteration '{n + 1}' done! --- ")
-        print("      ")
+        print("")
 
         ReloadAllModules();
 
-    print("      ")
+    print("")
     print(f" --- Experiment '{key}' done! --- ")
-    print("      ")
+    print("")
         
