@@ -1,53 +1,65 @@
-from ProjectTools import ConfigHelper
+import importlib
+from importlib import reload
 
+from ProjectTools import ConfigHelper
+ 
 import CGAN as cg
 import DataGenerator as dg
 
-print(" --- Loading config files --- ")
-cfg = ConfigHelper.ConfigHelper()
-cfg.LoadConfig()
-print(" --- Done! --- ")
-print("")
+class JANGAN():
+    cfg = None
 
-print(" --- Generating dataset if not there --- ")
+    def __init__(self, expFile, configFile):
+        importlib.import_module(expFile)
+        self.LoadConfig(configFile)
 
-datagen = dg.DataGenerator()
-datagen.ConfigureFileImporter(
-    cfg.GetStringValue("DATAGENERATOR","TextPath"),
-    cfg.GetStringValue("DATAGENERATOR","LetterDownloadURL"),
-    cfg.GetJsonValue("DATAGENERATOR","TextDownloadURLS"),
-    cfg.GetStringValue("DATAGENERATOR","TempDownloadLetterPath"),
-    cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"))
-datagen.ConfigureTextSequence(
-    cfg.GetStringValue("DATAGENERATOR", "TextPath"))
-datagen.ConfigureDataExtractor(
-    cfg.GetStringValue("DATAGENERATOR", "OutputLettersPath"),
-    cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterPath"),
-    cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"),
-    cfg.GetIntValue("DATAGENERATOR", "MinimumLetterCount"),
-    cfg.GetIntValue("DATAGENERATOR", "MaximumLetterCount"),
-    cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat"))
-datagen.GenerateData()
+    def LoadConfig(self, configFile):
+        print(" --- Loading experiment config file --- ")
+        self.cfg = ConfigHelper.ConfigHelper(configFile)
+        self.cfg.LoadConfig()
+        print(" --- Done! --- ")
+        print("")
 
-print(" --- Done! --- ")
-print("")
-print(" --- Training CGAN --- ")
+    def Run(self):
+        print(" --- Generating dataset if not there --- ")
 
-cgan = cg.CGAN(
-    cfg.GetIntValue("CGAN", "BatchSize"),
-    1,
-    cfg.GetIntValue("CGAN", "NumberOfClasses"),
-    cfg.GetIntValue("CGAN", "ImageSize"),
-    cfg.GetIntValue("CGAN", "LatentDimension"),
-    cfg.GetIntValue("CGAN", "EpochCount"),
-    cfg.GetIntValue("CGAN", "RefreshUIEachXIteration"),
-    cfg.GetIntValue("CGAN", "NumberOfFakeImagesToOutput"),
-    cfg.GetStringValue("CGAN", "TrainDatasetDir"),
-    cfg.GetStringValue("CGAN", "TestDatasetDir"))
+        datagen = dg.DataGenerator()
+        datagen.ConfigureFileImporter(
+            self.cfg.GetStringValue("DATAGENERATOR","TextPath"),
+            self.cfg.GetStringValue("DATAGENERATOR","LetterDownloadURL"),
+            self.cfg.GetJsonValue("DATAGENERATOR","TextDownloadURLS"),
+            self.cfg.GetStringValue("DATAGENERATOR","TempDownloadLetterPath"),
+            self.cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"))
+        datagen.ConfigureTextSequence(
+            self.cfg.GetStringValue("DATAGENERATOR", "TextPath"))
+        datagen.ConfigureDataExtractor(
+            self.cfg.GetStringValue("DATAGENERATOR", "OutputLettersPath"),
+            self.cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterPath"),
+            self.cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"),
+            self.cfg.GetIntValue("DATAGENERATOR", "MinimumLetterCount"),
+            self.cfg.GetIntValue("DATAGENERATOR", "MaximumLetterCount"),
+            self.cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat"))
+        datagen.GenerateData()
 
-cgan.SetupCGAN()
-cgan.LoadDataset()
-cgan.TrainGAN()
-cgan.ProduceLetters()
+        print(" --- Done! --- ")
+        print("")
+        print(" --- Training CGAN --- ")
 
-print(" --- Done! --- ")
+        cgan = cg.CGAN(
+            self.cfg.GetIntValue("CGAN", "BatchSize"),
+            1,
+            self.cfg.GetIntValue("CGAN", "NumberOfClasses"),
+            self.cfg.GetIntValue("CGAN", "ImageSize"),
+            self.cfg.GetIntValue("CGAN", "LatentDimension"),
+            self.cfg.GetIntValue("CGAN", "EpochCount"),
+            self.cfg.GetIntValue("CGAN", "RefreshUIEachXIteration"),
+            self.cfg.GetIntValue("CGAN", "NumberOfFakeImagesToOutput"),
+            self.cfg.GetStringValue("CGAN", "TrainDatasetDir"),
+            self.cfg.GetStringValue("CGAN", "TestDatasetDir"))
+
+        cgan.SetupCGAN()
+        cgan.LoadDataset()
+        cgan.TrainGAN()
+        cgan.ProduceLetters()
+
+        print(" --- Done! --- ")
