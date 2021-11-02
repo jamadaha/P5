@@ -42,6 +42,9 @@ class JANGAN():
         print(f" --- Done! --- ")
 
     def Run(self):
+        if self.cfg.GetBoolValue("DATAGENERATOR", "PurgePreviousData"):
+            self.PurgeRunDataFolder()
+
         print(" --- Generating dataset if not there --- ")
 
         datagen = dg.DataGenerator()
@@ -78,7 +81,9 @@ class JANGAN():
             self.cfg.GetIntValue("CGAN", "RefreshUIEachXIteration"),
             self.cfg.GetIntValue("CGAN", "NumberOfFakeImagesToOutput"),
             self.cfg.GetStringValue("CGAN", "TrainDatasetDir"),
-            self.cfg.GetStringValue("CGAN", "TestDatasetDir"))
+            self.cfg.GetStringValue("CGAN", "TestDatasetDir"),
+            self.cfg.GetBoolValue("CGAN", "SaveCheckpoints"),
+            self.cfg.GetBoolValue("CGAN", "UseSavedModel"))
 
         self.cgan.SetupCGAN()
         self.cgan.LoadDataset()

@@ -45,7 +45,6 @@ for key in expDict:
             import JANGAN as jg
 
             expJANGAN = jg.JANGAN(expDict[key]['ModuleName'], expDict[key]['ConfigFile'])
-            expJANGAN.PurgeRunDataFolder()
             expJANGAN.Run()
             expJANGAN.ProduceOutput()
 

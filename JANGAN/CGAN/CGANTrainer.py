@@ -11,12 +11,14 @@ class CGANTrainer():
     Datasets = []
     Epochs = 0
     RefreshUIEachXStep = 1
+    SaveCheckpoints = False
 
-    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep):
+    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints):
         self.CGAN = cGAN
         self.Datasets = datasets
         self.Epochs = epochs
         self.RefreshUIEachXStep = refreshUIEachXStep
+        self.SaveCheckpoints = saveCheckPoints
 
     def TrainCGAN(self):
         print("Training started")
@@ -45,6 +47,9 @@ class CGANTrainer():
             print("")
             print("Done!")
             print(f"Time for epoch {epoch + 1} is {self.GetDatetimeFromSeconds(totalEpochTime)}. Est time remaining for training is {self.GetDatetimeFromSeconds(totalEpochTime*(self.Epochs-(epoch + 1)))}")
+
+            if self.SaveCheckpoints:
+                self.CGAN.save_weights('checkpoints/cgan_checkpoint')
 
     def CreateDataSet(self, dataArray):
         returnSet = dataArray[0]

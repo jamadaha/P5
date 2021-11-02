@@ -3,6 +3,7 @@ from ProjectTools import AutoPackageInstaller as ap
 ap.CheckAndInstall("tensorflow")
 
 from tensorflow import keras
+import os
 
 from CGAN import DatasetLoader as dl
 from CGAN import DatasetFormatter as df
@@ -21,6 +22,8 @@ class CGAN():
     RefreshEachStep = -1
     ImageCountToProduce = -1
     TensorDatasets = None
+    SaveCheckpoints = True
+    UseSavedModel = False
 
     TrainingDataDir = ""
     TestingDataDir = ""
@@ -29,7 +32,7 @@ class CGAN():
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, saveCheckpoints, useSavedModel):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -40,6 +43,8 @@ class CGAN():
         self.ImageCountToProduce = imageCountToProduce
         self.TrainingDataDir = trainingDataDir
         self.TestingDataDir = testingDataDir
+        self.SaveCheckpoints = saveCheckpoints
+        self.UseSavedModel = useSavedModel
 
     def SetupCGAN(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -72,9 +77,19 @@ class CGAN():
         self.TensorDatasets = bulkDatasetFormatter.ProcessData();
 
     def TrainGAN(self):
-        cGANTrainer = ct.CGANTrainer(self.CondGAN,self.TensorDatasets,self.EpochCount,self.RefreshEachStep)
-        cGANTrainer.TrainCGAN()
+        cGANTrainer = ct.CGANTrainer(self.CondGAN,self.TensorDatasets,self.EpochCount,self.RefreshEachStep,self.SaveCheckpoints)
+        if self.UseSavedModel:
+            if self.LoadCheckpointIfThere() == False:
+                cGANTrainer.TrainCGAN()
+        else:
+            cGANTrainer.TrainCGAN()
         self.TrainedGenerator = cGANTrainer.CGAN.generator
+
+    def LoadCheckpointIfThere():
+        if os.path.exists('checkpoints/cgan_checkpoint'):
+            cGANTrainer.CGAN.load_weights('checkpoints/cgan_checkpoint')
+            return True
+        return False
 
     def ProduceLetters(self):
         sentinel = True
