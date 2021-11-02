@@ -35,7 +35,11 @@ class ConfigHelper():
 
     def GetIntValue(self, category, key):
         self.CheckIfKeyExists(category,key)
-        return int(self.__config[category][key])
+        return self.__config.getint(category, key)
+
+    def GetBoolValue(self, category, key):
+        self.CheckIfKeyExists(category,key)
+        return self.__config.getboolean(category, key)
 
     def GetStringValue(self, category, key):
         self.CheckIfKeyExists(category,key)
