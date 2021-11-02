@@ -4,12 +4,12 @@ ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
 
 from tensorflow import keras
-from keras_preprocessing.image import array_to_img, save_img
 import tensorflow as tf
 import imageio
 import numpy as np
 from PIL import Image
 import os
+import matplotlib.pyplot as plt
 
 class LetterProducer():
     OutputPath = ""
@@ -53,8 +53,6 @@ class LetterProducer():
         imageio.mimsave('out.gif', images)
 
     def SaveImages(self, id, images):
-        images *= 255.0
-
         path = self.OutputPath + str(id) + '/'
 
         if not os.path.isdir(path):
@@ -63,6 +61,6 @@ class LetterProducer():
         # Save images
         index = 0
         for image in images:
-            img = Image.fromarray(np.squeeze(image), mode="1")
-            img.save(path + str(index) + ".png", "png")
+            plt.imshow(image[:, :, 0] * 127.5 + 127.5, cmap='gray')
+            plt.savefig(path + str(index) + ".png".format(image))
             index += 1
