@@ -362,3 +362,5 @@ MigrationBackup/
 
 *.gif
 override-config.ini
+
+JANGAN/checkpoints/

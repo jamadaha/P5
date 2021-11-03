@@ -23,25 +23,16 @@ class JANGAN():
 
     def PurgeRunDataFolder(self):
         print(" --- Purging training data folder --- ")
-        import os, shutil
 
-        folder = self.cfg.GetStringValue("DATAGENERATOR","OutputLettersPath")
-
-        if os.path.exists(folder):
-            for filename in os.listdir(folder):
-                file_path = os.path.join(folder, filename)
-                try:
-                    if os.path.isfile(file_path) or os.path.islink(file_path):
-                        os.unlink(file_path)
-                    elif os.path.isdir(file_path):
-                        shutil.rmtree(file_path)
-                except Exception as e:
-                    print('Failed to delete %s. Reason: %s' % (file_path, e))
-            shutil.rmtree(folder)
+        from ProjectTools import HelperFunctions as hf
+        hf.DeleteFolderAndAllContents(self.cfg.GetStringValue("DATAGENERATOR","OutputLettersPath"))
 
         print(f" --- Done! --- ")
 
     def Run(self):
+        if self.cfg.GetBoolValue("DATAGENERATOR", "PurgePreviousData"):
+            self.PurgeRunDataFolder()
+
         print(" --- Generating dataset if not there --- ")
 
         datagen = dg.DataGenerator()
@@ -78,7 +69,10 @@ class JANGAN():
             self.cfg.GetIntValue("CGAN", "RefreshUIEachXIteration"),
             self.cfg.GetIntValue("CGAN", "NumberOfFakeImagesToOutput"),
             self.cfg.GetStringValue("CGAN", "TrainDatasetDir"),
-            self.cfg.GetStringValue("CGAN", "TestDatasetDir"))
+            self.cfg.GetStringValue("CGAN", "TestDatasetDir"),
+            self.cfg.GetBoolValue("CGAN", "SaveCheckpoints"),
+            self.cfg.GetBoolValue("CGAN", "UseSavedModel"),
+            self.cfg.GetStringValue("CGAN", "CheckpointPath"))
 
         self.cgan.SetupCGAN()
         self.cgan.LoadDataset()
