@@ -61,6 +61,7 @@ class LetterProducer():
         # Save images
         index = 0
         for image in images:
-            plt.imshow(image[:, :, 0] * 127.5 + 127.5, cmap='gray')
-            plt.savefig(path + str(index) + ".png".format(image))
+            plt.imshow(image[:, :, 0], cmap='gray')
+            plt.axis('off')
+            plt.savefig(path + str(index) + ".png".format(image), bbox_inches='tight', pad_inches=0)
             index += 1
