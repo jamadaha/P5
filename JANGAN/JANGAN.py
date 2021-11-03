@@ -69,6 +69,7 @@ class JANGAN():
             self.cfg.GetIntValue("CGAN", "NumberOfFakeImagesToOutput"),
             self.cfg.GetStringValue("CGAN", "TrainDatasetDir"),
             self.cfg.GetStringValue("CGAN", "TestDatasetDir"),
+            self.cfg.GetStringValue("CGAN", "OutputDir"),
             self.cfg.GetBoolValue("CGAN", "SaveCheckpoints"),
             self.cfg.GetBoolValue("CGAN", "UseSavedModel"),
             self.cfg.GetStringValue("CGAN", "CheckpointPath"))
