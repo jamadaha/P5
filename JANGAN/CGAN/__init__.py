@@ -3,6 +3,7 @@ from ProjectTools import AutoPackageInstaller as ap
 ap.CheckAndInstall("tensorflow")
 
 from tensorflow import keras
+import os
 
 from CGAN import DatasetLoader as dl
 from CGAN import DatasetFormatter as df
@@ -21,6 +22,9 @@ class CGAN():
     RefreshEachStep = -1
     ImageCountToProduce = -1
     TensorDatasets = None
+    SaveCheckpoints = True
+    UseSavedModel = False
+    CheckpointPath = ""
 
     TrainingDataDir = ""
     TestingDataDir = ""
@@ -29,7 +33,7 @@ class CGAN():
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -41,6 +45,9 @@ class CGAN():
         self.TrainingDataDir = trainingDataDir
         self.TestingDataDir = testingDataDir
         self.OutputDir = outputDir
+        self.SaveCheckpoints = saveCheckpoints
+        self.UseSavedModel = useSavedModel
+        self.CheckpointPath = checkpointPath
 
     def SetupCGAN(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -62,6 +69,10 @@ class CGAN():
         )
 
     def LoadDataset(self):
+        if self.UseSavedModel:
+            print("Assuming checkpoint exists. Continuing without loading data...")
+            return
+
         dataLoader = dl.DatasetLoader(
             self.TrainingDataDir,
             self.TestingDataDir,
@@ -73,8 +84,19 @@ class CGAN():
         self.TensorDatasets = bulkDatasetFormatter.ProcessData();
 
     def TrainGAN(self):
-        cGANTrainer = ct.CGANTrainer(self.CondGAN,self.TensorDatasets,self.EpochCount,self.RefreshEachStep)
-        cGANTrainer.TrainCGAN()
+        if not os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):
+            print("Checkpoint not found! Training instead")
+            self.UseSavedModel = False
+            self.LoadDataset()
+
+        cGANTrainer = ct.CGANTrainer(self.CondGAN,self.TensorDatasets,self.EpochCount,self.RefreshEachStep,self.SaveCheckpoints, self.CheckpointPath)
+
+        if self.UseSavedModel:
+            print("Attempting to load CGAN model from checkpoint...")
+            cGANTrainer.CGAN.load_weights(self.CheckpointPath + 'cgan_checkpoint')
+            print("Checkpoint loaded!")
+        else:
+            cGANTrainer.TrainCGAN()
         self.TrainedGenerator = cGANTrainer.CGAN.generator
 
     def ProduceLetters(self):

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>d4e30b41-8be9-4594-925b-4b04ba96c32e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>JANGAN.py</StartupFile>
+    <StartupFile>JANGANQueue.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -38,9 +38,24 @@
     <Compile Include="DataGenerator\SharedFunctions.py" />
     <Compile Include="DataGenerator\TextSequence.py" />
     <Compile Include="DataGenerator\__init__.py" />
+    <Compile Include="ExperimentQueue\BaseRun.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExperimentQueue\TestExperiment.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExperimentQueue\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="JANGAN.py" />
+    <Compile Include="JANGANQueue.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ProjectTools\AutoPackageInstaller.py" />
     <Compile Include="ProjectTools\ConfigHelper.py" />
+    <Compile Include="ProjectTools\HelperFunctions.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ProjectTools\InstallScript.py" />
     <Compile Include="ProjectTools\ConfigHelperTests.py" />
     <Compile Include="ProjectTools\__init__.py" />
@@ -48,11 +63,16 @@
   <ItemGroup>
     <Folder Include="CGAN\" />
     <Folder Include="DataGenerator\" />
+    <Folder Include="ExperimentQueue\" />
     <Folder Include="ProjectTools\" />
     <Folder Include="ProjectTools\TestFiles\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config.ini" />
+    <Content Include="ExperimentQueueConfig.ini" />
+    <Content Include="ExperimentQueue\BaseRunConfig.ini">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="ExperimentQueue\TestExperimentConfig.ini" />
     <Content Include="ProjectTools\TestFiles\override-test-config.ini" />
     <Content Include="ProjectTools\TestFiles\test-config.ini" />
   </ItemGroup>
