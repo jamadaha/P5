@@ -13,13 +13,15 @@ class CGANTrainer():
     Epochs = 0
     RefreshUIEachXStep = 1
     SaveCheckpoints = False
+    CheckpointPath = ""
 
-    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints):
+    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath):
         self.CGAN = cGAN
         self.Datasets = datasets
         self.Epochs = epochs
         self.RefreshUIEachXStep = refreshUIEachXStep
         self.SaveCheckpoints = saveCheckPoints
+        self.CheckpointPath = checkpointPath
 
     def TrainCGAN(self):
         print("Training started")
@@ -50,10 +52,10 @@ class CGANTrainer():
             print(f"Time for epoch {epoch + 1} is {self.GetDatetimeFromSeconds(totalEpochTime)}. Est time remaining for training is {self.GetDatetimeFromSeconds(totalEpochTime*(self.Epochs-(epoch + 1)))}")
 
             if self.SaveCheckpoints:
-                if os.path.exists('checkpoints/cgan_checkpoint.index'):
+                if os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):
                     from ProjectTools import HelperFunctions as hf
-                    hf.DeleteFolderAndAllContents('checkpoints/cgan_checkpoint')
-                self.CGAN.save_weights('checkpoints/cgan_checkpoint')
+                    hf.DeleteFolderAndAllContents(self.CheckpointPath)
+                self.CGAN.save_weights(self.CheckpointPath + 'cgan_checkpoint')
 
     def CreateDataSet(self, dataArray):
         returnSet = dataArray[0]

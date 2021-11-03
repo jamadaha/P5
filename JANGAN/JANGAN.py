@@ -71,7 +71,8 @@ class JANGAN():
             self.cfg.GetStringValue("CGAN", "TrainDatasetDir"),
             self.cfg.GetStringValue("CGAN", "TestDatasetDir"),
             self.cfg.GetBoolValue("CGAN", "SaveCheckpoints"),
-            self.cfg.GetBoolValue("CGAN", "UseSavedModel"))
+            self.cfg.GetBoolValue("CGAN", "UseSavedModel"),
+            self.cfg.GetStringValue("CGAN", "CheckpointPath"))
 
         self.cgan.SetupCGAN()
         self.cgan.LoadDataset()

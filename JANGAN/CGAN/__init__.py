@@ -24,6 +24,7 @@ class CGAN():
     TensorDatasets = None
     SaveCheckpoints = True
     UseSavedModel = False
+    CheckpointPath = ""
 
     TrainingDataDir = ""
     TestingDataDir = ""
@@ -32,7 +33,7 @@ class CGAN():
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, saveCheckpoints, useSavedModel):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, saveCheckpoints, useSavedModel, checkpointPath):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -45,6 +46,7 @@ class CGAN():
         self.TestingDataDir = testingDataDir
         self.SaveCheckpoints = saveCheckpoints
         self.UseSavedModel = useSavedModel
+        self.CheckpointPath = checkpointPath
 
     def SetupCGAN(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -81,16 +83,16 @@ class CGAN():
         self.TensorDatasets = bulkDatasetFormatter.ProcessData();
 
     def TrainGAN(self):
-        if not os.path.exists('checkpoints/cgan_checkpoint.index'):
+        if not os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):
             print("Checkpoint not found! Training instead")
             self.UseSavedModel = False
             self.LoadDataset()
 
-        cGANTrainer = ct.CGANTrainer(self.CondGAN,self.TensorDatasets,self.EpochCount,self.RefreshEachStep,self.SaveCheckpoints)
+        cGANTrainer = ct.CGANTrainer(self.CondGAN,self.TensorDatasets,self.EpochCount,self.RefreshEachStep,self.SaveCheckpoints, self.CheckpointPath)
 
         if self.UseSavedModel:
             print("Attempting to load CGAN model from checkpoint...")
-            cGANTrainer.CGAN.load_weights('checkpoints/cgan_checkpoint')
+            cGANTrainer.CGAN.load_weights(self.CheckpointPath + 'cgan_checkpoint')
             print("Checkpoint loaded!")
         else:
             cGANTrainer.TrainCGAN()
