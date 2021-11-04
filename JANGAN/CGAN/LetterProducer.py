@@ -4,7 +4,6 @@ ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
 ap.CheckAndInstall("pillow")
 
-from tensorflow import keras
 import tensorflow as tf
 import imageio
 import os
