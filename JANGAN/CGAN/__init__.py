@@ -100,14 +100,13 @@ class CGAN():
         self.TrainedGenerator = cGANTrainer.CGAN.generator
 
     def ProduceLetters(self):
+        from tqdm import tqdm
         letterProducer = lp.LetterProducer(self.OutputDir, self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension)
         # Warmup letter producer
         #   This is done as it outputs something to console
         letterProducer.GenerateLetter(0, 1)
 
-        for i in range(self.NumberOfClasses):
-            print(f"Producing images for class {i + 1}/{self.NumberOfClasses}")
+        for i in tqdm(range(self.NumberOfClasses), desc='Producing images'):
             images = letterProducer.GenerateLetter(i, self.ImageCountToProduce)
-            
             letterProducer.SaveImages(i, images)
            

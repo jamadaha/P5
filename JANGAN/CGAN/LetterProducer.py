@@ -51,7 +51,6 @@ class LetterProducer():
         imageio.mimsave('out.gif', images)
 
     def SaveImages(self, id, images):
-        from tqdm import tqdm
         path = self.OutputPath + str(id) + '/'
 
         if not os.path.isdir(path):
@@ -59,7 +58,7 @@ class LetterProducer():
 
         # Save images
         index = 0
-        for image in tqdm(iterable=images, total=len(images)):
+        for image in images:
             tf.keras.utils.save_img(
                 path + str(index) + ".png".format(image), image
             )
