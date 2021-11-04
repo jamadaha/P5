@@ -101,12 +101,13 @@ class CGAN():
 
     def ProduceLetters(self):
         letterProducer = lp.LetterProducer(self.OutputDir, self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension)
-        index = 0
-        while (index < self.NumberOfClasses):
-            images = letterProducer.GenerateLetter(index, self.ImageCountToProduce)
-            letterProducer.SaveImages(index, images)
-            index += 1
+        # Warmup letter producer
+        #   This is done as it outputs something to console
+        letterProducer.GenerateLetter(0, 1)
 
+        for i in range(self.NumberOfClasses):
+            print(f"Producing images for class {i + 1}/{self.NumberOfClasses}")
+            images = letterProducer.GenerateLetter(i, self.ImageCountToProduce)
             
-
+            letterProducer.SaveImages(i, images)
            

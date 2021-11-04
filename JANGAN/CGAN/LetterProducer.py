@@ -3,6 +3,7 @@ from ProjectTools import AutoPackageInstaller as ap
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
 ap.CheckAndInstall("os")
+ap.CheckAndInstall("tqdm")
 
 import tensorflow as tf
 import imageio
@@ -50,6 +51,7 @@ class LetterProducer():
         imageio.mimsave('out.gif', images)
 
     def SaveImages(self, id, images):
+        from tqdm import tqdm
         path = self.OutputPath + str(id) + '/'
 
         if not os.path.isdir(path):
@@ -57,7 +59,7 @@ class LetterProducer():
 
         # Save images
         index = 0
-        for image in images:
+        for image in tqdm(iterable=images, total=len(images)):
             tf.keras.utils.save_img(
                 path + str(index) + ".png".format(image), image
             )
