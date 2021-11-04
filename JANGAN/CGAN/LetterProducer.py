@@ -3,7 +3,6 @@ from ProjectTools import AutoPackageInstaller as ap
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
 
-from tensorflow import keras
 import tensorflow as tf
 import imageio
 

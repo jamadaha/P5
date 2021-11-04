@@ -2,10 +2,9 @@ from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
 
-from tensorflow import keras
 import tensorflow as tf
 
-class ConditionalGAN(keras.Model):
+class ConditionalGAN(tf.keras.Model):
     ImageSize = 0
     NumberOfClasses = 0
 
@@ -14,8 +13,8 @@ class ConditionalGAN(keras.Model):
         self.discriminator = discriminator
         self.generator = generator
         self.latent_dim = latentDimension
-        self.gen_loss_tracker = keras.metrics.Mean(name="generator_loss")
-        self.disc_loss_tracker = keras.metrics.Mean(name="discriminator_loss")
+        self.gen_loss_tracker = tf.keras.metrics.Mean(name="generator_loss")
+        self.disc_loss_tracker = tf.keras.metrics.Mean(name="discriminator_loss")
         self.ImageSize = imageSize
         self.NumberOfClasses = numberOfClasses
 
