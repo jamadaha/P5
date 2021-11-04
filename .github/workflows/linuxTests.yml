@@ -26,6 +26,6 @@ jobs:
     - name: Test with unittest and installing packages
       run: |
         cd JANGAN
-        python -m unittest discover -p *Tests.py
+        python -m unittest -v ProjectTools/ConfigHelperTests.py
       env:
         AutoPackageInstaller_YesToAllModules: "True"
