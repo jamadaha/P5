@@ -2,12 +2,11 @@ from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
+ap.CheckAndInstall("pillow")
 
 from tensorflow import keras
 import tensorflow as tf
 import imageio
-import numpy as np
-from PIL import Image
 import os
 import matplotlib.pyplot as plt
 
