@@ -28,7 +28,7 @@ class CGANTrainer():
         self.CheckpointPath = checkpointPath
         self.WriteToCSV = writeToCSV
         self.CSVPath = csvPath
-        self.AppendToCSV(['Epoch', 'Generator Loss', 'Discriminator loss'])
+        self.InitCSV(['Epoch', 'Generator Loss', 'Discriminator loss'])
 
     def TrainCGAN(self):
         print("Training started")
@@ -76,6 +76,12 @@ class CGANTrainer():
                 from ProjectTools import HelperFunctions as hf
                 hf.DeleteFolderAndAllContents(self.CheckpointPath)
             self.CGAN.save_weights(self.CheckpointPath + 'cgan_checkpoint')
+
+    def InitCSV(self, data) -> None:
+        if self.WriteToCSV:
+            with open(self.CSVPath, 'w') as file:
+                csv_writer = csv.writer(file)
+                csv_writer.writerow(data)
 
     def AppendToCSV(self, data) -> None:
         if self.WriteToCSV:
