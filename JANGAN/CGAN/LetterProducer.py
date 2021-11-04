@@ -26,8 +26,8 @@ class LetterProducer():
         interpolation_noise = tf.repeat(interpolation_noise, repeats=imageCountToProduce)
         interpolation_noise = tf.reshape(interpolation_noise, (imageCountToProduce, self.LatentDimension))
 
-        first_label = keras.utils.to_categorical([classID], self.NumberOfClasses)
-        second_label = keras.utils.to_categorical([classID], self.NumberOfClasses)
+        first_label = tf.keras.utils.to_categorical([classID], self.NumberOfClasses)
+        second_label = tf.keras.utils.to_categorical([classID], self.NumberOfClasses)
         first_label = tf.cast(first_label, tf.float32)
         second_label = tf.cast(second_label, tf.float32)
 
