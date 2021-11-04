@@ -26,6 +26,8 @@ class CGAN():
     SaveCheckpoints = True
     UseSavedModel = False
     CheckpointPath = ""
+    WriteToCSV = False
+    CSVPath = ""
 
     TrainingDataDir = ""
     TestingDataDir = ""
@@ -34,7 +36,7 @@ class CGAN():
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, writeToCSV, csvPath):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -49,6 +51,8 @@ class CGAN():
         self.SaveCheckpoints = saveCheckpoints
         self.UseSavedModel = useSavedModel
         self.CheckpointPath = checkpointPath
+        self.WriteToCSV = writeToCSV
+        self.CSVPath = csvPath
 
     def SetupCGAN(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -90,7 +94,7 @@ class CGAN():
             self.UseSavedModel = False
             self.LoadDataset()
 
-        cGANTrainer = ct.CGANTrainer(self.CondGAN,self.TensorDatasets,self.EpochCount,self.RefreshEachStep,self.SaveCheckpoints, self.CheckpointPath)
+        cGANTrainer = ct.CGANTrainer(self.CondGAN, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.WriteToCSV, self.CSVPath)
 
         if self.UseSavedModel:
             print("Attempting to load CGAN model from checkpoint...")
