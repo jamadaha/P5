@@ -1,6 +1,7 @@
 from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
+ap.CheckAndInstall("tqdm")
 
 from tensorflow import keras
 import os
