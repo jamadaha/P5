@@ -1,4 +1,6 @@
 import importlib
+import os
+
 from importlib import reload
 
 from ProjectTools import ConfigHelper
@@ -58,10 +60,16 @@ class JANGAN():
         print("")
         print(" --- Training CGAN --- ")
 
+        classCount = 0
+        for entry in os.scandir(self.cfg.GetStringValue("DATAGENERATOR", "OutputLettersPath")):
+            if entry.is_dir():
+                classCount += 1
+
+
         self.cgan = cg.CGAN(
             self.cfg.GetIntValue("CGAN", "BatchSize"),
             1,
-            self.cfg.GetIntValue("CGAN", "NumberOfClasses"),
+            classCount,
             self.cfg.GetIntValue("CGAN", "ImageSize"),
             self.cfg.GetIntValue("CGAN", "LatentDimension"),
             self.cfg.GetIntValue("CGAN", "EpochCount"),
