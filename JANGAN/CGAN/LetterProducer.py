@@ -3,7 +3,6 @@ from ProjectTools import AutoPackageInstaller as ap
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
 ap.CheckAndInstall("os")
-ap.CheckAndInstall("tqdm")
 
 import tensorflow as tf
 import imageio
