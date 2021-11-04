@@ -2,11 +2,11 @@ from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
+ap.CheckAndInstall("os")
 
 import tensorflow as tf
 import imageio
 import os
-import matplotlib.pyplot as plt
 
 class LetterProducer():
     OutputPath = ""
@@ -58,7 +58,7 @@ class LetterProducer():
         # Save images
         index = 0
         for image in images:
-            plt.imshow(image[:, :, 0], cmap='gray')
-            plt.axis('off')
-            plt.savefig(path + str(index) + ".png".format(image), bbox_inches='tight', pad_inches=0)
+            tf.keras.utils.save_img(
+                path + str(index) + ".png".format(image), image
+            )
             index += 1
