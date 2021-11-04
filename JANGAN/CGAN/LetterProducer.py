@@ -2,16 +2,21 @@ from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
+ap.CheckAndInstall("os")
+ap.CheckAndInstall("tqdm")
 
 import tensorflow as tf
 import imageio
+import os
 
 class LetterProducer():
+    OutputPath = ""
     TrainedGenerator = None
     NumberOfClasses = 0
     LatentDimension = 0
 
-    def __init__(self, trainedGenerator, numberOfClasses, latentDimension):
+    def __init__(self, outputPath, trainedGenerator, numberOfClasses, latentDimension):
+        self.OutputPath = outputPath
         self.TrainedGenerator = trainedGenerator
         self.NumberOfClasses = numberOfClasses
         self.LatentDimension = latentDimension
@@ -22,8 +27,8 @@ class LetterProducer():
         interpolation_noise = tf.repeat(interpolation_noise, repeats=imageCountToProduce)
         interpolation_noise = tf.reshape(interpolation_noise, (imageCountToProduce, self.LatentDimension))
 
-        first_label = keras.utils.to_categorical([classID], self.NumberOfClasses)
-        second_label = keras.utils.to_categorical([classID], self.NumberOfClasses)
+        first_label = tf.keras.utils.to_categorical([classID], self.NumberOfClasses)
+        second_label = tf.keras.utils.to_categorical([classID], self.NumberOfClasses)
         first_label = tf.cast(first_label, tf.float32)
         second_label = tf.cast(second_label, tf.float32)
 
@@ -44,3 +49,17 @@ class LetterProducer():
 
         #Generate Gif
         imageio.mimsave('out.gif', images)
+
+    def SaveImages(self, id, images):
+        path = self.OutputPath + str(id) + '/'
+
+        if not os.path.isdir(path):
+            os.makedirs(path)
+
+        # Save images
+        index = 0
+        for image in images:
+            tf.keras.utils.save_img(
+                path + str(index) + ".png".format(image), image
+            )
+            index += 1

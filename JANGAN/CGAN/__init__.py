@@ -33,7 +33,7 @@ class CGAN():
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, saveCheckpoints, useSavedModel, checkpointPath):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -44,6 +44,7 @@ class CGAN():
         self.ImageCountToProduce = imageCountToProduce
         self.TrainingDataDir = trainingDataDir
         self.TestingDataDir = testingDataDir
+        self.OutputDir = outputDir
         self.SaveCheckpoints = saveCheckpoints
         self.UseSavedModel = useSavedModel
         self.CheckpointPath = checkpointPath
@@ -99,27 +100,13 @@ class CGAN():
         self.TrainedGenerator = cGANTrainer.CGAN.generator
 
     def ProduceLetters(self):
-        sentinel = True
-        while(sentinel):
-            Question = input(f"Enter a new index to generate (0-{self.NumberOfClasses - 1}))(type N to exit):")
-            if Question == "N":
-                sentinel = False
-                break
+        from tqdm import tqdm
+        letterProducer = lp.LetterProducer(self.OutputDir, self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension)
+        # Warmup letter producer
+        #   This is done as it outputs something to console
+        letterProducer.GenerateLetter(0, 1)
 
-            if not Question.isnumeric():
-                print("Please only write numbers or N to exit")
-                continue
-
-            value = int(Question)
-
-            if value >= self.NumberOfClasses:
-                print(f"Please write numbers within 0-{self.NumberOfClasses - 1}")
-                continue
-            if value < 0:
-                print(f"Please write numbers within 0-{self.NumberOfClasses - 1}")
-                continue
-
-            letterProducer = lp.LetterProducer(self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension)
-
-            images = letterProducer.GenerateLetter(value, self.ImageCountToProduce)
-            letterProducer.SaveImagesAsGif(images)
+        for i in tqdm(range(self.NumberOfClasses), desc='Producing images'):
+            images = letterProducer.GenerateLetter(i, self.ImageCountToProduce)
+            letterProducer.SaveImages(i, images)
+           
