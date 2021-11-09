@@ -6,7 +6,6 @@ ap.CheckAndInstall("time")
 import tensorflow as tf
 import time
 import os
-import csv
 from ProjectTools import Logger as lgr
 
 class CGANTrainer():
@@ -44,9 +43,6 @@ class CGANTrainer():
             print("")
             print("Done!")
             print(f"Time for epoch {epoch + 1} is {self.GetDatetimeFromSeconds(totalEpochTime)}. Est time remaining for training is {self.GetDatetimeFromSeconds(totalEpochTime*(self.Epochs-(epoch + 1)))}")
-
-            if self.SaveCheckpoints:
-                self.__SaveCheckpoint()
         print("Training finished!")
             
     def CreateDataSet(self, dataArray):
@@ -85,3 +81,5 @@ class CGANTrainer():
                 self.CGAN.train_step(image_batch, False)
             iteration += 1
         self.__PrintStatus(totalIterations, totalIterations, epochTime, epoch)
+        if self.SaveCheckpoints:
+            self.__SaveCheckpoint()
