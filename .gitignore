@@ -364,3 +364,5 @@ MigrationBackup/
 override-config.ini
 
 JANGAN/checkpoints/
+
+*.pyperf
