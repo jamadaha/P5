@@ -8,6 +8,7 @@ import tensorflow as tf
 import time
 import os
 import csv
+from ProjectTools import Logger as lgr
 
 class CGANTrainer():
     CGAN = None
@@ -16,17 +17,17 @@ class CGANTrainer():
     RefreshUIEachXStep = 1
     SaveCheckpoints = False
     CheckpointPath = ""
-    WriteToCSV = False
-    CSVPath = ""
+    Logger = None
 
-    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, writeToCSV):
+    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, logPath):
         self.CGAN = cGAN
         self.Datasets = datasets
         self.Epochs = epochs
         self.RefreshUIEachXStep = refreshUIEachXStep
         self.SaveCheckpoints = saveCheckPoints
         self.CheckpointPath = checkpointPath
-        self.WriteToCSV = writeToCSV
+        self.Logger = lgr.Logger(logPath, 'TrainingData')
+        self.Logger.InitCSV(['Epoch', 'GeneratorLoss', 'DiscriminatorLoss'])
 
     def TrainCGAN(self):
         print("Training started")
@@ -47,7 +48,7 @@ class CGANTrainer():
                     estRemainTime = ((now - epochTime) / self.RefreshUIEachXStep) * (itemCount - count)
                     epochTime = now
                     print(f"Generator loss: {g_loss:.4f}. Discriminator loss: {d_loss:.4f}. Progress: {((count/itemCount)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainTime)}    ", end="\r")
-                    #self.AppendToCSV([epoch + 1, g_loss, d_loss])
+                    self.Logger.AppendToCSV([epoch + 1, g_loss, d_loss])
                 else:
                     self.CGAN.train_step(image_batch)
                 count += 1
