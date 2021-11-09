@@ -1,10 +1,10 @@
-from DataLoader.DataLoader import DataLoader
-from DataLoader.FitData import FitData
-from Classifier.Classifier import Classifier
-from Classifier.Classifier import LayerConfigObject
-from Classifier.Classifier import CompilerConfigObject
-from Plotter.Plotter import Plotter
-from Plotter.PlotData import PlotData
+from SimpleClassifier.DataLoader.DataLoader import DataLoader
+from SimpleClassifier.DataLoader.FitData import FitData
+from SimpleClassifier.Classifier.Classifier import Classifier
+from SimpleClassifier.Classifier.Classifier import LayerConfigObject
+from SimpleClassifier.Classifier.Classifier import CompilerConfigObject
+from SimpleClassifier.Plotter.Plotter import Plotter
+from SimpleClassifier.Plotter.PlotData import PlotData
 from tensorflow.keras.callbacks import History
 from tensorflow import data
 import tensorflow

@@ -7,7 +7,7 @@ import PIL.Image
 import pathlib
 from multipledispatch import dispatch
 import matplotlib.pyplot as plt
-from DataLoader.FitData import FitData
+from SimpleClassifier.DataLoader.FitData import FitData
 
 class DataLoader(object):
     """A class to handle loading of data for the model. Is responsible for all direct manipulation of the data"""    

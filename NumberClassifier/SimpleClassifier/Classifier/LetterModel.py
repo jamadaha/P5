@@ -1,6 +1,6 @@
 from tensorflow.keras import Sequential
-from Classifier.LayerConfigObject import LayerConfigObject
-from Classifier.CompilerConfigObject import CompilerConfigObject
+from SimpleClassifier.Classifier.LayerConfigObject import LayerConfigObject
+from SimpleClassifier.Classifier.CompilerConfigObject import CompilerConfigObject
 
 
 class LetterModel():

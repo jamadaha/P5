@@ -5,12 +5,12 @@ import tensorflow
 from tensorflow.keras.callbacks import ModelCheckpoint
 from multipledispatch import dispatch
 from tensorflow.keras import Model
-from DataLoader.FitData import FitData
-from Classifier.LayerConfigObject import LayerConfigObject
-from Classifier.CompilerConfigObject import CompilerConfigObject
-from Classifier.LetterModel import LetterModel
+from SimpleClassifier.DataLoader.FitData import FitData
+from SimpleClassifier.Classifier.LayerConfigObject import LayerConfigObject
+from SimpleClassifier.Classifier.CompilerConfigObject import CompilerConfigObject
+from SimpleClassifier.Classifier.LetterModel import LetterModel
 from tensorflow.keras.models import load_model
-import PathUtil
+import SimpleClassifier.PathUtil
 
 
 
