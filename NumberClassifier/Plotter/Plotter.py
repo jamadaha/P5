@@ -1,6 +1,6 @@
 from tensorflow import data
 import matplotlib.pyplot as plt
-from PlotData import PlotData
+from Plotter.PlotData import PlotData
 
 class Plotter(object):
     """Utility class for plotting data"""
