@@ -1,4 +1,5 @@
 from importlib import reload
+import traceback
 
 def ReloadAllModules():
     print(" --- Reloading modules --- ")
@@ -51,6 +52,8 @@ for key in expDict:
         except Exception as e:
             print("")
             print(f"      ERROR! Experiment '{key}' failed with error '{e}'")
+            print("       STACKTRACE")
+            print(traceback.format_exc())
             print("")
 
         print("")
