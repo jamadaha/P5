@@ -13,6 +13,7 @@ class Logger:
         self.__WriteToCSV('a+', data)
     
     def __WriteToCSV(self, writeMode, data) -> None:
-        with open(self.OutputDir, writeMode) as file:
+        import csv
+        with open(self.OutputDir + self.Name + '.csv', writeMode) as file:
                 csv_writer = csv.writer(file)
                 csv_writer.writerow(data)
