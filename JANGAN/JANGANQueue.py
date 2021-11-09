@@ -52,7 +52,7 @@ for key in expDict:
         except Exception as e:
             print("")
             print(f"      ERROR! Experiment '{key}' failed with error '{e}'")
-            print("       STACKTRACE")
+            print("      STACKTRACE")
             print(traceback.format_exc())
             print("")
 
