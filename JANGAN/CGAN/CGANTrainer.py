@@ -2,7 +2,6 @@ from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("time")
-ap.CheckAndInstall("csv")
 
 import tensorflow as tf
 import time
