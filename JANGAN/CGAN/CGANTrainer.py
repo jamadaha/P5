@@ -19,7 +19,7 @@ class CGANTrainer():
     WriteToCSV = False
     CSVPath = ""
 
-    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, writeToCSV, csvPath):
+    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, writeToCSV):
         self.CGAN = cGAN
         self.Datasets = datasets
         self.Epochs = epochs
@@ -27,8 +27,6 @@ class CGANTrainer():
         self.SaveCheckpoints = saveCheckPoints
         self.CheckpointPath = checkpointPath
         self.WriteToCSV = writeToCSV
-        self.CSVPath = csvPath
-        self.InitCSV(['Epoch', 'Generator Loss', 'Discriminator loss'])
 
     def TrainCGAN(self):
         print("Training started")
@@ -49,7 +47,7 @@ class CGANTrainer():
                     estRemainTime = ((now - epochTime) / self.RefreshUIEachXStep) * (itemCount - count)
                     epochTime = now
                     print(f"Generator loss: {g_loss:.4f}. Discriminator loss: {d_loss:.4f}. Progress: {((count/itemCount)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainTime)}    ", end="\r")
-                    self.AppendToCSV([epoch + 1, g_loss, d_loss])
+                    #self.AppendToCSV([epoch + 1, g_loss, d_loss])
                 else:
                     self.CGAN.train_step(image_batch)
                 count += 1
@@ -59,7 +57,11 @@ class CGANTrainer():
             print("Done!")
             print(f"Time for epoch {epoch + 1} is {self.GetDatetimeFromSeconds(totalEpochTime)}. Est time remaining for training is {self.GetDatetimeFromSeconds(totalEpochTime*(self.Epochs-(epoch + 1)))}")
 
-            self.CreateCheckpoint()
+            if self.SaveCheckpoints:
+                if os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):
+                    from ProjectTools import HelperFunctions as hf
+                    hf.DeleteFolderAndAllContents(self.CheckpointPath)
+                self.CGAN.save_weights(self.CheckpointPath + 'cgan_checkpoint')
             
     def CreateDataSet(self, dataArray):
         returnSet = dataArray[0]
@@ -69,22 +71,3 @@ class CGANTrainer():
 
     def GetDatetimeFromSeconds(self, seconds):
         return time.strftime("%H:%M:%S", time.gmtime(seconds))
-
-    def CreateCheckpoint(self) -> None:
-        if self.SaveCheckpoints:
-            if os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):
-                from ProjectTools import HelperFunctions as hf
-                hf.DeleteFolderAndAllContents(self.CheckpointPath)
-            self.CGAN.save_weights(self.CheckpointPath + 'cgan_checkpoint')
-
-    def InitCSV(self, data) -> None:
-        if self.WriteToCSV:
-            with open(self.CSVPath, 'w') as file:
-                csv_writer = csv.writer(file)
-                csv_writer.writerow(data)
-
-    def AppendToCSV(self, data) -> None:
-        if self.WriteToCSV:
-            with open(self.CSVPath, 'a+') as file:
-                csv_writer = csv.writer(file)
-                csv_writer.writerow(data)
