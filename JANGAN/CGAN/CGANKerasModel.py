@@ -28,7 +28,7 @@ class ConditionalGAN(tf.keras.Model):
         self.g_optimizer = g_optimizer
         self.loss_fn = loss_fn
 
-    def train_step(self, data):
+    def train_step(self, data, returnLoss):
          # Unpack the data.
         real_images, one_hot_labels = data
 
@@ -95,9 +95,10 @@ class ConditionalGAN(tf.keras.Model):
         self.g_optimizer.apply_gradients(zip(grads, self.generator.trainable_weights))
 
         # Monitor loss.
-        self.gen_loss_tracker.update_state(g_loss)
-        self.disc_loss_tracker.update_state(d_loss)
-        return {
-            "g_loss": self.gen_loss_tracker.result(),
-            "d_loss": self.disc_loss_tracker.result(),
-        }
+        if returnLoss == True:
+            self.gen_loss_tracker.update_state(g_loss)
+            self.disc_loss_tracker.update_state(d_loss)
+            return {
+                "g_loss": self.gen_loss_tracker.result(),
+                "d_loss": self.disc_loss_tracker.result(),
+            }
