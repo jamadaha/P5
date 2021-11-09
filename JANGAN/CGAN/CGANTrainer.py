@@ -57,7 +57,6 @@ class CGANTrainer():
     def __PrintStatus(self, iteration, totalIterations, epochTime, epoch):
         estRemainingTime = ((time.time() - epochTime) / self.RefreshUIEachXStep) * (totalIterations - iteration)
         print(f"Generator loss: {self.__latestGLoss:.4f}. Discriminator loss: {self.__latestDLoss:.4f}. Progress: {((iteration/totalIterations)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainingTime)}    ", end="\r")
-        self.Logger.AppendToCSV([epoch + 1, self.__latestGLoss, self.__latestDLoss])
 
     def __SaveCheckpoint(self):
         if os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):
@@ -83,3 +82,4 @@ class CGANTrainer():
         self.__PrintStatus(totalIterations, totalIterations, epochTime, epoch)
         if self.SaveCheckpoints:
             self.__SaveCheckpoint()
+        self.Logger.AppendToCSV([epoch + 1, self.__latestGLoss, self.__latestDLoss])
