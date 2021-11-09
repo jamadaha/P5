@@ -1,6 +1,7 @@
 from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("csv")
+ap.CheckAndInstall("time")
 
 class Logger:
     OutputDir = ''
@@ -21,6 +22,8 @@ class Logger:
     
     def __WriteToCSV(self, writeMode: str, data: list) -> None:
         import csv
+        import time
         with open(self.OutputDir + self.Name + '.csv', writeMode) as file:
                 csv_writer = csv.writer(file)
                 csv_writer.writerow(data)
+                
