@@ -10,7 +10,7 @@ class LetterModel():
         self.sequential = Sequential(layers = layers.layers)
 
     def compile(self, compile_config: CompilerConfigObject):
-        super(LetterModel,self).compile(
+        self.sequential.compile(
             optimizer = compile_config.optimizer, 
             loss=compile_config.loss, 
             metrics = compile_config.metrics, 
