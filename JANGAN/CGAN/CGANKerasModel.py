@@ -28,6 +28,7 @@ class ConditionalGAN(tf.keras.Model):
         self.g_optimizer = g_optimizer
         self.loss_fn = loss_fn
 
+    @tf.function
     def train_step(self, data, returnLoss):
          # Unpack the data.
         real_images, one_hot_labels = data
