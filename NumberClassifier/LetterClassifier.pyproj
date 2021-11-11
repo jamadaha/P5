@@ -53,8 +53,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Classifier\" />
+    <Folder Include="Classifier\__pycache__\" />
     <Folder Include="DataLoader\" />
     <Folder Include="Plotter\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Classifier\__pycache__\Classifier.cpython-39.pyc" />
+    <Content Include="Classifier\__pycache__\CompilerConfigObject.cpython-39.pyc" />
+    <Content Include="Classifier\__pycache__\LayerConfigObject.cpython-39.pyc" />
+    <Content Include="Classifier\__pycache__\LetterModel.cpython-39.pyc" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

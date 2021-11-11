@@ -33,6 +33,24 @@
     <Compile Include="CGAN\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classifier\CompilerConfigObject.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\DataLoader\DataLoader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\DataLoader\FitData.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\LayerConfigObject.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\LetterModel.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DataGenerator\DataExtractor.py" />
     <Compile Include="DataGenerator\FileImporter.py" />
     <Compile Include="DataGenerator\SharedFunctions.py" />
@@ -62,6 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CGAN\" />
+    <Folder Include="Classifier\" />
+    <Folder Include="Classifier\DataLoader\" />
     <Folder Include="DataGenerator\" />
     <Folder Include="ExperimentQueue\" />
     <Folder Include="ProjectTools\" />
