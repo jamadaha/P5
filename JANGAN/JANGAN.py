@@ -7,9 +7,12 @@ from ProjectTools import ConfigHelper
  
 import CGAN as cg
 import DataGenerator as dg
+import Classifier as cf
+
 class JANGAN():
     cfg = None
     cgan = None
+    classifier = None
 
     def __init__(self, expFile, configFile):
         importlib.import_module(expFile)
@@ -93,5 +96,18 @@ class JANGAN():
         print(" --- Producing output --- ")
 
         self.cgan.ProduceLetters()
+
+        print(" --- Done! --- ")
+
+    def ClassifyCGANOutput(self):
+        print(" --- Classifying Output of CGAN --- ")
+
+        self.classifier = cf.Classifier()
+
+        # Generate data to train on (if not using checkpoint)
+
+        # Train on data (if not using checkpoint)
+
+        # Produce output
 
         print(" --- Done! --- ")

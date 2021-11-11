@@ -48,6 +48,7 @@ for key in expDict:
             expJANGAN = jg.JANGAN(expDict[key]['ModuleName'], expDict[key]['ConfigFile'])
             expJANGAN.Run()
             expJANGAN.ProduceOutput()
+            expJANGAN.ClassifyCGANOutput()
 
         except Exception as e:
             print("")
