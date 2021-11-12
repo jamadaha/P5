@@ -26,12 +26,18 @@ def ReloadAllModules():
     print(" --- Done! --- ")
 
 from ProjectTools import ConfigHelper    
+import JANGANQueueChecker
 
 print(" --- Loading queue config file --- ")
 cfg = ConfigHelper.ConfigHelper("ExperimentQueueConfig.ini")
 cfg.LoadConfig()
 print(" --- Done! --- ")
 print("")
+
+print(" --- Checking the queue file --- ")
+queueChecker = JANGANQueueChecker.JANGANQueueChecker(cfg)
+queueChecker.CheckConfig()
+print(" --- Done! --- ")
 
 expDict = cfg.GetJsonValue("EXPERIMENTS","ExperimentList");
 for key in expDict:
