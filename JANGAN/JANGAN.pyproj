@@ -33,6 +33,21 @@
     <Compile Include="CGAN\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classifier\CompilerConfigObject.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\DataLoader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\FitData.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\LayerConfigObject.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classifier\LetterModel.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Classifier\__init__.py">
       <SubType>Code</SubType>
     </Compile>
