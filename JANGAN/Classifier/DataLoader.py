@@ -36,6 +36,25 @@ class DataLoader(object):
         fd = self._preprocess_images(self._load_from_dir(path))
         return fd
 
+    def load_data_set(self, path: str, validation_split = 0.2, subset = "validation", seed = 123):
+        data_dir = pathlib.Path(path)
+        ds = tensorflow.keras.utils.image_dataset_from_directory(data_dir, 
+                                                                            labels="inferred", 
+                                                                            label_mode="int", 
+                                                                            class_names=None,
+                                                                            validation_split = validation_split,
+                                                                            subset=subset,
+                                                                            seed=seed,
+                                                                            color_mode="rgb",
+                                                                            batch_size=self.batch_size, 
+                                                                            image_size=(self.img_height, self.img_width), 
+                                                                            shuffle=True, 
+                                                                            interpolation="bilinear", 
+                                                                            follow_links=False, 
+                                                                            crop_to_aspect_ratio=False)
+
+        return self._preprocess_images(ds)
+
     @dispatch(tensorflow.data.Dataset)
     def _preprocess_images(self, dataset: tensorflow.data.Dataset):
         norm_data = self._cache_dataset(dataset)
