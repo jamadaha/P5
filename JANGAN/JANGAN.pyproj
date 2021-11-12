@@ -48,6 +48,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="JANGAN.py" />
+    <Compile Include="JANGANModuleReloader.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="JANGANQueue.py">
       <SubType>Code</SubType>
     </Compile>
