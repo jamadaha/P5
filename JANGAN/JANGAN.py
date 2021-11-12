@@ -33,7 +33,7 @@ class JANGAN():
 
         print(f" --- Done! --- ")
 
-    def Run(self):
+    def MakeCGANDataset(self):
         if self.cfg.GetBoolValue("DATAGENERATOR", "PurgePreviousData"):
             self.PurgeRunDataFolder()
 
@@ -61,13 +61,14 @@ class JANGAN():
 
         print(" --- Done! --- ")
         print("")
+
+    def TrainCGAN(self):
         print(" --- Training CGAN --- ")
 
         classCount = 0
         for entry in os.scandir(self.cfg.GetStringValue("DATAGENERATOR", "OutputLettersPath")):
             if entry.is_dir():
                 classCount += 1
-
 
         self.cgan = cg.CGAN(
             self.cfg.GetIntValue("CGAN", "BatchSize"),

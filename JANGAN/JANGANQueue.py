@@ -1,31 +1,7 @@
-from importlib import reload
 import traceback
-
-def ReloadAllModules():
-    print(" --- Reloading modules --- ")
-
-    import CGAN as cg
-    reload(cg.CGANKerasModel)
-    reload(cg.CGANTrainer)
-    reload(cg.DatasetFormatter)
-    reload(cg.DatasetLoader)
-    reload(cg.LayerDefinition)
-    reload(cg.LetterProducer)
-    reload(cg)
-
-    import DataGenerator as dg
-    reload(dg.DataExtractor)
-    reload(dg.FileImporter)
-    reload(dg.SharedFunctions)
-    reload(dg.TextSequence)
-    reload(dg)
-
-    import JANGAN as jg
-    reload(jg)
-
-    print(" --- Done! --- ")
-
 from ProjectTools import ConfigHelper    
+import JANGANQueueChecker
+import JANGANModuleReloader
 
 print(" --- Loading queue config file --- ")
 cfg = ConfigHelper.ConfigHelper("ExperimentQueueConfig.ini")
@@ -33,7 +9,12 @@ cfg.LoadConfig()
 print(" --- Done! --- ")
 print("")
 
-expDict = cfg.GetJsonValue("EXPERIMENTS","ExperimentList");
+print(" --- Checking the queue file --- ")
+queueChecker = JANGANQueueChecker.JANGANQueueChecker(cfg)
+queueChecker.CheckConfig()
+print(" --- Done! --- ")
+
+expDict = cfg.GetJsonValue("EXPERIMENTS","ExperimentList")
 for key in expDict:
     count = expDict[key]['AmountOfTimesToRun']
     for n in range(count):
@@ -46,9 +27,13 @@ for key in expDict:
             import JANGAN as jg
 
             expJANGAN = jg.JANGAN(expDict[key]['ModuleName'], expDict[key]['ConfigFile'])
-            expJANGAN.Run()
-            expJANGAN.ProduceOutput()
-            expJANGAN.ClassifyCGANOutput()
+
+            if expDict[key]['MakeCGANDataset'] == "True":
+                expJANGAN.MakeCGANDataset()
+            if expDict[key]['TrainCGAn'] == "True":
+                expJANGAN.TrainCGAN()
+            if expDict[key]['ProduceCGANLetters'] == "True":
+                expJANGAN.ProduceOutput()
 
         except Exception as e:
             print("")
@@ -56,6 +41,8 @@ for key in expDict:
             print("      STACKTRACE")
             print(traceback.format_exc())
             print("")
+
+        JANGANModuleReloader.JANGANModuleReloader().ReloadModules()
 
         print("")
         print(f" --- Experiment iteration '{n + 1}' done! --- ")
