@@ -26,23 +26,15 @@ class DataLoader(object):
         self.img_width = 180
         self.seed = 123
 
-    def __cache_dataset(self, dataset: tensorflow.data.Dataset):
+    def __CacheDataset(self, dataset: tensorflow.data.Dataset):
         #Cached images are kept in memory after they're loaded - ensures the dataset does not become a bottleneck when training. 
         AUTOTUNE = tensorflow.data.experimental.AUTOTUNE
         cached_ds = dataset.cache().prefetch(buffer_size=AUTOTUNE)
         return cached_ds
-    
-        
-    #Changes the pixel range to [0,1]
-    '''def _normalize_pixel_range(self, dataset: tensorflow.data.Dataset):
-        normalization_layer = tensorflow.keras.layers.Rescaling(.1/255)
-        normalized_ds = dataset.map(lambda x, y: (normalization_layer(x), y))
-        image_batch, labels_batch = next(iter(normalized_ds))
-        return normalized_ds'''
 
     #Method completely loads data from path, creates af FittingData object and preprocesses data for training
     def LoadFittingData(self, path:str):
-        fd = self.__PreprocessImages(self.__load_from_dir(path))
+        fd = self.__PreprocessImages(self.__LoadFromDir(path))
         return fd
 
     def LoadDataSet(self, path: str, validation_split = 0.2, subset = "validation", seed = 123):
@@ -67,7 +59,7 @@ class DataLoader(object):
 
     @dispatch(tensorflow.data.Dataset)
     def __PreprocessImages(self, dataset: tensorflow.data.Dataset):
-        norm_data = self.__cache_dataset(dataset)
+        norm_data = self.__CacheDataset(dataset)
         return norm_data
         
     
@@ -79,7 +71,7 @@ class DataLoader(object):
         fd.SetTrainData(self.__PreprocessImages(fitting_data.GetValidationData()))
         return fd
     
-    def __load_from_dir(self, path: str):
+    def __LoadFromDir(self, path: str):
         data_dir = pathlib.Path(path)
 
         training_ds = tensorflow.keras.utils.image_dataset_from_directory(data_dir, 
@@ -116,18 +108,6 @@ class DataLoader(object):
 
         return fitting_data
  
-    
-
-        
-
-
-
-    
-
-
-
-
-
 
 
 
