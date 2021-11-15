@@ -22,8 +22,8 @@ from tensorflow.keras.models import load_model
 
 
 class Classifier():
-    def __init__(self, epochs, retrain, modelname):
-        self.save_dir =  Path( './training_models')
+    def __init__(self, epochs, retrain, modelname, model_path):
+        self.save_dir =  Path(model_path)
         self.model: Model
 
         #Metrics

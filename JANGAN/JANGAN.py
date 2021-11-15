@@ -106,7 +106,8 @@ class JANGAN():
         self.classifier = cf.Classifier(
             self.cfg.GetIntValue("Classifier", "Epochs"),
             self.cfg.GetBoolValue("Classifier", "Retrain"),
-            self.cfg.GetStringValue("Classifier", "ModelName"))
+            self.cfg.GetStringValue("Classifier", "ModelName"), 
+            self.cfg.GetStringValue("Classifier", "ModelPath"))
 
         self.classifier.TrainClassifier(self.cfg.GetStringValue("CGAN", "OutputDir"))
 
