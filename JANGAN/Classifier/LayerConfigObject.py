@@ -1,6 +1,9 @@
+from ProjectTools import AutoPackageInstaller as ap
+
+ap.CheckAndInstall("tensorflow")
+
 from tensorflow.keras import layers
 class LayerConfigObject(object):
-    """description of class"""
 
     def __init__(self):
         self.layers = [
@@ -14,5 +17,5 @@ class LayerConfigObject(object):
                     layers.Flatten(),
                     layers.Dense(128, activation='relu')]
 
-    def add_dense_layer(self, num: int):
+    def AddDenseLayer(self, num: int):
         self.layers.append(layers.Dense(num))

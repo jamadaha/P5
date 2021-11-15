@@ -1,3 +1,5 @@
+from ProjectTools import AutoPackageInstaller as ap
+ap.CheckAndInstall("tensorflow")
 import tensorflow
 
 class CompilerConfigObject(object):

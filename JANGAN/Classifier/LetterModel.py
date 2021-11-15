@@ -1,3 +1,7 @@
+from ProjectTools import AutoPackageInstaller as ap
+
+ap.CheckAndInstall("tensorflow")
+
 from tensorflow.keras import Sequential
 from Classifier.LayerConfigObject import LayerConfigObject
 from Classifier.CompilerConfigObject import CompilerConfigObject

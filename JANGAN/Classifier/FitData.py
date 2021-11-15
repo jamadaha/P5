@@ -1,4 +1,9 @@
+from ProjectTools import AutoPackageInstaller as ap
+
+ap.CheckAndInstall("tensorflow")
+
 import tensorflow
+
 class FitData(object):
     """Datastructure for holding a training and evaluation dataset for fitting models."""
     
@@ -8,15 +13,15 @@ class FitData(object):
         self.labels: []
         self.num_classes = len(td.class_names)
 
-    def get_train_data(self):
+    def GetTrainData(self):
         return self.train_data
 
-    def set_train_data(self, data: tensorflow.data.Dataset):
+    def SetTrainData(self, data: tensorflow.data.Dataset):
         self.train_data = data
 
-    def get_val_data(self):
+    def GetValidationData(self):
         return self.val_data
     
-    def set_val_data(self, data: tensorflow.data.Dataset):
+    def SetValidationData(self, data: tensorflow.data.Dataset):
         self.val_data = data
 
