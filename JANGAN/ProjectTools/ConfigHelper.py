@@ -5,15 +5,18 @@ ap.CheckAndInstall("json")
 import configparser
 import os
 import json
+import time
 
 class ConfigHelper():
     __config = None
     ConfigDir = ""
     ConfigOverrideDir = ""
+    TokenReplacements = [("{TIMESTAMP}", time.strftime("%Y%m%d-%H%M%S"))]
 
-    def __init__(self, configDir = "config.ini", configOverrideDir = "override-config.ini"):
+    def __init__(self, configDir = "config.ini", configOverrideDir = "override-config.ini", tokenReplacements = []):
         self.ConfigDir = configDir;
         self.ConfigOverrideDir = configOverrideDir
+        TokenReplacements = tokenReplacements
 
     def LoadConfig(self):
         self.__config = configparser.ConfigParser()
@@ -43,7 +46,11 @@ class ConfigHelper():
 
     def GetStringValue(self, category, key):
         self.CheckIfKeyExists(category,key)
-        return self.__config[category][key].strip('"')
+        value = self.__config[category][key]
+        value = value.strip('"')
+        for token in self.TokenReplacements:
+            value = value.replace(token[0], token[1])
+        return value
 
     def GetJsonValue(self, category, key):
         self.CheckIfKeyExists(category,key)
