@@ -103,18 +103,18 @@ class JANGAN():
     def ClassifyCGANOutput(self):
         print(" --- Classifying Output of CGAN --- ")
 
-        self.classifier = cf.Classifier(self.cfg.GetIntValue("Classifier", "Epochs"),
-                                        self.cfg.GetBoolValue("Classifier", "Retrain"),
-                                        self.cfg.GetStringValue("Classifier", "ModelName")
-                                        )
+        self.classifier = cf.Classifier(
+            self.cfg.GetIntValue("Classifier", "Epochs"),
+            self.cfg.GetBoolValue("Classifier", "Retrain"),
+            self.cfg.GetStringValue("Classifier", "ModelName"))
 
         self.classifier.TrainClassifier(self.cfg.GetStringValue("CGAN", "OutputDir"))
 
         # Produce output
-        self.classifier.ProduceStatistics(self.cfg.GetStringValue("Classifier", "ValidationData"),
-                                          self.cfg.GetFloatValue("Classifier", "ValidationSplit"),
-                                          self.cfg.GetStringValue("Classifier", "Subset"),
-                                          self.cfg.GetIntValue("Classifier", "Seed")                                         
-                                          )
+        self.classifier.ProduceStatistics(
+            self.cfg.GetStringValue("Classifier", "ValidationData"),
+            self.cfg.GetFloatValue("Classifier", "ValidationSplit"),
+            self.cfg.GetStringValue("Classifier", "Subset"),
+            self.cfg.GetIntValue("Classifier", "Seed"))
 
         print(" --- Done! --- ")
