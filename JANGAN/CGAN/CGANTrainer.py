@@ -102,14 +102,14 @@ class CGANTrainer():
             if iteration % self.RefreshUIEachXStep == 0:
                 returnTest = self.CGAN.test_step(image_batch, True)
                 self.__latestAccuracy = float(returnTest['cgan_accuracy'])
-                self.__PrintTestStatus(iteration, totalIterations, epochTime);
+                self.__PrintTestStatus(iteration, totalIterations, epochTime)
                 epochTime = time.time()
             else:
                 self.CGAN.test_step(image_batch, True)
             iteration += 1
-        self.CGAN.CGANAccuracy_tracker.reset_state();
+        self.CGAN.CGANAccuracy_tracker.reset_state()
 
-        self.__PrintTestStatus(totalIterations, totalIterations, epochTime);
+        self.__PrintTestStatus(totalIterations, totalIterations, epochTime)
         print("")
         print("Done!")
 
