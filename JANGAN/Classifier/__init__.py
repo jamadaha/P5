@@ -70,7 +70,7 @@ class Classifier():
     def __TrainModelCallback_(self, model: Model, fd: FitData.FitData, epochs: int, retrain = False, model_name = "my_model"):
         cm = model
         save_path = self.save_dir / (model_name + '.h5')
-        self.MakeDir(self.save_dir)
+        self.save_dir.mkdir(parents = True, exist_ok = True)
 
         if(retrain):
             self.fit_history = cm.fit(fd.GetTrainData(), epochs=epochs)
@@ -91,13 +91,5 @@ class Classifier():
             return model.predict(data)
         except:
             print("Exception thrown. Tried to predict over untrained model.")
-
-    #Utility functions for handling paths.
-
-    def MakeDir(self, path: Path):
-        if(path.exists()):
-            return path
-        else:
-            path.mkdir(parents=True, exist_ok=True)
 
 
