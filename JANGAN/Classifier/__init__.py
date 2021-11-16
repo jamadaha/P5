@@ -36,27 +36,20 @@ class Classifier():
         self.retrain = retrain
         self.modelname = modelname
 
-    def TrainClassifier(self, data_path: str):
+    def TrainClassifier(self, fitdata: FitData.FitData):
         #Sets up the model for training
         self.model = self.__CreateModel(LayerConfigObject.LayerConfigObject(), CompilerConfigObject.CompilerConfigObject())
-        
-        #Mount data from GAN
-        dataLoader = DataLoader.DataLoader()
-        data = dataLoader.LoadFittingData(data_path)
-        
         #Train the model with the mounted data
-        self.model = self.__TrainModelCallback_(self.model, data, self.epochs, self.retrain, self.modelname)
+        self.model = self.__TrainModelCallback_(self.model, fitdata, self.epochs, self.retrain, self.modelname)
         return self.model
 
-    def __EvaluateOnRealData(self, data_path: str, validation_split = 0.2, subset = "validaton", seed = 123):
-        dataLoader = DataLoader.DataLoader()
-        data = dataLoader.LoadDataSet(data_path, validation_split, subset, seed)
+    def __EvaluateOnData(self, data: tensorflow.data.Dataset , validation_split = 0.2, subset = "validaton", seed = 123):
         score = self.model.evaluate(x = data, verbose = 1)
         self.loss = score[0]
         self.accuracy = score[1]
 
     def ProduceStatistics(self, input_path: str, validation_split = 0.2, subset = "validation", seed = 123):
-        self.__EvaluateOnRealData(input_path, validation_split, subset, seed)
+        self.__EvaluateOnData(input_path, validation_split, subset, seed)
         return self.accuracy
     
     def __CreateModel(self, layers: LayerConfigObject.LayerConfigObject, compile_config: CompilerConfigObject.CompilerConfigObject):
