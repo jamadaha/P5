@@ -14,9 +14,9 @@ queueChecker = JANGANQueueChecker.JANGANQueueChecker(cfg)
 queueChecker.CheckConfig()
 print(" --- Done! --- ")
 
-expDict = cfg.GetJsonValue("EXPERIMENTS","ExperimentList")
+expDict = cfg.GetListValue("EXPERIMENTS","ExperimentList")
 for key in expDict:
-    count = expDict[key]['AmountOfTimesToRun']
+    count = cfg.GetIntValue(key,'AmountOfTimesToRun')
     for n in range(count):
         print("")
         print(f" --- Running experiment '{key}' --- ")
@@ -26,12 +26,12 @@ for key in expDict:
         try:
             import JANGAN as jg
 
-            expJANGAN = jg.JANGAN(expDict[key]['ModuleName'], expDict[key]['ConfigFile'])
-            if expDict[key]['MakeCGANDataset'] == "True":
+            expJANGAN = jg.JANGAN(cfg.GetStringValue(key, 'ModuleName'), cfg.GetStringValue(key, 'ConfigFile'))
+            if cfg.GetBoolValue(key, 'MakeCGANDataset') == True:
                 expJANGAN.MakeCGANDataset()
-            if expDict[key]['TrainCGAn'] == "True":
+            if cfg.GetBoolValue(key, 'TrainCGAN') == True:
                 expJANGAN.TrainCGAN()
-            if expDict[key]['ProduceCGANLetters'] == "True":
+            if cfg.GetBoolValue(key, 'ProduceCGANLetters') == True:
                 expJANGAN.ProduceOutput()
 
         except Exception as e:
