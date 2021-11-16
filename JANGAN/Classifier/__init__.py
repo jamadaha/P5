@@ -22,23 +22,30 @@ from tensorflow.keras.models import load_model
 
 
 class Classifier():
+    save_dir: Path
+    model: Model
+    #Metrics
+    fit_history: tensorflow.keras.callbacks.History
+    accuracy
+    loss
+    #Training variables
+    epochs: int
+    retrain: bool
+    modelname: str
+
     def __init__(self, epochs, retrain, modelname, model_path):
         self.save_dir =  Path(model_path)
-        self.model: Model
-
-        #Metrics
-        self.fit_history: tensorflow.keras.callbacks.History
         self.accuracy = []
         self.loss = []
-
-        #Training variables
         self.epochs = epochs
         self.retrain = retrain
         self.modelname = modelname
 
     def TrainClassifier(self, fitdata: FitData.FitData):
+        layers = LayerConfigObject.LayerConfigObject()
+        layers.AddDenseLayer(fitdata.num_classes)
         #Sets up the model for training
-        self.model = self.__CreateModel(LayerConfigObject.LayerConfigObject(), CompilerConfigObject.CompilerConfigObject())
+        self.model = self.__CreateModel(layers, CompilerConfigObject.CompilerConfigObject())
         #Train the model with the mounted data
         self.model = self.__TrainModelCallback_(self.model, fitdata, self.epochs, self.retrain, self.modelname)
         return self.model
