@@ -105,7 +105,7 @@ class ConditionalGAN(tf.keras.Model):
                 "d_loss": self.disc_loss_tracker.result(),
             }
 
-    #@tf.function
+    @tf.function
     def test_step(self, data, returnAccuracy):
         real_images, one_hot_labels = data
 
