@@ -117,7 +117,6 @@ class ConditionalGAN(tf.keras.Model):
             image_one_hot_labels, (-1, self.ImageSize, self.ImageSize, self.NumberOfClasses)
         )
 
-        labelCount = tf.shape(one_hot_labels)[1] - 1
         batch_size = tf.shape(real_images)[0]
         misleading_labels = tf.ones((batch_size, 1))
 
