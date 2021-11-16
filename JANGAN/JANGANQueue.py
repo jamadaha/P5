@@ -27,13 +27,16 @@ for key in expDict:
             import JANGAN as jg
 
             expJANGAN = jg.JANGAN(expDict[key]['ModuleName'], expDict[key]['ConfigFile'])
-
+            expJANGAN.ClassifyCGANOutput()
             if expDict[key]['MakeCGANDataset'] == "True":
                 expJANGAN.MakeCGANDataset()
             if expDict[key]['TrainCGAn'] == "True":
                 expJANGAN.TrainCGAN()
             if expDict[key]['ProduceCGANLetters'] == "True":
                 expJANGAN.ProduceOutput()
+            if expDict[key]['TrainClassifier'] == "True":
+                expJANGAN.ClassifyCGANOutput()
+
 
         except Exception as e:
             print("")
