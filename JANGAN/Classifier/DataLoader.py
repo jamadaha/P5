@@ -20,11 +20,12 @@ from Classifier.FitData import FitData
 
 class DataLoader(object):
     """A class to handle loading of data for the model. Is responsible for all direct manipulation of the data"""    
-    def __init__(self):
-        self.batch_size = 32
-        self.img_height = 180
-        self.img_width = 180
-        self.seed = 123
+    def __init__(self, batch_size: int, img_height: int, img_width: int, seed: int):
+        self.batch_size = batch_size
+        self.img_height = img_height
+        self.img_width = img_width
+        self.seed = seed
+
 
     def __CacheDataset(self, dataset: tensorflow.data.Dataset):
         #Cached images are kept in memory after they're loaded - ensures the dataset does not become a bottleneck when training. 
@@ -61,8 +62,8 @@ class DataLoader(object):
         data_dir = pathlib.Path(path)
         ds = tensorflow.keras.utils.image_dataset_from_directory(
             data_dir, 
-            labels="inferred", 
-            label_mode="int", 
+            labels="inferred",
+            label_mode="int",
             class_names=None,
             validation_split = validation_split,
             subset=subset,

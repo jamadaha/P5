@@ -8,6 +8,7 @@ from ProjectTools import ConfigHelper
 import CGAN as cg
 import DataGenerator as dg
 import Classifier as cf
+import Classifier.DataLoader
 
 class JANGAN():
     cfg = None
@@ -102,18 +103,30 @@ class JANGAN():
 
     def ClassifyCGANOutput(self):
         print(" --- Classifying Output of CGAN --- ")
+        #Mount data from GAN
+        dataLoader = Classifier.DataLoader.DataLoader(
+            self.cfg.GetIntValue("DataLoader", "BatchSize"),
+            self.cfg.GetIntValue("DataLoader", "ImageHeight"),
+            self.cfg.GetIntValue("DataLoader", "ImageWidth"),
+            self.cfg.GetIntValue("DataLoader", "Seed")
+            )
+
+        data = dataLoader.LoadFittingData( 
+            self.cfg.GetStringValue("CGAN", "OutputDir"))
 
         self.classifier = cf.Classifier(
             self.cfg.GetIntValue("Classifier", "Epochs"),
             self.cfg.GetBoolValue("Classifier", "Retrain"),
-            self.cfg.GetStringValue("Classifier", "ModelName"), 
+            self.cfg.GetStringValue("Classifier", "ModelName"),
             self.cfg.GetStringValue("Classifier", "ModelPath"))
 
-        self.classifier.TrainClassifier(self.cfg.GetStringValue("CGAN", "OutputDir"))
+        #Train model
+        self.classifier.TrainClassifier(data)
+        vdata = dataLoader.LoadDataSet(self.cfg.GetStringValue("Classifier", "ValidationData"), self.cfg.GetStringValue("ValidationSplit"), self.cfg.GetStringValue("Classifier", "Subset"), self.cfg.GetIntValue("Classifier", "Seed"))
 
         # Produce output
         self.classifier.ProduceStatistics(
-            self.cfg.GetStringValue("Classifier", "ValidationData"),
+            vdata,
             self.cfg.GetFloatValue("Classifier", "ValidationSplit"),
             self.cfg.GetStringValue("Classifier", "Subset"),
             self.cfg.GetIntValue("Classifier", "Seed"))
