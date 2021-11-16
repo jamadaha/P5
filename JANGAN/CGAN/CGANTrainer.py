@@ -7,6 +7,7 @@ import tensorflow as tf
 import time
 import os
 from ProjectTools import Logger as lgr
+import tensorboard
 
 class CGANTrainer():
     CGAN = None
@@ -31,7 +32,12 @@ class CGANTrainer():
         self.CheckpointPath = checkpointPath
         self.Logger = lgr.Logger(logPath, 'TrainingData')
         self.Logger.InitCSV(['Epoch', 'GeneratorLoss', 'DiscriminatorLoss'])
-        self.SummaryWriter = tf.summary.create_file_writer(logPath)
+        self.SummaryWriter = {
+            'GLoss': tf.summary.create_file_writer(os.path.join(logPath, 'Loss', 'GLoss')),
+            'DLoss': tf.summary.create_file_writer(os.path.join(logPath, 'Loss', 'DLoss')),
+            'DiffLoss': tf.summary.create_file_writer(os.path.join(logPath, 'Loss', 'DiffLoss')),
+            'Accuracy': tf.summary.create_file_writer(os.path.join(logPath, 'Accuracy'))
+        }
 
     def TrainCGAN(self):
         print("Training started")
@@ -75,6 +81,22 @@ class CGANTrainer():
             hf.DeleteFolderAndAllContents(self.CheckpointPath)
         self.CGAN.save_weights(self.CheckpointPath + 'cgan_checkpoint')
 
+    def __LogData(self, epoch):
+        self.Logger.AppendToCSV([epoch + 1, self.__latestGLoss, self.__latestDLoss])
+
+        with self.SummaryWriter['GLoss'].as_default():
+            with tf.name_scope('Loss'):
+                tf.summary.scalar('Loss', self.__latestGLoss, step=epoch)
+        with self.SummaryWriter['DLoss'].as_default():
+            with tf.name_scope('Loss'):
+                tf.summary.scalar('Loss', self.__latestDLoss, step=epoch)
+        with self.SummaryWriter['DiffLoss'].as_default():
+            with tf.name_scope('Loss'):
+                tf.summary.scalar('DiffLoss', abs(self.__latestDLoss - self.__latestGLoss), step=epoch)
+        with self.SummaryWriter['Accuracy'].as_default():
+            with tf.name_scope('Accuracy'):
+                tf.summary.scalar('Accuracy', self.__latestAccuracy, step=epoch)
+
     def __EpochRun(self, epoch):
         print("Training CGAN...")
         (image_batch_train, image_batch_test) = self.CreateDataSet(self.Datasets)
@@ -115,8 +137,5 @@ class CGANTrainer():
 
         if self.SaveCheckpoints:
             self.__SaveCheckpoint()
-        self.Logger.AppendToCSV([epoch + 1, self.__latestGLoss, self.__latestDLoss])
 
-        with self.SummaryWriter.as_default():
-            tf.summary.scalar('gloss', self.__latestGLoss, step=epoch+1)
-            tf.summary.scalar('dloss', self.__latestDLoss, step=epoch+1)
+        self.__LogData(epoch)
