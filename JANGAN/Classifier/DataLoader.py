@@ -121,7 +121,3 @@ class DataLoader(object):
         fitting_data = FitData(training_ds, validation_ds)
 
         return fitting_data
- 
-
-
-
