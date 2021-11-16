@@ -20,6 +20,7 @@ class CGANTrainer():
 
     __latestGLoss = 0
     __latestDLoss = 0
+    __latestAccuracy = 0
 
     def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, logPath):
         self.CGAN = cGAN
@@ -42,16 +43,20 @@ class CGANTrainer():
             self.__EpochRun(epoch)
 
             totalEpochTime = time.time()-start
-            print("")
-            print("Done!")
+
             print(f"Time for epoch {epoch + 1} is {self.GetDatetimeFromSeconds(totalEpochTime)}. Est time remaining for training is {self.GetDatetimeFromSeconds(totalEpochTime*(self.Epochs-(epoch + 1)))}")
         print("Training finished!")
             
     def CreateDataSet(self, dataArray):
-        returnSet = dataArray[0]
+        (returnTrainSet, returnTestSet) = dataArray[0]
         for data in dataArray[1:]:
-            returnSet = returnSet.concatenate(data)
-        return returnSet.shuffle(buffer_size=1024)
+            (addTrainSet, addTestSet) = data
+            returnTrainSet = returnTrainSet.concatenate(addTrainSet)
+            returnTestSet = returnTestSet.concatenate(addTestSet)
+        
+        returnTrainSet = returnTrainSet.shuffle(buffer_size=1024)
+        returnTestSet = returnTestSet.shuffle(buffer_size=1024)
+        return (returnTrainSet, returnTestSet)
 
     def GetDatetimeFromSeconds(self, seconds):
         return time.strftime("%H:%M:%S", time.gmtime(seconds))
@@ -60,6 +65,10 @@ class CGANTrainer():
         estRemainingTime = ((time.time() - epochTime) / self.RefreshUIEachXStep) * (totalIterations - iteration)
         print(f"Generator loss: {self.__latestGLoss:.4f}. Discriminator loss: {self.__latestDLoss:.4f}. Progress: {((iteration/totalIterations)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainingTime)}    ", end="\r")
 
+    def __PrintTestStatus(self, iteration, totalIterations, epochTime):
+        estRemainingTime = ((time.time() - epochTime) / self.RefreshUIEachXStep) * (totalIterations - iteration)
+        print(f"Accuracy: {self.__latestAccuracy:.2f}. Progress: {((iteration/totalIterations)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainingTime)}    ", end="\r")
+
     def __SaveCheckpoint(self):
         if os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):
             from ProjectTools import HelperFunctions as hf
@@ -67,11 +76,12 @@ class CGANTrainer():
         self.CGAN.save_weights(self.CheckpointPath + 'cgan_checkpoint')
 
     def __EpochRun(self, epoch):
-        epochDataset = self.CreateDataSet(self.Datasets)
-        totalIterations = tf.data.experimental.cardinality(epochDataset).numpy()
+        print("Training CGAN...")
+        (image_batch_train, image_batch_test) = self.CreateDataSet(self.Datasets)
+        totalIterations = tf.data.experimental.cardinality(image_batch_train).numpy()
         iteration = 0
         epochTime = time.time()
-        for image_batch in epochDataset:
+        for image_batch in image_batch_train:
             if iteration % self.RefreshUIEachXStep == 0:
                 returnVal = self.CGAN.train_step(image_batch, True)
                 self.__latestGLoss = float(returnVal['g_loss'])
@@ -81,7 +91,28 @@ class CGANTrainer():
             else:
                 self.CGAN.train_step(image_batch, False)
             iteration += 1
+
         self.__PrintStatus(totalIterations, totalIterations, epochTime, epoch)
+        print("")
+        print("Done!")
+
+        print("Testing CGAN...")
+        iteration = 0
+        for image_batch in image_batch_test:
+            if iteration % self.RefreshUIEachXStep == 0:
+                returnTest = self.CGAN.test_step(image_batch, True)
+                self.__latestAccuracy = float(returnTest['cgan_accuracy'])
+                self.__PrintTestStatus(iteration, totalIterations, epochTime)
+                epochTime = time.time()
+            else:
+                self.CGAN.test_step(image_batch, True)
+            iteration += 1
+        self.CGAN.CGANAccuracy_tracker.reset_state()
+
+        self.__PrintTestStatus(totalIterations, totalIterations, epochTime)
+        print("")
+        print("Done!")
+
         if self.SaveCheckpoints:
             self.__SaveCheckpoint()
         self.Logger.AppendToCSV([epoch + 1, self.__latestGLoss, self.__latestDLoss])
