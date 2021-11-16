@@ -16,6 +16,7 @@ class CGANTrainer():
     SaveCheckpoints = False
     CheckpointPath = ""
     Logger = None
+    SummaryWriter = None
 
     __latestGLoss = 0
     __latestDLoss = 0
@@ -29,6 +30,7 @@ class CGANTrainer():
         self.CheckpointPath = checkpointPath
         self.Logger = lgr.Logger(logPath, 'TrainingData')
         self.Logger.InitCSV(['Epoch', 'GeneratorLoss', 'DiscriminatorLoss'])
+        self.SummaryWriter = tf.summary.create_file_writer(logPath)
 
     def TrainCGAN(self):
         print("Training started")
@@ -83,3 +85,7 @@ class CGANTrainer():
         if self.SaveCheckpoints:
             self.__SaveCheckpoint()
         self.Logger.AppendToCSV([epoch + 1, self.__latestGLoss, self.__latestDLoss])
+
+        with self.SummaryWriter.as_default():
+            tf.summary.scalar('gloss', self.__latestGLoss, step=epoch+1)
+            tf.summary.scalar('dloss', self.__latestDLoss, step=epoch+1)
