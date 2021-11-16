@@ -3,6 +3,7 @@ from ProjectTools import AutoPackageInstaller as ap
 ap.CheckAndInstall("tensorflow")
 
 import tensorflow as tf
+import numpy as np
 
 class ConditionalGAN(tf.keras.Model):
     ImageSize = 0
@@ -107,24 +108,25 @@ class ConditionalGAN(tf.keras.Model):
 
     @tf.function
     def test_step(self, data, returnAccuracy):
-        real_images, one_hot_labels = data
+        real_images, real_labels = data
 
-        image_one_hot_labels = one_hot_labels[:, :, None, None]
-        image_one_hot_labels = tf.repeat(
-            image_one_hot_labels, repeats=[self.ImageSize * self.ImageSize]
+        image_frame_and_labels = real_labels[:, :, None, None]
+        image_frame_and_labels = tf.repeat(
+            image_frame_and_labels, repeats=[self.ImageSize * self.ImageSize]
         )
-        image_one_hot_labels = tf.reshape(
-            image_one_hot_labels, (-1, self.ImageSize, self.ImageSize, self.NumberOfClasses)
+        image_frame_and_labels = tf.reshape(
+            image_frame_and_labels, (-1, self.ImageSize, self.ImageSize, self.NumberOfClasses)
         )
 
         batch_size = tf.shape(real_images)[0]
-        misleading_labels = tf.ones((batch_size, 1))
+        correct_labels = tf.ones((batch_size, 1))
 
-        fake_image_and_labels = tf.concat([real_images, image_one_hot_labels], -1)
-        predictions = self.discriminator(fake_image_and_labels)
+        fake_image_and_labels = tf.concat([real_images, image_frame_and_labels], -1)
+        predictions = self.discriminator(fake_image_and_labels, training=False)
+
+        self.CGANAccuracy_tracker.update_state(correct_labels, predictions)
 
         if returnAccuracy == True:
-            self.CGANAccuracy_tracker.update_state(misleading_labels, predictions)
             return {
                 "cgan_accuracy": self.CGANAccuracy_tracker.result()
             }

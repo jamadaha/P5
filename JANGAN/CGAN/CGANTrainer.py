@@ -67,7 +67,7 @@ class CGANTrainer():
 
     def __PrintTestStatus(self, iteration, totalIterations, epochTime):
         estRemainingTime = ((time.time() - epochTime) / self.RefreshUIEachXStep) * (totalIterations - iteration)
-        print(f"Accuracy: {self.__latestAccuracy:.2f}. Progress: {((iteration/totalIterations)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainingTime)}    ", end="\r")
+        print(f"Accuracy: {(self.__latestAccuracy*100):.2f}% Progress: {((iteration/totalIterations)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainingTime)}    ", end="\r")
 
     def __SaveCheckpoint(self):
         if os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):
@@ -105,7 +105,7 @@ class CGANTrainer():
                 self.__PrintTestStatus(iteration, totalIterations, epochTime)
                 epochTime = time.time()
             else:
-                self.CGAN.test_step(image_batch, True)
+                self.CGAN.test_step(image_batch, False)
             iteration += 1
         self.CGAN.CGANAccuracy_tracker.reset_state()
 

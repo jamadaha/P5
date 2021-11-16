@@ -74,7 +74,7 @@ class CGAN():
         self.CondGAN.compile(
             d_optimizer=keras.optimizers.Adam(learning_rate=0.0003),
             g_optimizer=keras.optimizers.Adam(learning_rate=0.0003),
-            loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
+            loss_fn=keras.losses.BinaryCrossentropy(),
         )
 
     def LoadDataset(self):
