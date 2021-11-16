@@ -21,8 +21,3 @@ class LetterModel():
             run_eagerly = compile_config.run_eagerly,
             steps_per_execution = compile_config.steps_per_execution
             )
-    
-
-        
-        
-  
