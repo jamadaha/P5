@@ -30,12 +30,13 @@ class CGAN():
 
     TrainingDataDir = ""
     TestingDataDir = ""
+    DatasetSplit = 0
 
     CondGAN = None
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -51,6 +52,7 @@ class CGAN():
         self.UseSavedModel = useSavedModel
         self.CheckpointPath = checkpointPath
         self.LogPath = logPath
+        self.DatasetSplit = datasetSplit
 
     def SetupCGAN(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -83,7 +85,7 @@ class CGAN():
         dataLoader.LoadTrainDatasets()
         dataArray = dataLoader.DataSets
 
-        bulkDatasetFormatter = df.BulkDatasetFormatter(dataArray, self.NumberOfClasses,self.BatchSize)
+        bulkDatasetFormatter = df.BulkDatasetFormatter(dataArray, self.NumberOfClasses,self.BatchSize, self.DatasetSplit)
         self.TensorDatasets = bulkDatasetFormatter.ProcessData();
 
     def TrainGAN(self):

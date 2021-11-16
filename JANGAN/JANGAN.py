@@ -82,7 +82,8 @@ class JANGAN():
             self.cfg.GetBoolValue("CGAN", "SaveCheckpoints"),
             self.cfg.GetBoolValue("CGAN", "UseSavedModel"),
             self.cfg.GetStringValue("CGAN", "CheckpointPath"),
-            self.cfg.GetStringValue("CGAN", "LogPath"))
+            self.cfg.GetStringValue("CGAN", "LogPath"),
+            self.cfg.GetFloatValue("CGAN", "DatasetSplit"))
 
         self.cgan.SetupCGAN()
         self.cgan.LoadDataset()
