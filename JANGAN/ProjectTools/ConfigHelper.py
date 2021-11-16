@@ -49,6 +49,10 @@ class ConfigHelper():
         self.CheckIfKeyExists(category,key)
         return json.loads(self.__config[category][key].strip('"'))
 
+    def GetListValue(self, category, key):
+        self.CheckIfKeyExists(category,key)
+        return json.loads(self.__config[category][key].strip('"'))
+
     def CategoryKeyCount(self, category):
         self.CheckIfCategoryExists(category)
         return len(self.__config[category])
