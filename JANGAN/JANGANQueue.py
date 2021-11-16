@@ -29,7 +29,7 @@ for key in expDict:
             expJANGAN = jg.JANGAN(cfg.GetStringValue(key, 'ModuleName'), cfg.GetStringValue(key, 'ConfigFile'))
             if cfg.GetBoolValue(key, 'MakeCGANDataset') == True:
                 expJANGAN.MakeCGANDataset()
-            if cfg.GetBoolValue(key, 'TrainCGAn') == True:
+            if cfg.GetBoolValue(key, 'TrainCGAN') == True:
                 expJANGAN.TrainCGAN()
             if cfg.GetBoolValue(key, 'ProduceCGANLetters') == True:
                 expJANGAN.ProduceOutput()
