@@ -3,7 +3,6 @@ from ProjectTools import AutoPackageInstaller as ap
 ap.CheckAndInstall("tensorflow")
 
 import tensorflow as tf
-import numpy as np
 
 class ConditionalGAN(tf.keras.Model):
     ImageSize = 0
@@ -110,6 +109,7 @@ class ConditionalGAN(tf.keras.Model):
     def test_step(self, data, returnAccuracy):
         real_images, real_labels = data
 
+        # Make base tensor, with correct sizes
         image_frame_and_labels = real_labels[:, :, None, None]
         image_frame_and_labels = tf.repeat(
             image_frame_and_labels, repeats=[self.ImageSize * self.ImageSize]
@@ -118,12 +118,15 @@ class ConditionalGAN(tf.keras.Model):
             image_frame_and_labels, (-1, self.ImageSize, self.ImageSize, self.NumberOfClasses)
         )
 
+        # Make the "correct" labels, consisting of a large array with '1's
         batch_size = tf.shape(real_images)[0]
         correct_labels = tf.ones((batch_size, 1))
 
-        fake_image_and_labels = tf.concat([real_images, image_frame_and_labels], -1)
-        predictions = self.discriminator(fake_image_and_labels, training=False)
+        # Combine the real images and the base tensor from before, and make a prediction on it
+        real_image_and_labels = tf.concat([real_images, image_frame_and_labels], -1)
+        predictions = self.discriminator(real_image_and_labels, training=False)
 
+        # Update loss for this batch
         self.CGANAccuracy_tracker.update_state(correct_labels, predictions)
 
         if returnAccuracy == True:
