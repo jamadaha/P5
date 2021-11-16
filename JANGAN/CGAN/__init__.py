@@ -32,11 +32,13 @@ class CGAN():
     TestingDataDir = ""
     DatasetSplit = 0
 
+    AccuracyThreshold = 0
+
     CondGAN = None
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, accuracyThreshold):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -53,6 +55,7 @@ class CGAN():
         self.CheckpointPath = checkpointPath
         self.LogPath = logPath
         self.DatasetSplit = datasetSplit
+        self.AccuracyThreshold = accuracyThreshold
 
     def SetupCGAN(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -65,7 +68,8 @@ class CGAN():
             generator=layerDefiniton.GetGenerator(), 
             latentDimension=self.LatentDimension, 
             imageSize=self.ImageSize, 
-            numberOfClasses=self.NumberOfClasses
+            numberOfClasses=self.NumberOfClasses,
+            accuracyThreshold=self.AccuracyThreshold
         )
         self.CondGAN.compile(
             d_optimizer=keras.optimizers.Adam(learning_rate=0.0003),

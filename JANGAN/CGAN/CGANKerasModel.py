@@ -8,14 +8,14 @@ class ConditionalGAN(tf.keras.Model):
     ImageSize = 0
     NumberOfClasses = 0
 
-    def __init__(self, discriminator, generator, latentDimension, imageSize, numberOfClasses):
+    def __init__(self, discriminator, generator, latentDimension, imageSize, numberOfClasses, accuracyThreshold):
         super(ConditionalGAN, self).__init__()
         self.discriminator = discriminator
         self.generator = generator
         self.latent_dim = latentDimension
         self.gen_loss_tracker = tf.keras.metrics.Mean(name="generator_loss")
         self.disc_loss_tracker = tf.keras.metrics.Mean(name="discriminator_loss")
-        self.CGANAccuracy_tracker = tf.keras.metrics.Accuracy(name="cgan_accuracy")
+        self.CGANAccuracy_tracker = tf.keras.metrics.BinaryAccuracy(name="cgan_accuracy", threshold=accuracyThreshold)
         self.ImageSize = imageSize
         self.NumberOfClasses = numberOfClasses
 
@@ -123,8 +123,6 @@ class ConditionalGAN(tf.keras.Model):
 
         fake_image_and_labels = tf.concat([real_images, image_one_hot_labels], -1)
         predictions = self.discriminator(fake_image_and_labels)
-
-        sizedPrediction = tf.concat([predictions, misleading_labels], -1)
 
         if returnAccuracy == True:
             self.CGANAccuracy_tracker.update_state(misleading_labels, predictions)
