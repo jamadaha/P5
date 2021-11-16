@@ -49,6 +49,10 @@ class ConfigHelper():
         self.CheckIfKeyExists(category,key)
         return json.loads(self.__config[category][key].strip('"'))
 
+    def GetFloatValue(self, category, key):
+        self.CheckIfKeyExists(category, key)
+        return self.__config.getfloat(category, key)
+
     def GetListValue(self, category, key):
         self.CheckIfKeyExists(category,key)
         return json.loads(self.__config[category][key].strip('"'))
