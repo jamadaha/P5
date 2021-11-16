@@ -32,9 +32,29 @@ class DataLoader(object):
         cached_ds = dataset.cache().prefetch(buffer_size=AUTOTUNE)
         return cached_ds
 
+    @dispatch(FitData)
+    def __NormalizePixelRange(self, dataset: FitData):
+        trainds = self.__NormalizePixelRange(dataset.GetTrainData())
+        valds = self.__NormalizePixelRange(dataset.GetValidationData())
+        dataset.SetTrainData(trainds)
+        dataset.GetValidationData(valds)
+        return dataset
+
+
+    @dispatch(tensorflow.data.Dataset)
+    def __NormalizePixelRange(self, dataset: tensorflow.data.Dataset):
+        normalization_layer = tensorflow.keras.layers.Rescaling(.1/255)
+        normalized_ds = dataset.map(lambda x, y: (normalization_layer(x), y))
+        image_batch, labels_batch = next(iter(normalized_ds))
+        return normalized_ds
+
     #Method completely loads data from path, creates af FittingData object and preprocesses data for training
-    def LoadFittingData(self, path:str):
-        fd = self.__PreprocessImages(self.__LoadFromDir(path))
+    def LoadFittingData(self, path:str): 
+        fd = self.__LoadFromDir(path)
+        td = self.__PreprocessImages(fd.GetTrainData())
+        vd = self.__PreprocessImages(fd.GetValidationData())
+        fd.SetTrainData(td)
+        fd.SetValidationData(vd)
         return fd
 
     def LoadDataSet(self, path: str, validation_split = 0.2, subset = "validation", seed = 123):
@@ -57,20 +77,13 @@ class DataLoader(object):
 
         return self.__PreprocessImages(ds)
 
+    #Caches datasets in FittingData for training and validation set and normalizes pixel range
     @dispatch(tensorflow.data.Dataset)
     def __PreprocessImages(self, dataset: tensorflow.data.Dataset):
-        norm_data = self.__CacheDataset(dataset)
+        norm_data = self.__NormalizePixelRange(dataset)
+        norm_data = self.__CacheDataset(norm_data)
         return norm_data
-        
-    
-    #Caches datasets in FittingData for training and validation set
-    @dispatch(FitData)
-    def __PreprocessImages(self, fitting_data: FitData):
-        fd = fitting_data
-        fd.SetTrainData(self.__PreprocessImages(fitting_data.GetTrainData()))
-        fd.SetTrainData(self.__PreprocessImages(fitting_data.GetValidationData()))
-        return fd
-    
+
     def __LoadFromDir(self, path: str):
         data_dir = pathlib.Path(path)
 
