@@ -34,11 +34,13 @@ class CGAN():
 
     AccuracyThreshold = 0
 
+    LearningRate = None
+
     CondGAN = None
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, accuracyThreshold):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, accuracyThreshold, learningRate):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -56,6 +58,7 @@ class CGAN():
         self.LogPath = logPath
         self.DatasetSplit = datasetSplit
         self.AccuracyThreshold = accuracyThreshold
+        self.LearningRate = learningRate
 
     def SetupCGAN(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -72,8 +75,8 @@ class CGAN():
             accuracyThreshold=self.AccuracyThreshold
         )
         self.CondGAN.compile(
-            d_optimizer=keras.optimizers.Adam(learning_rate=0.0003),
-            g_optimizer=keras.optimizers.Adam(learning_rate=0.0003),
+            d_optimizer=keras.optimizers.Adam(learning_rate=self.LearningRate['Dis']),
+            g_optimizer=keras.optimizers.Adam(learning_rate=self.LearningRate['Gen']),
             loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
         )
 
