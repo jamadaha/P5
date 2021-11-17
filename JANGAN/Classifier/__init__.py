@@ -26,8 +26,8 @@ class Classifier():
     model: Model
     #Metrics
     fit_history: tensorflow.keras.callbacks.History
-    accuracy
-    loss
+    accuracy: []
+    loss: []
     #Training variables
     epochs: int
     retrain: bool

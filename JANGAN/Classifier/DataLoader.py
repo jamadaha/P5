@@ -26,7 +26,6 @@ class DataLoader(object):
         self.img_width = img_width
         self.seed = seed
 
-
     def __CacheDataset(self, dataset: tensorflow.data.Dataset):
         #Cached images are kept in memory after they're loaded - ensures the dataset does not become a bottleneck when training. 
         AUTOTUNE = tensorflow.data.experimental.AUTOTUNE
@@ -40,7 +39,6 @@ class DataLoader(object):
         dataset.SetTrainData(trainds)
         dataset.GetValidationData(valds)
         return dataset
-
 
     @dispatch(tensorflow.data.Dataset)
     def __NormalizePixelRange(self, dataset: tensorflow.data.Dataset):
