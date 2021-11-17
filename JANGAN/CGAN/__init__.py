@@ -90,7 +90,7 @@ class CGAN():
         dataArray = dataLoader.DataSets
 
         bulkDatasetFormatter = df.BulkDatasetFormatter(dataArray, self.NumberOfClasses,self.BatchSize, self.DatasetSplit)
-        self.TensorDatasets = bulkDatasetFormatter.ProcessData();
+        self.TensorDatasets = bulkDatasetFormatter.ProcessData()
 
     def TrainGAN(self):
         if not os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):

@@ -10,7 +10,7 @@ class JANGANQueueChecker():
         self.__cfg = config
 
     def CheckConfig(self):
-        expDict = self.__cfg.GetListValue("EXPERIMENTS","ExperimentList");
+        expDict = self.__cfg.GetListValue("EXPERIMENTS","ExperimentList")
         for key in expDict:
             moduleName = self.__cfg.GetStringValue(key, 'ModuleName')
             count = self.__cfg.GetIntValue(key, 'AmountOfTimesToRun') 
