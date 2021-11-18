@@ -58,7 +58,7 @@ class JANGAN():
         print(" --- Training CGAN --- ")
 
         classCount = 0
-        for entry in os.scandir(self.cfg.GetStringValue("DATAGENERATOR", "OutputLettersPath")):
+        for entry in os.scandir(self.cfg.GetStringValue("DATAGENERATOR", "LetterPath")):
             if entry.is_dir():
                 classCount += 1
 
