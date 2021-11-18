@@ -32,7 +32,7 @@ class CGAN():
     TestingDataDir = ""
     DatasetSplit = 0
 
-    AccuracyThreshold = 0
+    #AccuracyThreshold = 0
 
     LRScheduler = ''
     LearningRateDis = 0.0
@@ -42,7 +42,7 @@ class CGAN():
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, accuracyThreshold, LRScheduler, learningRateDis, learningRateGen):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -59,7 +59,6 @@ class CGAN():
         self.CheckpointPath = checkpointPath
         self.LogPath = logPath
         self.DatasetSplit = datasetSplit
-        self.AccuracyThreshold = accuracyThreshold
         self.LRScheduler = LRScheduler
         self.LearningRateDis = learningRateDis
         self.LearningRateGen = learningRateGen
@@ -76,7 +75,7 @@ class CGAN():
             latentDimension=self.LatentDimension, 
             imageSize=self.ImageSize, 
             numberOfClasses=self.NumberOfClasses,
-            accuracyThreshold=self.AccuracyThreshold
+            #accuracyThreshold=self.AccuracyThreshold
         )
 
         if self.LRScheduler == 'Constant':
