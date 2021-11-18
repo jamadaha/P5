@@ -9,9 +9,11 @@
           "request": "launch",
           "module": "cProfile",
           "cwd": "${workspaceFolder}/JANGAN",
+          "console": "integratedTerminal",
           "args": [
               "-o", "/tmp/tmp.prof", "${file}"
-          ]
+          ],
+          "env": { "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}" }
       },
       {
           "name": "Python: Current File",
@@ -19,7 +21,8 @@
           "request": "launch",
           "program": "${file}",
           "cwd": "${workspaceFolder}/JANGAN",
-          "console": "integratedTerminal"
+          "console": "integratedTerminal",
+          "env": { "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}" }
       }
   ]
 }
