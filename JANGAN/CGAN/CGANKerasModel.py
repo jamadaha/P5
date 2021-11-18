@@ -8,14 +8,14 @@ class ConditionalGAN(tf.keras.Model):
     ImageSize = 0
     NumberOfClasses = 0
 
-    def __init__(self, discriminator, generator, latentDimension, imageSize, numberOfClasses, accuracyThreshold):
+    def __init__(self, discriminator, generator, latentDimension, imageSize, numberOfClasses):
         super(ConditionalGAN, self).__init__()
         self.discriminator = discriminator
         self.generator = generator
         self.latent_dim = latentDimension
         self.gen_loss_tracker = tf.keras.metrics.Mean(name="generator_loss")
         self.disc_loss_tracker = tf.keras.metrics.Mean(name="discriminator_loss")
-        self.CGANAccuracy_tracker = tf.keras.metrics.BinaryAccuracy(name="cgan_accuracy", threshold=accuracyThreshold)
+        #self.CGANAccuracy_tracker = tf.keras.metrics.BinaryAccuracy(name="cgan_accuracy", threshold=accuracyThreshold)
         self.ImageSize = imageSize
         self.NumberOfClasses = numberOfClasses
 
@@ -105,26 +105,31 @@ class ConditionalGAN(tf.keras.Model):
                 "d_loss": self.disc_loss_tracker.result(),
             }
 
-    @tf.function
-    def test_step(self, data, returnAccuracy):
-        real_images, one_hot_labels = data
+    #@tf.function
+    #def test_step(self, data, returnAccuracy):
+    #    real_images, real_labels = data
 
-        image_one_hot_labels = one_hot_labels[:, :, None, None]
-        image_one_hot_labels = tf.repeat(
-            image_one_hot_labels, repeats=[self.ImageSize * self.ImageSize]
-        )
-        image_one_hot_labels = tf.reshape(
-            image_one_hot_labels, (-1, self.ImageSize, self.ImageSize, self.NumberOfClasses)
-        )
+    #    # Make base tensor, with correct sizes
+    #    image_frame_and_labels = real_labels[:, :, None, None]
+    #    image_frame_and_labels = tf.repeat(
+    #        image_frame_and_labels, repeats=[self.ImageSize * self.ImageSize]
+    #    )
+    #    image_frame_and_labels = tf.reshape(
+    #        image_frame_and_labels, (-1, self.ImageSize, self.ImageSize, self.NumberOfClasses)
+    #    )
 
-        batch_size = tf.shape(real_images)[0]
-        misleading_labels = tf.ones((batch_size, 1))
+    #    # Make the "correct" labels, consisting of a large array with '1's
+    #    batch_size = tf.shape(real_images)[0]
+    #    correct_labels = tf.ones((batch_size, 1))
 
-        fake_image_and_labels = tf.concat([real_images, image_one_hot_labels], -1)
-        predictions = self.discriminator(fake_image_and_labels)
+    #    # Combine the real images and the base tensor from before, and make a prediction on it
+    #    real_image_and_labels = tf.concat([real_images, image_frame_and_labels], -1)
+    #    predictions = self.discriminator(real_image_and_labels, training=False)
 
-        if returnAccuracy == True:
-            self.CGANAccuracy_tracker.update_state(misleading_labels, predictions)
-            return {
-                "cgan_accuracy": self.CGANAccuracy_tracker.result()
-            }
+    #    # Update loss for this batch
+    #    self.CGANAccuracy_tracker.update_state(correct_labels, predictions)
+
+    #    if returnAccuracy == True:
+    #        return {
+    #            "cgan_accuracy": self.CGANAccuracy_tracker.result()
+    #        }
