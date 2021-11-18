@@ -8,7 +8,6 @@ class ConditionalGAN(tf.keras.Model):
     ImageSize = 0
     NumberOfClasses = 0
 
-    #def __init__(self, discriminator, generator, latentDimension, imageSize, numberOfClasses, accuracyThreshold):
     def __init__(self, discriminator, generator, latentDimension, imageSize, numberOfClasses):
         super(ConditionalGAN, self).__init__()
         self.discriminator = discriminator

@@ -42,7 +42,7 @@ class CGAN():
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, accuracyThreshold, LRScheduler, learningRateDis, learningRateGen):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -59,7 +59,6 @@ class CGAN():
         self.CheckpointPath = checkpointPath
         self.LogPath = logPath
         self.DatasetSplit = datasetSplit
-        self.AccuracyThreshold = accuracyThreshold
         self.LRScheduler = LRScheduler
         self.LearningRateDis = learningRateDis
         self.LearningRateGen = learningRateGen
