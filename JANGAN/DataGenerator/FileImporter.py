@@ -12,6 +12,8 @@ class FileImporter:
         self.TempDownloadLetterPath = tempDownloadLetterPath
         self.TempDownloadLetterFileName = tempDownloadLetterFileName
 
+        self.ImportFiles()
+
     def ImportFiles(self):
         print("Importing files")
         self.ImportTexts()

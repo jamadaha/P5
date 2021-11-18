@@ -26,7 +26,7 @@ class JANGAN():
         print(" --- Purging training data folder --- ")
 
         from ProjectTools import HelperFunctions as hf
-        hf.DeleteFolderAndAllContents(self.cfg.GetStringValue("DATAGENERATOR","OutputLettersPath"))
+        hf.DeleteFolderAndAllContents(self.cfg.GetStringValue("DATAGENERATOR","LetterPath"))
 
         print(f" --- Done! --- ")
 
@@ -36,24 +36,19 @@ class JANGAN():
 
         print(" --- Generating dataset if not there --- ")
 
-        datagen = dg.DataGenerator()
-        datagen.ConfigureFileImporter(
-            self.cfg.GetStringValue("DATAGENERATOR","TextPath"),
-            self.cfg.GetStringValue("DATAGENERATOR","LetterDownloadURL"),
-            self.cfg.GetJsonValue("DATAGENERATOR","TextDownloadURLS"),
-            self.cfg.GetStringValue("DATAGENERATOR","TempDownloadLetterPath"),
-            self.cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"))
-        datagen.ConfigureTextSequence(
-            self.cfg.GetStringValue("DATAGENERATOR", "TextPath"))
-        datagen.ConfigureDataExtractor(
-            self.cfg.GetStringValue("DATAGENERATOR", "OutputLettersPath"),
-            self.cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterPath"),
-            self.cfg.GetStringValue("DATAGENERATOR", "TempDownloadLetterFileName"),
+        datagen = dg.DataGenerator(
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadURL"),
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadPath"),
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadName"),
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterPath"),
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterOutputFormat"),
             self.cfg.GetIntValue("DATAGENERATOR", "MinimumLetterCount"),
             self.cfg.GetIntValue("DATAGENERATOR", "MaximumLetterCount"),
-            self.cfg.GetStringValue("DATAGENERATOR", "OutputLetterFormat"),
+            self.cfg.GetJsonValue("DATAGENERATOR", "TextDownloadURLS"),
+            self.cfg.GetStringValue("DATAGENERATOR", "TextPath"),
             self.cfg.GetBoolValue("DATAGENERATOR", "IncludeNumbers"),
-            self.cfg.GetBoolValue("DATAGENERATOR", "IncludeLetters"))
+            self.cfg.GetBoolValue("DATAGENERATOR", "IncludeLetters"),
+        )
         datagen.GenerateData()
 
         print(" --- Done! --- ")
