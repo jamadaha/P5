@@ -4,6 +4,7 @@ ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("time")
 
 import tensorflow as tf
+from tensorflow import keras
 import time
 import os
 from ProjectTools import Logger as lgr
@@ -51,6 +52,7 @@ class CGANTrainer():
             totalEpochTime = time.time()-start
 
             print(f"Time for epoch {epoch + 1} is {self.GetDatetimeFromSeconds(totalEpochTime)}. Est time remaining for training is {self.GetDatetimeFromSeconds(totalEpochTime*(self.Epochs-(epoch + 1)))}")
+        
         print("Training finished!")
             
     def CreateDataSet(self, dataArray):
@@ -113,6 +115,8 @@ class CGANTrainer():
             else:
                 self.CGAN.train_step(image_batch, False)
             iteration += 1
+        
+        keras.backend.clear_session()
 
         self.__PrintStatus(totalIterations, totalIterations, epochTime, epoch)
         print("")
