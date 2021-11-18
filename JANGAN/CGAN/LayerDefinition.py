@@ -21,7 +21,7 @@ class LayerDefinition():
                 tf.keras.layers.Conv2D(128, (3, 3), strides=(2, 2), padding="same"),
                 tf.keras.layers.LeakyReLU(alpha=0.2),
                 tf.keras.layers.GlobalMaxPooling2D(),
-                tf.keras.layers.Dense(1, activation="sigmoid"),
+                tf.keras.layers.Dense(1),
             ],
             name="discriminator",
         )

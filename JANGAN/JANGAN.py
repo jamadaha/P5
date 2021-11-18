@@ -84,7 +84,8 @@ class JANGAN():
             self.cfg.GetStringValue("CGAN", "CheckpointPath"),
             self.cfg.GetStringValue("CGAN", "LogPath"),
             self.cfg.GetFloatValue("CGAN", "DatasetSplit"),
-            self.cfg.GetFloatValue("CGAN", "AccuracyThreshold"))
+            #self.cfg.GetFloatValue("CGAN", "AccuracyThreshold")
+            )
 
         self.cgan.SetupCGAN()
         self.cgan.LoadDataset()
