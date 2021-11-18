@@ -12,7 +12,7 @@ class ConfigHelper():
     ConfigOverrideDir = ""
 
     def __init__(self, configDir = "config.ini", configOverrideDir = "override-config.ini"):
-        self.ConfigDir = configDir;
+        self.ConfigDir = configDir
         self.ConfigOverrideDir = configOverrideDir
 
     def LoadConfig(self):
