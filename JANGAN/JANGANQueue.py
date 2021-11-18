@@ -1,4 +1,8 @@
+from os import path, write
 import traceback
+import tracemalloc
+import os
+import time
 from ProjectTools import ConfigHelper    
 import JANGANQueueChecker
 import JANGANModuleReloader
@@ -15,7 +19,26 @@ queueChecker.CheckConfig()
 print(" --- Done! --- ")
 
 expDict = cfg.GetListValue("EXPERIMENTS","ExperimentList")
+
+tracemalloc.start()
+tracemallocPath = '../../Data/TraceMalloc'
+
+if not os.path.isdir(tracemallocPath):
+    os.makedirs(tracemallocPath)
+
+named_tuple = time.localtime() # get struct_time
+time_string = time.strftime("%m-%d-%Y, %H:%M:%S", named_tuple)
+
+tracemallocFile = '/' + time_string + ' tracemalloc.txt'
+
+file = open(tracemallocPath + tracemallocFile,"x")
+file.close()
+
+snapshot = {}
+saveKeys = []
+
 for key in expDict:
+    saveKeys.append(key)
     count = cfg.GetIntValue(key,'AmountOfTimesToRun')
     for n in range(count):
         print("")
@@ -43,11 +66,42 @@ for key in expDict:
 
         JANGANModuleReloader.JANGANModuleReloader().ReloadModules()
 
+        snapshot[key] = tracemalloc.take_snapshot()
+        top_stats = snapshot[key].statistics('lineno')
+        
         print("")
         print(f" --- Experiment iteration '{n + 1}' done! --- ")
         print("")
+    
+    tm = open(tracemallocPath + tracemallocFile, 'a')
+    tm.write(f"[Writing tracemalloc for {key}]")
+    tm.write('\n')
+    tm.close()
+
+    for stat in top_stats[:25]:
+        text = str(stat)
+        with open(tracemallocPath + tracemallocFile, 'a') as f:
+            f.writelines(text)
+            f.write('\n')
+    
+    f.close()
+
+    tm = open(tracemallocPath + tracemallocFile, 'a')
+    tm.write('\n')
+    tm.write('Traced memory is (current, peak):' + str(tracemalloc.get_traced_memory()))
+    tm.write('\n\n')
+    tm.close()
+    
+    print("Tracemallock is done")
 
     print("")
     print(f" --- Experiment '{key}' done! --- ")
     print("")
-        
+
+if (len(saveKeys) > 1):
+    for x in range(len(saveKeys)):
+
+        top_stats = snapshot[saveKeys].compare_to(snapshot[saveKeys], 'lineno')
+        print("[ Top 10 differences ]")
+        for stat in top_stats[:10]:
+            print(stat)
