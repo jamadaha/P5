@@ -86,10 +86,8 @@ class JANGAN():
             self.cfg.GetFloatValue("CGAN", "DatasetSplit"),
             self.cfg.GetFloatValue("CGAN", "AccuracyThreshold"),
             self.cfg.GetStringValue("CGAN", "LRScheduler"),
-            {
-                'Gen': self.cfg.GetFloatValue("CGAN", "GeneratorLearningRate"),
-                'Dis': self.cfg.GetFloatValue("CGAN", "DiscriminatorLearningRate"),
-            })
+            self.cfg.GetFloatValue("CGAN", "LearningRateDiscriminator"),
+            self.cfg.GetFloatValue("CGAN", "LearningRateGenerator"))
 
         self.cgan.SetupCGAN()
         self.cgan.LoadDataset()

@@ -35,13 +35,14 @@ class CGAN():
     AccuracyThreshold = 0
 
     LRScheduler = ''
-    LearningRate = None
+    LearningRateDis = 0.0
+    LearningRateGen = 0.0
 
     CondGAN = None
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, accuracyThreshold, LRScheduler, learningRate):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, accuracyThreshold, LRScheduler, learningRateDis, learningRateGen):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -60,7 +61,8 @@ class CGAN():
         self.DatasetSplit = datasetSplit
         self.AccuracyThreshold = accuracyThreshold
         self.LRScheduler = LRScheduler
-        self.LearningRate = learningRate
+        self.LearningRateDis = learningRateDis
+        self.LearningRateGen = learningRateGen
 
     def SetupCGAN(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -79,18 +81,18 @@ class CGAN():
 
         if self.LRScheduler == 'Constant':
             self.CondGAN.compile(
-                d_optimizer=keras.optimizers.Adam(learning_rate=self.LearningRate['Dis']),
-                g_optimizer=keras.optimizers.Adam(learning_rate=self.LearningRate['Gen']),
+                d_optimizer=keras.optimizers.Adam(learning_rate=self.LearningRateDis),
+                g_optimizer=keras.optimizers.Adam(learning_rate=self.LearningRateGen),
                 loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
             )  
         elif self.LRScheduler == 'ExponentialDecay':
             disSchedule = keras.optimizers.schedules.ExponentialDecay(
-                initial_learning_rate=self.LearningRate['Dis'],
+                initial_learning_rate=self.LearningRateDis,
                 decay_steps=10000,
                 decay_rate=0.9
             )
             genSchedule = keras.optimizers.schedules.ExponentialDecay(
-                initial_learning_rate=self.LearningRate['Gen'],
+                initial_learning_rate=self.LearningRateGen,
                 decay_steps=10000,
                 decay_rate=0.9
             )
