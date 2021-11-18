@@ -49,6 +49,8 @@ class DataGenerator():
     def GenerateData(self):
         print("Generating dataset...")
 
+        self.__FileImporter.ImportFiles()
+
         if self.__LetterOutputMinCount == 0 and self.__LetterOutputMaxCount == 0:
             self.__DataExtractor.ExtractSequence(
                 self.__LetterOutputFormat
