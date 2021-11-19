@@ -6,26 +6,31 @@ import configparser
 import os
 import json
 import time
+import shutil
 
 class ConfigHelper():
     __config = None
-    ConfigDir = ""
-    ConfigOverrideDir = ""
+    ConfigPath = ""
+    ConfigOverridePath = ""
     TokenReplacements = [("{TIMESTAMP}", time.strftime("%Y%m%d-%H%M%S"))]
 
-    def __init__(self, configDir = "config.ini", configOverrideDir = "override-config.ini", tokenReplacements = []):
-        self.ConfigDir = configDir;
-        self.ConfigOverrideDir = configOverrideDir
+    def __init__(self, configPath = "config.ini", configOverridePath = "override-config.ini", tokenReplacements = []):
+        self.ConfigPath = configPath;
+        self.ConfigOverridePath = configOverridePath
         TokenReplacements = tokenReplacements
 
     def LoadConfig(self):
         self.__config = configparser.ConfigParser()
-        if not os.path.exists(self.ConfigDir):
+        if not os.path.exists(self.ConfigPath):
             raise ConfigFileNotFoundException(f"path: '{os.path.abspath(os.getcwd())}', file: '{self.ConfigDir}' not found!")
-        if os.path.exists(self.ConfigOverrideDir):
-            self.__config.read([self.ConfigDir, self.ConfigOverrideDir])
+        if os.path.exists(self.ConfigOverridePath):
+            self.__config.read([self.ConfigPath, self.ConfigOverridePath])
         else:
-            self.__config.read(self.ConfigDir)
+            self.__config.read(self.ConfigPath)
+
+    def CopyConfigToPath(self, path):
+        os.makedirs(path)
+        shutil.copy(self.ConfigPath, path)
 
     def CheckIfCategoryExists(self, category):
         if not self.__config.has_section(category):
