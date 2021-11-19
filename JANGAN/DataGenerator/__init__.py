@@ -1,6 +1,5 @@
 from DataGenerator import FileImporter as fi
 from DataGenerator import DataExtractor as de
-from DataGenerator import TextSequence as ts
 
 class DataGenerator():
     __LetterOutputFormat = ""
@@ -9,7 +8,6 @@ class DataGenerator():
 
     __FileImporter = None
     __DataExtractor = None
-    __TextSequence = None
 
     def __init__(
         self, 
@@ -36,20 +34,18 @@ class DataGenerator():
             letterDownloadPath,
             letterDownloadName)
 
-        self.__TextSequence = ts.TextSequence(textPath)
+        self.__FileImporter.ImportFiles()
 
         self.__DataExtractor = de.DataExtractor(
             letterOutputPath,
             letterDownloadPath +
             letterDownloadName,
-            self.__TextSequence,
+            textPath,
             includeNumbers,
             includeLetters)
 
     def GenerateData(self):
         print("Generating dataset...")
-
-        self.__FileImporter.ImportFiles()
 
         if self.__LetterOutputMinCount == 0 and self.__LetterOutputMaxCount == 0:
             self.__DataExtractor.ExtractSequence(
