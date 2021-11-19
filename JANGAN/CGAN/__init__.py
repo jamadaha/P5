@@ -32,13 +32,17 @@ class CGAN():
     TestingDataDir = ""
     DatasetSplit = 0
 
-    AccuracyThreshold = 0
+    #AccuracyThreshold = 0
+
+    LRScheduler = ''
+    LearningRateDis = 0.0
+    LearningRateGen = 0.0
 
     CondGAN = None
     DataLoader = None
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, accuracyThreshold):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -55,7 +59,9 @@ class CGAN():
         self.CheckpointPath = checkpointPath
         self.LogPath = logPath
         self.DatasetSplit = datasetSplit
-        self.AccuracyThreshold = accuracyThreshold
+        self.LRScheduler = LRScheduler
+        self.LearningRateDis = learningRateDis
+        self.LearningRateGen = learningRateGen
 
     def SetupCGAN(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -69,13 +75,34 @@ class CGAN():
             latentDimension=self.LatentDimension, 
             imageSize=self.ImageSize, 
             numberOfClasses=self.NumberOfClasses,
-            accuracyThreshold=self.AccuracyThreshold
+            #accuracyThreshold=self.AccuracyThreshold
         )
-        self.CondGAN.compile(
-            d_optimizer=keras.optimizers.Adam(learning_rate=0.0003),
-            g_optimizer=keras.optimizers.Adam(learning_rate=0.0003),
-            loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
-        )
+
+        if self.LRScheduler == 'Constant':
+            self.CondGAN.compile(
+                d_optimizer=keras.optimizers.Adam(learning_rate=self.LearningRateDis),
+                g_optimizer=keras.optimizers.Adam(learning_rate=self.LearningRateGen),
+                loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
+            )  
+        elif self.LRScheduler == 'ExponentialDecay':
+            disSchedule = keras.optimizers.schedules.ExponentialDecay(
+                initial_learning_rate=self.LearningRateDis,
+                decay_steps=10000,
+                decay_rate=0.9
+            )
+            genSchedule = keras.optimizers.schedules.ExponentialDecay(
+                initial_learning_rate=self.LearningRateGen,
+                decay_steps=10000,
+                decay_rate=0.9
+            )
+
+            self.CondGAN.compile(
+                d_optimizer=keras.optimizers.Adam(learning_rate=disSchedule),
+                g_optimizer=keras.optimizers.Adam(learning_rate=genSchedule),
+                loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
+            )  
+
+        
 
     def LoadDataset(self):
         if self.UseSavedModel:
@@ -90,7 +117,7 @@ class CGAN():
         dataArray = dataLoader.DataSets
 
         bulkDatasetFormatter = df.BulkDatasetFormatter(dataArray, self.NumberOfClasses,self.BatchSize, self.DatasetSplit)
-        self.TensorDatasets = bulkDatasetFormatter.ProcessData();
+        self.TensorDatasets = bulkDatasetFormatter.ProcessData()
 
     def TrainGAN(self):
         if not os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):

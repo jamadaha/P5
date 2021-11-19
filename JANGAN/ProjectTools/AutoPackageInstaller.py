@@ -19,7 +19,7 @@ def CheckAndInstall(packageName, installName = None):
             while True:
                 Question = input("Package '" + installName + "' is missing. Wanna install it? (y/n)(type Y to say yes to all):")
                 if Question == "Y":
-                    os.environ["AutoPackageInstaller_YesToAllModules"] = "True";
+                    os.environ["AutoPackageInstaller_YesToAllModules"] = "True"
                     CheckAndInstall(packageName)
                     break
                 elif Question == "y":
