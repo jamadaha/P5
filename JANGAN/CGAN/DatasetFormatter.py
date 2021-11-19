@@ -14,12 +14,14 @@ class DatasetFormatter():
     Labels = []
     NumberOfLabels = -1
     BatchSize = -1
+    DatasetSplit = 0
 
-    def __init__(self, images, labels, numberOfLabels, batchSize):
+    def __init__(self, images, labels, numberOfLabels, batchSize, datasetSplit):
         self.Images = images
         self.Labels = labels
         self.NumberOfLabels = numberOfLabels
         self.BatchSize = batchSize
+        self.DatasetSplit = datasetSplit
 
     def ProcessData(self):
         # Scale the pixel values to [0, 1] range, add a channel dimension to
@@ -41,18 +43,29 @@ class BulkDatasetFormatter():
     DataArrays = []
     NumberOfLabels = -1
     BatchSize = -1
+    DatasetSplit = 0
 
-    def __init__(self, dataArrays, numberOfLabels, batchSize):
+    def __init__(self, dataArrays, numberOfLabels, batchSize, datasetSplit):
         self.DataArrays = dataArrays
         self.NumberOfLabels = numberOfLabels
         self.BatchSize = batchSize
+        self.DatasetSplit = datasetSplit
 
     def ProcessData(self):
         tensorDatasets = []
         print(f"Converting all data arrays into tensorflow datasets...")
         for dataset in tqdm(iterable=self.DataArrays, total=len(self.DataArrays)):
             (images, labels) = dataset
-            datasetFormatter = DatasetFormatter(images, labels, self.NumberOfLabels, self.BatchSize)
-            tensorDatasets.append(datasetFormatter.ProcessData())
+            datasetFormatter = DatasetFormatter(images, labels, self.NumberOfLabels, self.BatchSize, self.DatasetSplit)
+            tensorDatasets.append(self.SplitDataset(datasetFormatter.ProcessData(), len(labels)))
         print(f"A total of {len(tensorDatasets)} have been formatted to tensorflow datasets!")
         return tensorDatasets
+
+    def SplitDataset(self, dataset, dataSize):
+        train_size = int(self.DatasetSplit * dataSize)
+        test_size = int((1 - self.DatasetSplit) * dataSize)
+
+        train_dataset = dataset.take(train_size)
+        test_dataset = dataset.take(test_size)
+
+        return (train_dataset, test_dataset)

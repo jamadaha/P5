@@ -2,16 +2,32 @@
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+
+  // In order to profile run the configuration "Python: Current File with profiler"
+  // then install snake viz sudo pip install snakeviz
+  // then run snakeviz /tmp/tmp.prof
+
   "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Python: Current File",
-      "type": "python",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}/JANGAN",
-      "env": { "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}" }
-    }
+  "configurations": [{
+          "name": "Python: Current File with profiler",
+          "type": "python",
+          "request": "launch",
+          "module": "cProfile",
+          "cwd": "${workspaceFolder}/JANGAN",
+          "console": "integratedTerminal",
+          "args": [
+              "-o", "/tmp/tmp.prof", "${file}"
+          ],
+          "env": { "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}" }
+      },
+      {
+          "name": "Python: Current File",
+          "type": "python",
+          "request": "launch",
+          "program": "${file}",
+          "cwd": "${workspaceFolder}/JANGAN",
+          "console": "integratedTerminal",
+          "env": { "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}" }
+      }
   ]
 }
