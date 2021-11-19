@@ -32,7 +32,7 @@ for key in expDict:
                 expJANGAN.TrainCGAN()
             if cfg.GetBoolValue(key, 'ProduceCGANLetters') == True:
                 expJANGAN.ProduceOutput()
-            if expDict[key]['TrainClassifier'] == "True":
+            if cfg.GetBoolValue(key, 'TrainClassifier') == True:
                 expJANGAN.ClassifyCGANOutput()
 
 

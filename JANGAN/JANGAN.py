@@ -105,28 +105,29 @@ class JANGAN():
 
     def ClassifyCGANOutput(self):
         print(" --- Classifying Output of CGAN --- ")
-        #Mount data from GAN
-        dataLoader = Classifier.DataLoader.DataLoader(
-            self.cfg.GetIntValue("DataLoader", "BatchSize"),
-            self.cfg.GetIntValue("DataLoader", "ImageHeight"),
-            self.cfg.GetIntValue("DataLoader", "ImageWidth"),
-            self.cfg.GetIntValue("DataLoader", "Seed")
-            )
-
-        data = dataLoader.LoadFittingData( 
-            self.cfg.GetStringValue("CGAN", "OutputDir"))
 
         self.classifier = cf.Classifier(
             self.cfg.GetIntValue("Classifier", "Epochs"),
             self.cfg.GetBoolValue("Classifier", "Retrain"),
             self.cfg.GetStringValue("Classifier", "ModelName"),
-            self.cfg.GetStringValue("Classifier", "ModelPath"))
+            self.cfg.GetStringValue("Classifier", "ModelPath"),
+            self.cfg.GetStringValue("CGAN", "OutputDir"),
+            self.cfg.GetIntValue("Classifier", "BatchSize"),
+            self.cfg.GetIntValue("Classifier", "ImageHeight"),
+            self.cfg.GetIntValue("Classifier", "ImageWidth"),
+            self.cfg.GetIntValue("Classifier", "Seed"),
+            self.cfg.GetIntValue("Classifier", "Split")
+            )
+
+        #Mount data from GAN
+        self.classifier.LoadData()
 
         #Train model
         self.classifier.TrainClassifier(data)
+        
+        # Produce output
         vdata = dataLoader.LoadDataSet(self.cfg.GetStringValue("Classifier", "ValidationData"), self.cfg.GetStringValue("ValidationSplit"), self.cfg.GetStringValue("Classifier", "Subset"), self.cfg.GetIntValue("Classifier", "Seed"))
 
-        # Produce output
         self.classifier.ProduceStatistics(
             vdata,
             self.cfg.GetFloatValue("Classifier", "ValidationSplit"),
