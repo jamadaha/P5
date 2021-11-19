@@ -22,7 +22,7 @@ class ConfigHelper():
     def LoadConfig(self):
         self.__config = configparser.ConfigParser()
         if not os.path.exists(self.ConfigPath):
-            raise ConfigFileNotFoundException(f"path: '{os.path.abspath(os.getcwd())}', file: '{self.ConfigDir}' not found!")
+            raise ConfigFileNotFoundException(f"path: '{os.path.abspath(os.getcwd())}', file: '{self.ConfigPath}' not found!")
         if os.path.exists(self.ConfigOverridePath):
             self.__config.read([self.ConfigPath, self.ConfigOverridePath])
         else:
