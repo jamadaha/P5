@@ -11,8 +11,8 @@ class CheckMemoryLeak():
     SnapshotKeys = []
     Top_stats = any
 
-    def ConfigurePath(self):
-        self.TracemallocPath = '../../Data/TraceMalloc'
+    def ConfigurePath(self, path, fileName):
+        self.TracemallocPath = path
 
         if not os.path.isdir(self.TracemallocPath):
             os.makedirs(self.TracemallocPath)
@@ -20,7 +20,7 @@ class CheckMemoryLeak():
         named_tuple = time.localtime() # get struct_time
         time_string = time.strftime("%m-%d-%Y, %H:%M:%S", named_tuple)
 
-        self.TracemallocFile = '/' + time_string + ' tracemalloc.txt'
+        self.TracemallocFile = '/' + time_string + ' ' + fileName
 
         file = open(self.TracemallocPath + self.TracemallocFile,"x")
         file.close()
@@ -43,7 +43,7 @@ class CheckMemoryLeak():
 
     def CompareSnapshots(self):
         if (len(self.SnapshotKeys) > 1):
-            for num in range(len(self.SnapshotKeys)):
+            for num in range(len(self.SnapshotKeys) - 1):
                 if (self.SnapshotKeys[num + 1] != None):
                     snapshot1 = self.Snapshot[self.SnapshotKeys[num]]
                     snapshot2 = self.Snapshot[self.SnapshotKeys[num + 1]]
