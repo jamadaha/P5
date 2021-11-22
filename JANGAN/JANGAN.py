@@ -34,6 +34,9 @@ class JANGAN():
         if self.cfg.GetBoolValue("DATAGENERATOR", "PurgePreviousData"):
             self.PurgeRunDataFolder()
 
+            
+        self.cfg.CopyConfigToPath(self.cfg.GetStringValue("CGAN", "ConfigCopyPath"))
+
         print(" --- Generating dataset if not there --- ")
 
         datagen = dg.DataGenerator(
@@ -77,6 +80,7 @@ class JANGAN():
             self.cfg.GetBoolValue("CGAN", "SaveCheckpoints"),
             self.cfg.GetBoolValue("CGAN", "UseSavedModel"),
             self.cfg.GetStringValue("CGAN", "CheckpointPath"),
+            self.cfg.GetStringValue("CGAN", "LatestCheckpointPath"),
             self.cfg.GetStringValue("CGAN", "LogPath"),
             self.cfg.GetFloatValue("CGAN", "DatasetSplit"),
             self.cfg.GetStringValue("CGAN", "LRScheduler"),
