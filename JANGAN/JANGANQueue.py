@@ -1,7 +1,9 @@
 import traceback
+import tracemalloc
 from ProjectTools import ConfigHelper    
 import JANGANQueueChecker
 import JANGANModuleReloader
+import CheckMemoryLeak as cml
 
 print(" --- Loading queue config file --- ")
 cfg = ConfigHelper.ConfigHelper("ExperimentQueueConfig.ini")
@@ -13,9 +15,26 @@ print(" --- Checking the queue file --- ")
 queueChecker = JANGANQueueChecker.JANGANQueueChecker(cfg)
 queueChecker.CheckConfig()
 print(" --- Done! --- ")
+print("")
 
 expDict = cfg.GetListValue("EXPERIMENTS","ExperimentList")
+
+gCfg = ConfigHelper.ConfigHelper("GlobalConfig.ini")
+gCfg.LoadConfig()
+
+runTraceMalloc = gCfg.GetBoolValue("TRACEMALLOC", "RunTraceMalloc")
+
+if (runTraceMalloc):
+    print(" --- Starting Trace Malloc ---")
+    tracemalloc.start()
+
+    checkMemoryLeak = cml.CheckMemoryLeak()
+    checkMemoryLeak.ConfigurePath(gCfg.GetStringValue("TRACEMALLOC", "TraceMallocDir"), gCfg.GetStringValue("TRACEMALLOC", "TraceMallocFile"))
+
 for key in expDict:
+    if (runTraceMalloc):
+        checkMemoryLeak.SaveKey(key)
+
     count = cfg.GetIntValue(key,'AmountOfTimesToRun')
     for n in range(count):
         print("")
@@ -43,11 +62,19 @@ for key in expDict:
 
         JANGANModuleReloader.JANGANModuleReloader().ReloadModules()
 
+        if (runTraceMalloc): 
+            checkMemoryLeak.SaveSnapshot(key, tracemalloc.take_snapshot())
+        
         print("")
         print(f" --- Experiment iteration '{n + 1}' done! --- ")
         print("")
+       
+    if (runTraceMalloc): 
+        checkMemoryLeak.WriteToFile(key, tracemalloc.get_traced_memory())
 
     print("")
     print(f" --- Experiment '{key}' done! --- ")
     print("")
-        
+
+if (runTraceMalloc): 
+    checkMemoryLeak.CompareSnapshots()
