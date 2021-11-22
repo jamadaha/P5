@@ -1,4 +1,5 @@
 from ProjectTools import AutoPackageInstaller as ap
+from DataGenerator import TextSequence as ts
 
 ap.CheckAndInstall("tqdm")
 ap.CheckAndInstall("zipfile")
@@ -16,10 +17,10 @@ class DataExtractor:
     IncludeLetters = False
 
 
-    def __init__(self, outputPath, dataPath, textSequence, includeNumbers, includeLetters):
+    def __init__(self, outputPath, dataPath, textPath, includeNumbers, includeLetters):
         self.OutputPath = outputPath
         self.DataPath = dataPath
-        self.TS = textSequence
+        self.TS = ts.TextSequence(textPath)
         self.IncludeNumbers = includeNumbers
         self.IncludeLetters = includeLetters
 
