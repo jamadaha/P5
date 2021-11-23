@@ -17,23 +17,24 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
         disModel.add(tf.keras.layers.InputLayer((28, 28, self.DiscriminatorInChannels)))
         disModel.add(
             tf.keras.layers.Conv2D(
-                self.DiscriminatorInChannels / 2, 
-                (3, 3), 
-                strides=(2, 2)
+                filters=64, 
+                kernel_size=7, 
+                strides=3,
+                padding="valid"
             )
         )
         disModel.add(tf.keras.layers.LeakyReLU(alpha=0.2))
         disModel.add(
             tf.keras.layers.Conv2D(
-                self.DiscriminatorInChannels,
-                (3, 3),
-                strides=(2, 2)
+                filters=32, 
+                kernel_size=2, 
+                strides=2,
+                padding="valid"
             )
         )
         disModel.add(tf.keras.layers.LeakyReLU(alpha=0.2))
-        print(disModel.summary())
+        disModel.add(tf.keras.layers.Flatten())
         disModel.add(tf.keras.layers.Dense(1, activation='sigmoid'))
-        
         print(disModel.summary())
         tf.keras.utils.plot_model(disModel, to_file='disModel.png', show_shapes=True)
         return disModel

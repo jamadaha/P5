@@ -12,6 +12,9 @@ class LayerDefinition():
         self.DiscriminatorInChannels = discriminatorInChannels
         self.GeneratorInChannels = generatorInChannels
 
+
+    # Good for calculating conv2d size change
+    # https://madebyollin.github.io/convnet-calculator/
     def GetDiscriminator(self):
         return tf.keras.Sequential(
             [
