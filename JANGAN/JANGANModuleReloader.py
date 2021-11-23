@@ -17,8 +17,6 @@ class JANGANModuleReloader():
         import DataGenerator as dg
         reload(dg.DataExtractor)
         reload(dg.FileImporter)
-        reload(dg.SharedFunctions)
-        reload(dg.TextSequence)
         reload(dg)
 
         import JANGAN as jg
