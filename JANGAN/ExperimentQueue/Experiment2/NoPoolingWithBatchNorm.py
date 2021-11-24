@@ -23,6 +23,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
                 padding="valid"
             )
         )
+        disModel.add(tf.keras.layers.BatchNormalization())
         disModel.add(tf.keras.layers.LeakyReLU(alpha=0.2))
         disModel.add(
             tf.keras.layers.Conv2D(
@@ -32,6 +33,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
                 padding="valid"
             )
         )
+        disModel.add(tf.keras.layers.BatchNormalization())
         disModel.add(tf.keras.layers.LeakyReLU(alpha=0.2))
         disModel.add(tf.keras.layers.Flatten())
         disModel.add(tf.keras.layers.Dense(1, activation='sigmoid'))
