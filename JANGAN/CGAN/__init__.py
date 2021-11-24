@@ -67,7 +67,7 @@ class CGAN():
 
     def SetupCGAN(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
-        discriminator_in_channels = self.LatentDimension + self.NumberOfClasses
+        discriminator_in_channels = self.NumberOfChannels + self.NumberOfClasses
 
         layerDefiniton = ld.LayerDefinition(discriminator_in_channels,generator_in_channels)
 
