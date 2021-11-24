@@ -13,33 +13,92 @@ class LayerDefinition():
         self.GeneratorInChannels = generatorInChannels
 
     def GetDiscriminator(self):
-        return tf.keras.Sequential(
-            [
-                tf.keras.layers.InputLayer((28, 28, self.DiscriminatorInChannels)),
-                tf.keras.layers.Conv2D(64, (3, 3), strides=(2, 2), padding="same"),
-                tf.keras.layers.LeakyReLU(alpha=0.2),
-                tf.keras.layers.Conv2D(128, (3, 3), strides=(2, 2), padding="same"),
-                tf.keras.layers.LeakyReLU(alpha=0.2),
-                tf.keras.layers.GlobalMaxPooling2D(),
-                tf.keras.layers.Dense(1),
-            ],
-            name="discriminator",
+        model = tf.keras.Sequential(
+            name='discriminator'
         )
+        model.add(
+            tf.keras.layers.InputLayer(
+                (28, 28, self.DiscriminatorInChannels)
+            )
+        )
+        model.add(
+            tf.keras.layers.Conv2D(
+                filters=64,
+                kernel_size=(3, 3),
+                strides=(2, 2),
+                padding='same'
+            )
+        )
+        model.add(
+            tf.keras.layers.LeakyReLU(alpha=0.2)
+        )
+        model.add(
+            tf.keras.layers.Conv2D(
+                filters=128,
+                kernel_size=(3, 3),
+                strides=(2, 2),
+                padding='same'
+            )
+        )
+        model.add(
+            tf.keras.layers.LeakyReLU(alpha=0.2)
+        )
+        model.add(
+            tf.keras.layers.GlobalMaxPooling2D()
+        )
+        model.add(
+            tf.keras.layers.Dense(1)
+        )
+        return model
 
     def GetGenerator(self):
-        return tf.keras.Sequential(
-            [
-                tf.keras.layers.InputLayer((self.GeneratorInChannels,)),
-                # We want to generate 128 + num_classes coefficients to reshape into a
-                # 7x7x(128 + num_classes) map.
-                tf.keras.layers.Dense(7 * 7 * self.GeneratorInChannels),
-                tf.keras.layers.LeakyReLU(alpha=0.2),
-                tf.keras.layers.Reshape((7, 7, self.GeneratorInChannels)),
-                tf.keras.layers.Conv2DTranspose(128, (4, 4), strides=(2, 2), padding="same"),
-                tf.keras.layers.LeakyReLU(alpha=0.2),
-                tf.keras.layers.Conv2DTranspose(128, (4, 4), strides=(2, 2), padding="same"),
-                tf.keras.layers.LeakyReLU(alpha=0.2),
-                tf.keras.layers.Conv2D(1, (7, 7), padding="same", activation="sigmoid"),
-            ],
-            name="generator",
+        model = tf.keras.Sequential(
+            name='generator'
         )
+        model.add(
+            tf.keras.layers.InputLayer(
+                (self.GeneratorInChannels, )
+            )
+        )
+        model.add(
+            tf.keras.layers.Dense(
+                7 * 7 * self.GeneratorInChannels
+            )
+        )
+        model.add(
+            tf.keras.layers.LeakyReLU(alpha=0.2)
+        )
+        model.add(
+            tf.keras.layers.Reshape(
+                (7, 7, self.GeneratorInChannels)
+            )
+        )
+        model.add(
+            tf.keras.layers.Conv2DTranspose(
+                filters=128,
+                kernel_size=(4, 4),
+                strides=(2, 2),
+                padding='same'
+            )
+        )
+        model.add(
+            tf.keras.layers.LeakyReLU(alpha=0.2)
+        )
+        model.add(
+            tf.keras.layers.Conv2DTranspose(
+                filters=128,
+                kernel_size=(4, 4),
+                strides=(2, 2),
+                padding='same'
+            )
+        )
+        model.add(
+            tf.keras.layers.Conv2D(
+                filters=1,
+                kernel_size=(7, 7),
+                strides=(1, 1),
+                padding='same',
+                activation='sigmoid'
+            )
+        )
+        return model
