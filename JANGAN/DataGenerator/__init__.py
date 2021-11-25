@@ -20,6 +20,8 @@ class DataGenerator():
         letterOutputMaxCount,
         textDownloadURLS,
         textPath,
+        distributionPath,
+        printDistribution,
         includeNumbers,
         includeLetters) -> None:
 
@@ -41,6 +43,8 @@ class DataGenerator():
             letterDownloadPath +
             letterDownloadName,
             textPath,
+            distributionPath,
+            printDistribution,
             includeNumbers,
             includeLetters)
 

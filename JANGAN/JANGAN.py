@@ -49,6 +49,8 @@ class JANGAN():
             self.cfg.GetIntValue("DATAGENERATOR", "MaximumLetterCount"),
             self.cfg.GetJsonValue("DATAGENERATOR", "TextDownloadURLS"),
             self.cfg.GetStringValue("DATAGENERATOR", "TextPath"),
+            self.cfg.GetStringValue("DATAGENERATOR", "DistributionPath"),
+            self.cfg.GetBoolValue("DATAGENERATOR", "PrintDistribution"),
             self.cfg.GetBoolValue("DATAGENERATOR", "IncludeNumbers"),
             self.cfg.GetBoolValue("DATAGENERATOR", "IncludeLetters"),
         )

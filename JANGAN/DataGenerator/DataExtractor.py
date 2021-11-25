@@ -12,15 +12,19 @@ class DataExtractor:
     DataPath = ""
     Letters = {}
     TS = None
+    DistributionPath = ""
+    PrintDistribution = False
     LetterOutputIndex = {}
     IncludeNumbers = False
     IncludeLetters = False
 
 
-    def __init__(self, outputPath, dataPath, textPath, includeNumbers, includeLetters):
+    def __init__(self, outputPath, dataPath, textPath, distributionPath, printDistribution, includeNumbers, includeLetters):
         self.OutputPath = outputPath
         self.DataPath = dataPath
         self.TS = ts.TextSequence(textPath)
+        self.DistributionPath = distributionPath
+        self.PrintDistribution = printDistribution
         self.IncludeNumbers = includeNumbers
         self.IncludeLetters = includeLetters
 
@@ -35,17 +39,14 @@ class DataExtractor:
         with zipfile.ZipFile(self.DataPath, "r") as zf:
             zipInfos = self.FilterNameList(zf.infolist())
             self.CountNames(zipInfos)
+            self.HandleDistributionFile(outputFormat)
             print("Extracting")
-            while 1:
-                extractionLetter = self.TS.GetNextLetter()
-                if extractionLetter in self.Letters:
-
-                    if self.Letters[extractionLetter]['Index'] > self.Letters[extractionLetter]['Count']:
-                        break
-
-                    fileInfo = zipInfos[self.Letters[extractionLetter]
-                                        ['StartIndex'] + self.Letters[extractionLetter]['Index']]
-                    self.ExtractFile(outputFormat, zf, fileInfo, extractionLetter)
+            for letter in self.Letters:
+                for i in range(0, self.Letters[letter]['DistributionCount']):
+                    fileInfo = zipInfos[self.Letters[letter]['StartIndex'] + i]
+                    self.ExtractFile(outputFormat, zf, fileInfo, letter)
+            
+            
 
     def ExtractSpecifiedDistribution(self, outputFormat, minCount, maxCount):
         import zipfile
@@ -59,6 +60,7 @@ class DataExtractor:
             zipInfos = self.FilterNameList(zf.infolist())
             self.CountNames(zipInfos)
             self.RemoveLettersBelowLimit(minCount)
+            self.HandleDistributionFile(outputFormat)
             print("Extracting")
             for letter in tqdm(iterable=self.Letters, total=len(self.Letters)):
                 letterMax = min(maxCount, self.Letters[letter]['Count'])
@@ -112,6 +114,7 @@ class DataExtractor:
             self.Letters[chr(i)] = {}
             self.Letters[chr(i)]['HexLetter'] = hexLetter
             self.Letters[chr(i)]['StartIndex'] = -1
+            self.Letters[chr(i)]['DistributionCount'] = 0
             self.Letters[chr(i)]['Index'] = 0
             self.Letters[chr(i)]['Count'] = 0
 
@@ -126,19 +129,45 @@ class DataExtractor:
                             info)
                     self.Letters[letter]['Count'] += 1
 
+    def HandleDistributionFile(self, format):
+        if self.PrintDistribution:
+            self.CountDistribution()
+            self.PrintDistributionCSV(format)
+
+    def CountDistribution(self):
+        while 1:
+            extractionLetter = self.TS.GetNextLetter()
+            if extractionLetter in self.Letters:
+                if self.Letters[extractionLetter]['DistributionCount'] > self.Letters[extractionLetter]['Count']:
+                    return
+                else:
+                    self.Letters[extractionLetter]['DistributionCount'] += 1
+
+    def PrintDistributionCSV(self, format):
+        import csv
+        with open(self.DistributionPath, 'w') as file:
+            writer = csv.writer(file, delimiter=',', lineterminator='\n')
+            writer.writerow(['letter', 'index', 'count'])
+            for letter in self.Letters:
+                writer.writerow([letter, self.GetIndexFormat(letter, format), self.Letters[letter]['DistributionCount']])
+                    
+
     def CreateOutputPath(self, basePath, letter, format):
-        outputPath = basePath
+        return basePath + self.GetIndexFormat(letter, format)
+
+    def GetIndexFormat(self, letter, format):
+        index = ''
         if format == 'Letter':
             if str.islower(letter):
-                outputPath = basePath + '_'
-            outputPath += letter
+                index = '_'
+            index += letter
         elif format == 'Number':
-            outputPath += str(ord(letter))
+            index += str(ord(letter))
         elif format == 'ZeroIndexed':
             if not letter in self.LetterOutputIndex:
                 self.LetterOutputIndex[letter] = {}
                 self.LetterOutputIndex[letter]['index'] = len(self.LetterOutputIndex) - 1
-            outputPath += str(self.LetterOutputIndex[letter]['index'])
+            index += str(self.LetterOutputIndex[letter]['index'])
         else:
             raise Exception("Invalid output format: " + format + " Should be 'Letter' or 'Number'")
-        return outputPath
+        return index

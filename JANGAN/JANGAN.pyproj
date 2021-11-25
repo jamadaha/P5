@@ -33,6 +33,7 @@
     <Compile Include="CGAN\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CheckMemoryLeak\__init__.py" />
     <Compile Include="DataGenerator\DataExtractor.py" />
     <Compile Include="DataGenerator\FileImporter.py" />
     <Compile Include="DataGenerator\SharedFunctions.py" />
@@ -71,6 +72,7 @@
     <Folder Include="CGAN\" />
     <Folder Include="DataGenerator\" />
     <Folder Include="ExperimentQueue\" />
+    <Folder Include="CheckMemoryLeak\" />
     <Folder Include="ProjectTools\" />
     <Folder Include="ProjectTools\TestFiles\" />
   </ItemGroup>
