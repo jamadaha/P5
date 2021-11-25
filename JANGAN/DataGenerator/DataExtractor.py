@@ -146,7 +146,7 @@ class DataExtractor:
     def PrintDistributionCSV(self, format):
         import csv
         with open(self.DistributionPath, 'w') as file:
-            writer = csv.writer(file, delimiter=',')
+            writer = csv.writer(file, delimiter=',', dialect='unix')
             writer.writerow(['letter', 'index', 'count'])
             for letter in self.Letters:
                 writer.writerow([letter, self.GetIndexFormat(letter, format), self.Letters[letter]['DistributionCount']])
