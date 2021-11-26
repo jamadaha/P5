@@ -9,6 +9,7 @@ import time
 import os
 import shutil
 from ProjectTools import Logger as lgr
+from CGAN import LetterProducer as lp
 import tensorboard
 
 class CGANTrainer():
@@ -23,11 +24,16 @@ class CGANTrainer():
     Logger = None
     SummaryWriter = None
 
+    OutputDir = ""
+    ImageCountToProduce = 0
+    NumberOfClasses = 0
+    LatentDimensions = 0
+
     __latestGLoss = 0
     __latestDLoss = 0
     #__latestAccuracy = 0
 
-    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath):
+    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath, outputDir, imageCountToProduce, numberOfClasses, latentDimension):
         self.CGAN = cGAN
         self.Datasets = datasets
         self.Epochs = epochs
@@ -43,6 +49,11 @@ class CGANTrainer():
             'DiffLoss': tf.summary.create_file_writer(os.path.join(logPath, 'Loss', 'DiffLoss')),
             #'Accuracy': tf.summary.create_file_writer(os.path.join(logPath, 'Accuracy'))
         }
+        self.OutputDir = outputDir
+        self.ImageCountToProduce = imageCountToProduce
+        self.NumberOfClasses = numberOfClasses
+        self.LatentDimensions = latentDimension
+
 
     def TrainCGAN(self):
         print("Training started")
@@ -156,5 +167,18 @@ class CGANTrainer():
 
         if self.SaveCheckpoints:
             self.__SaveCheckpoint()
+        
+        self.ProduceLetters(epoch + 1)
 
         self.__LogData(epoch)
+
+
+    def ProduceLetters(self, epoch):
+        from tqdm import tqdm
+        path = os.path.join(self.OutputDir, str(epoch) + '/')
+        letterProducer = lp.LetterProducer(path, self.CGAN.generator, self.NumberOfClasses, self.LatentDimensions)
+
+        for i in tqdm(range(self.NumberOfClasses), desc='Producing images'):
+            images = letterProducer.GenerateLetter(i, self.ImageCountToProduce)
+            letterProducer.SaveImages(i, images)
+           

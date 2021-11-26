@@ -10,7 +10,6 @@ from CGAN import DatasetLoader as dl
 from CGAN import DatasetFormatter as df
 from CGAN import CGANKerasModel as km
 from CGAN import LayerDefinition as ld
-from CGAN import LetterProducer as lp
 from CGAN import CGANTrainer as ct
 
 class CGAN():
@@ -102,9 +101,7 @@ class CGAN():
                 d_optimizer=keras.optimizers.Adam(learning_rate=disSchedule),
                 g_optimizer=keras.optimizers.Adam(learning_rate=genSchedule),
                 loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
-            )  
-
-        
+            )
 
     def LoadDataset(self):
         if self.UseSavedModel:
@@ -128,7 +125,7 @@ class CGAN():
             self.UseSavedModel = False
             self.LoadDataset()
 
-        cGANTrainer = ct.CGANTrainer(self.CondGAN, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
+        cGANTrainer = ct.CGANTrainer(self.CondGAN, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.OutputDir, self.ImageCountToProduce, self.NumberOfClasses, self.LatentDimension)
 
         if self.UseSavedModel:
             print("Attempting to load CGAN model from checkpoint...")
@@ -149,15 +146,3 @@ class CGAN():
             return None
         else:
             return ckptPath
-
-    def ProduceLetters(self):
-        from tqdm import tqdm
-        letterProducer = lp.LetterProducer(self.OutputDir, self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension)
-        # Warmup letter producer
-        #   This is done as it outputs something to console
-        letterProducer.GenerateLetter(0, 1)
-
-        for i in tqdm(range(self.NumberOfClasses), desc='Producing images'):
-            images = letterProducer.GenerateLetter(i, self.ImageCountToProduce)
-            letterProducer.SaveImages(i, images)
-           

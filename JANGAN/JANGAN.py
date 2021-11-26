@@ -94,10 +94,3 @@ class JANGAN():
         self.cgan.TrainGAN()
 
         print(" --- Done! --- ")
-
-    def ProduceOutput(self):
-        print(" --- Producing output --- ")
-
-        self.cgan.ProduceLetters()
-
-        print(" --- Done! --- ")
