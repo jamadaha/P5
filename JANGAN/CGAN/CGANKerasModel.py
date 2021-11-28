@@ -53,7 +53,7 @@ class ConditionalGAN(tf.keras.Model):
         )
 
         # Decode the noise (guided by labels) to fake images.
-        generated_images = self.generator(random_vector_labels)
+        generated_images = self.generator(random_vector_labels, training=True)
 
         # Combine them with real images. Note that we are concatenating the labels
         # with these images here.
