@@ -40,7 +40,7 @@ class LetterProducer():
 
         # Combine the noise and the labels and run inference with the generator.
         noise_and_labels = tf.concat([interpolation_noise, interpolation_labels], 1)
-        fake = self.TrainedGenerator.predict(noise_and_labels)
+        fake = self.TrainedGenerator(noise_and_labels, training=False)
         return fake
         
     def SaveImagesAsGif(self, images):
