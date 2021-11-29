@@ -39,7 +39,9 @@
     <Compile Include="DataGenerator\SharedFunctions.py" />
     <Compile Include="DataGenerator\TextSequence.py" />
     <Compile Include="DataGenerator\__init__.py" />
-    <Compile Include="ExperimentQueue\UnbalancedDataset.py" />
+    <Compile Include="ExperimentQueue\Experiment2\Dataset\InverseUnbalancedDataset.py" />
+    <Compile Include="ExperimentQueue\Experiment2\Dataset\BalancedDataset.py" />
+    <Compile Include="ExperimentQueue\Experiment2\Dataset\UnbalancedDataset.py" />
     <Compile Include="ExperimentQueue\BaseRun.py">
       <SubType>Code</SubType>
     </Compile>
@@ -74,12 +76,16 @@
     <Folder Include="DataGenerator\" />
     <Folder Include="ExperimentQueue\" />
     <Folder Include="CheckMemoryLeak\" />
+    <Folder Include="ExperimentQueue\Experiment2\" />
+    <Folder Include="ExperimentQueue\Experiment2\Dataset\" />
     <Folder Include="ProjectTools\" />
     <Folder Include="ProjectTools\TestFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ExperimentQueueConfig.ini" />
-    <Content Include="ExperimentQueue\UnbalancedDataset.ini" />
+    <Content Include="ExperimentQueue\Experiment2\Dataset\InverseUnbalancedDataset.ini" />
+    <Content Include="ExperimentQueue\Experiment2\Dataset\BalancedDataset.ini" />
+    <Content Include="ExperimentQueue\Experiment2\Dataset\UnbalancedDataset.ini" />
     <Content Include="ExperimentQueue\BaseRunConfig.ini">
       <SubType>Code</SubType>
     </Content>
