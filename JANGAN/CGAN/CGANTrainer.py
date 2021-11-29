@@ -117,7 +117,7 @@ class CGANTrainer():
     def __EpochRun(self, epoch):
         print("Training CGAN...")
         (image_batch_train, image_batch_test) = self.CreateDataSet(self.Datasets)
-        totalIterations = tf.data.experimental.cardinality(image_batch_train).numpy()
+        totalIterations = self.GetDatasetSize(image_batch_train)
         iteration = 0
         epochTime = time.time()
         for image_batch in image_batch_train:
@@ -158,3 +158,6 @@ class CGANTrainer():
             self.__SaveCheckpoint()
 
         self.__LogData(epoch)
+
+    def GetDatasetSize(self, data):
+        return tf.data.experimental.cardinality(data).numpy()
