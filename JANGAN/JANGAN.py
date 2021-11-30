@@ -7,9 +7,13 @@ from ProjectTools import ConfigHelper
  
 import CGAN as cg
 import DataGenerator as dg
+import Classifier as cf
+
 class JANGAN():
     cfg = None
     cgan = None
+    classifier = None
+    NumberOfClasses = None
 
     def __init__(self, expFile, configFile):
         importlib.import_module(expFile)
@@ -62,15 +66,15 @@ class JANGAN():
     def TrainCGAN(self):
         print(" --- Training CGAN --- ")
 
-        classCount = 0
+        self.NumberOfClasses = 0
         for entry in os.scandir(self.cfg.GetStringValue("DATAGENERATOR", "LetterPath")):
             if entry.is_dir():
-                classCount += 1
+                self.NumberOfClasses += 1
 
         self.cgan = cg.CGAN(
             self.cfg.GetIntValue("CGAN", "BatchSize"),
             1,
-            classCount,
+            self.NumberOfClasses,
             self.cfg.GetIntValue("CGAN", "ImageSize"),
             self.cfg.GetIntValue("CGAN", "LatentDimension"),
             self.cfg.GetIntValue("CGAN", "EpochCount"),
@@ -99,5 +103,42 @@ class JANGAN():
         print(" --- Producing output --- ")
 
         self.cgan.ProduceLetters()
+
+        print(" --- Done! --- ")
+
+    def ClassifyCGANOutput(self):
+        print(" --- Classifying Output of CGAN --- ")
+
+        if self.NumberOfClasses == None:
+            self.NumberOfClasses = 0
+            for entry in os.scandir(self.cfg.GetStringValue("Classifier", "TrainDatasetDir")):
+                if entry.is_dir():
+                    self.NumberOfClasses += 1
+
+        self.classifier = cf.Classifier(
+            self.cfg.GetIntValue("Classifier", "BatchSize"),
+            1,
+            self.NumberOfClasses,
+            self.cfg.GetIntValue("Classifier", "ImageSize"),
+            self.cfg.GetIntValue("Classifier", "EpochCount"),
+            self.cfg.GetIntValue("Classifier", "RefreshUIEachXIteration"),
+            self.cfg.GetStringValue("Classifier", "TrainDatasetDir"),
+            self.cfg.GetStringValue("Classifier", "TestDatasetDir"),
+            self.cfg.GetStringValue("Classifier", "ClassifyDir"),
+            self.cfg.GetBoolValue("Classifier", "SaveCheckpoints"),
+            self.cfg.GetBoolValue("Classifier", "UseSavedModel"),
+            self.cfg.GetStringValue("Classifier", "CheckpointPath"),
+            self.cfg.GetStringValue("Classifier", "LatestCheckpointPath"),
+            self.cfg.GetStringValue("Classifier", "LogPath"),
+            self.cfg.GetFloatValue("Classifier", "DatasetSplit"),
+            self.cfg.GetStringValue("Classifier", "LRScheduler"),
+            self.cfg.GetFloatValue("Classifier", "LearningRateClassifier"),
+            self.cfg.GetFloatValue("Classifier", "AccuracyThreshold"))
+
+        self.classifier.SetupClassifier()
+        self.classifier.LoadDataset()
+        self.classifier.TrainClassifier()
+
+        self.classifier.ClassifyData()
 
         print(" --- Done! --- ")
