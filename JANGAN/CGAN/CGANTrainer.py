@@ -175,10 +175,19 @@ class CGANTrainer():
 
     def ProduceLetters(self, epoch):
         from tqdm import tqdm
+        import numpy
         path = os.path.join(self.OutputDir, str(epoch) + '/')
         letterProducer = lp.LetterProducer(path, self.CGAN.generator, self.NumberOfClasses, self.LatentDimensions)
 
+        imageArray = []
+
         for i in tqdm(range(self.NumberOfClasses), desc='Producing images'):
             images = letterProducer.GenerateLetter(i, self.ImageCountToProduce)
+            imageArray.append(images[0:1])
             letterProducer.SaveImages(i, images)
+
+        imageArray = numpy.reshape(imageArray, (len(imageArray), 28, 28, 1))
+
+        with tf.summary.create_file_writer(path + 'Log/').as_default():
+            tf.summary.image("Epoch images", imageArray, max_outputs=len(imageArray), step=epoch)
            
