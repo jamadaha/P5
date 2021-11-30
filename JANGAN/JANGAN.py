@@ -1,7 +1,6 @@
 import importlib
 import os
-
-from importlib import reload
+from JANGANConfigChecker import JANGANConfigChecker
 
 from ProjectTools import ConfigHelper
  
@@ -9,21 +8,26 @@ import CGAN as cg
 import DataGenerator as dg
 import Classifier as cf
 
+
 class JANGAN():
     cfg = None
     cgan = None
     classifier = None
     NumberOfClasses = None
+    ThrowIfConfigFileBad = True
 
-    def __init__(self, expFile, configFile):
+    def __init__(self, expFile, configFile, throwIfConfigFileBad):
         importlib.import_module(expFile)
         self.LoadConfig(configFile)
+        self.ThrowIfConfigFileBad = throwIfConfigFileBad
 
     def LoadConfig(self, configFile):
         print(" --- Loading experiment config file --- ")
         self.cfg = ConfigHelper.ConfigHelper(configFile)
         self.cfg.LoadConfig()
         print(" --- Done! --- ")
+        cfgCheck = JANGANConfigChecker()
+        cfgCheck.CheckConfig(self.cfg, self.ThrowIfConfigFileBad)
         print("")
 
     def PurgeRunDataFolder(self):

@@ -27,7 +27,7 @@ for key in expDict:
 
         try:
             import JANGAN as jg
-            expJANGAN = jg.JANGAN(cfg.GetStringValue(key, 'ModuleName'), cfg.GetStringValue(key, 'ConfigFile'))
+            expJANGAN = jg.JANGAN(cfg.GetStringValue(key, 'ModuleName'), cfg.GetStringValue(key, 'ConfigFile'), cfg.GetBoolValue("EXPERIMENTS", "ThrowIfConfigFileBad"))
             if cfg.GetBoolValue(key, 'MakeCGANDataset') == True:
                 expJANGAN.MakeCGANDataset()
             if cfg.GetBoolValue(key, 'TrainCGAN') == True:
