@@ -18,8 +18,8 @@ class JANGAN():
 
     def __init__(self, expFile, configFile, throwIfConfigFileBad):
         importlib.import_module(expFile)
-        self.LoadConfig(configFile)
         self.ThrowIfConfigFileBad = throwIfConfigFileBad
+        self.LoadConfig(configFile)
 
     def LoadConfig(self, configFile):
         print(" --- Loading experiment config file --- ")
