@@ -13,7 +13,7 @@ class JANGAN():
     cfg = None
     cgan = None
     classifier = None
-    NumerOfClasses = None
+    NumberOfClasses = None
 
     def __init__(self, expFile, configFile):
         importlib.import_module(expFile)
@@ -66,15 +66,15 @@ class JANGAN():
     def TrainCGAN(self):
         print(" --- Training CGAN --- ")
 
-        self.NumerOfClasses = 0
+        self.NumberOfClasses = 0
         for entry in os.scandir(self.cfg.GetStringValue("DATAGENERATOR", "LetterPath")):
             if entry.is_dir():
-                self.NumerOfClasses += 1
+                self.NumberOfClasses += 1
 
         self.cgan = cg.CGAN(
             self.cfg.GetIntValue("CGAN", "BatchSize"),
             1,
-            self.NumerOfClasses,
+            self.NumberOfClasses,
             self.cfg.GetIntValue("CGAN", "ImageSize"),
             self.cfg.GetIntValue("CGAN", "LatentDimension"),
             self.cfg.GetIntValue("CGAN", "EpochCount"),
@@ -109,16 +109,16 @@ class JANGAN():
     def ClassifyCGANOutput(self):
         print(" --- Classifying Output of CGAN --- ")
 
-        if self.NumerOfClasses == None:
-            self.NumerOfClasses = 0
+        if self.NumberOfClasses == None:
+            self.NumberOfClasses = 0
             for entry in os.scandir(self.cfg.GetStringValue("Classifier", "TrainDatasetDir")):
                 if entry.is_dir():
-                    self.NumerOfClasses += 1
+                    self.NumberOfClasses += 1
 
         self.classifier = cf.Classifier(
             self.cfg.GetIntValue("Classifier", "BatchSize"),
             1,
-            self.NumerOfClasses,
+            self.NumberOfClasses,
             self.cfg.GetIntValue("Classifier", "ImageSize"),
             self.cfg.GetIntValue("Classifier", "EpochCount"),
             self.cfg.GetIntValue("Classifier", "RefreshUIEachXIteration"),
