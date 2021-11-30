@@ -8,8 +8,6 @@ class JANGANModuleReloader():
         import CGAN as cg
         reload(cg.CGANKerasModel)
         reload(cg.CGANTrainer)
-        reload(cg.DatasetFormatter)
-        reload(cg.DatasetLoader)
         reload(cg.LayerDefinition)
         reload(cg.LetterProducer)
         reload(cg)
@@ -18,6 +16,16 @@ class JANGANModuleReloader():
         reload(dg.DataExtractor)
         reload(dg.FileImporter)
         reload(dg)
+
+        import Classifier as cf
+        reload(cf.ClassifierKerasModel)
+        reload(cf.ClassifierTrainer)
+        reload(cf.LayerDefinition)
+        reload(cf)
+
+        import DatasetLoader as dl
+        reload(dl.DatasetFormatter)
+        reload(dl)
 
         import JANGAN as jg
         reload(jg)

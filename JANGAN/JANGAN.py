@@ -8,12 +8,12 @@ from ProjectTools import ConfigHelper
 import CGAN as cg
 import DataGenerator as dg
 import Classifier as cf
-import Classifier.DataLoader
 
 class JANGAN():
     cfg = None
     cgan = None
     classifier = None
+    NumerOfClasses = None
 
     def __init__(self, expFile, configFile):
         importlib.import_module(expFile)
@@ -66,15 +66,15 @@ class JANGAN():
     def TrainCGAN(self):
         print(" --- Training CGAN --- ")
 
-        classCount = 0
+        self.NumerOfClasses = 0
         for entry in os.scandir(self.cfg.GetStringValue("DATAGENERATOR", "LetterPath")):
             if entry.is_dir():
-                classCount += 1
+                self.NumerOfClasses += 1
 
         self.cgan = cg.CGAN(
             self.cfg.GetIntValue("CGAN", "BatchSize"),
             1,
-            classCount,
+            self.NumerOfClasses,
             self.cfg.GetIntValue("CGAN", "ImageSize"),
             self.cfg.GetIntValue("CGAN", "LatentDimension"),
             self.cfg.GetIntValue("CGAN", "EpochCount"),
@@ -82,7 +82,7 @@ class JANGAN():
             self.cfg.GetIntValue("CGAN", "NumberOfFakeImagesToOutput"),
             self.cfg.GetStringValue("CGAN", "TrainDatasetDir"),
             self.cfg.GetStringValue("CGAN", "TestDatasetDir"),
-            self.cfg.GetStringValue("CGAN", "InputDir"),
+            self.cfg.GetStringValue("CGAN", "OutputDir"),
             self.cfg.GetBoolValue("CGAN", "SaveCheckpoints"),
             self.cfg.GetBoolValue("CGAN", "UseSavedModel"),
             self.cfg.GetStringValue("CGAN", "CheckpointPath"),
@@ -109,33 +109,36 @@ class JANGAN():
     def ClassifyCGANOutput(self):
         print(" --- Classifying Output of CGAN --- ")
 
+        if self.NumerOfClasses == None:
+            self.NumerOfClasses = 0
+            for entry in os.scandir(self.cfg.GetStringValue("Classifier", "TrainDatasetDir")):
+                if entry.is_dir():
+                    self.NumerOfClasses += 1
+
         self.classifier = cf.Classifier(
-            self.cfg.GetIntValue("Classifier", "Epochs"),
-            self.cfg.GetBoolValue("Classifier", "Retrain"),
-            self.cfg.GetStringValue("Classifier", "ModelName"),
-            self.cfg.GetStringValue("Classifier", "ModelPath"),
-            self.cfg.GetStringValue("Classifier", "TrainDir"),
-            "",
             self.cfg.GetIntValue("Classifier", "BatchSize"),
-            self.cfg.GetIntValue("Classifier", "ImageHeight"),
-            self.cfg.GetIntValue("Classifier", "ImageWidth"),
-            self.cfg.GetIntValue("Classifier", "Seed"),
-            self.cfg.GetFloatValue("Classifier", "Split"),
-            )
+            1,
+            self.NumerOfClasses,
+            self.cfg.GetIntValue("Classifier", "ImageSize"),
+            self.cfg.GetIntValue("Classifier", "EpochCount"),
+            self.cfg.GetIntValue("Classifier", "RefreshUIEachXIteration"),
+            self.cfg.GetStringValue("Classifier", "TrainDatasetDir"),
+            self.cfg.GetStringValue("Classifier", "TestDatasetDir"),
+            self.cfg.GetStringValue("Classifier", "ClassifyDir"),
+            self.cfg.GetBoolValue("Classifier", "SaveCheckpoints"),
+            self.cfg.GetBoolValue("Classifier", "UseSavedModel"),
+            self.cfg.GetStringValue("Classifier", "CheckpointPath"),
+            self.cfg.GetStringValue("Classifier", "LatestCheckpointPath"),
+            self.cfg.GetStringValue("Classifier", "LogPath"),
+            self.cfg.GetFloatValue("Classifier", "DatasetSplit"),
+            self.cfg.GetStringValue("Classifier", "LRScheduler"),
+            self.cfg.GetFloatValue("Classifier", "LearningRateClassifier"),
+            self.cfg.GetFloatValue("Classifier", "AccuracyThreshold"))
 
-        #Mount data from GAN
-        self.classifier.LoadData()
-
-        #Train model
+        self.classifier.SetupClassifier()
+        self.classifier.LoadDataset()
         self.classifier.TrainClassifier()
-        
-        # Produce output
-        #vdata = dataLoader.LoadDataSet(self.cfg.GetStringValue("Classifier", "ValidationData"), self.cfg.GetStringValue("ValidationSplit"), self.cfg.GetStringValue("Classifier", "Subset"), self.cfg.GetIntValue("Classifier", "Seed"))
 
-        self.classifier.ProduceStatistics(
-            vdata,
-            self.cfg.GetFloatValue("Classifier", "ValidationSplit"),
-            self.cfg.GetStringValue("Classifier", "Subset"),
-            self.cfg.GetIntValue("Classifier", "Seed"))
+        self.classifier.ClassifyData()
 
         print(" --- Done! --- ")

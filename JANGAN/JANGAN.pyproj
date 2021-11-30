@@ -31,18 +31,9 @@
     <Compile Include="CGAN\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classifier\CompilerConfigObject.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Classifier\DataLoader.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Classifier\LayerConfigObject.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Classifier\LetterModel.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Classifier\ClassifierKerasModel.py" />
+    <Compile Include="Classifier\ClassifierTrainer.py" />
+    <Compile Include="Classifier\LayerDefinition.py" />
     <Compile Include="Classifier\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -52,7 +43,8 @@
     <Compile Include="DataGenerator\TextSequence.py" />
     <Compile Include="DataGenerator\__init__.py" />
     <Compile Include="DatasetLoader\DatasetFormatter.py" />
-    <Compile Include="DatasetLoader\FitData.py" />
+    <Compile Include="DatasetLoader\DatasetLoader.py" />
+    <Compile Include="DatasetLoader\DiskReader.py" />
     <Compile Include="DatasetLoader\__init__.py">
       <SubType>Code</SubType>
     </Compile>
