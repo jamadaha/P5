@@ -82,7 +82,7 @@ class JANGAN():
             self.cfg.GetIntValue("CGAN", "NumberOfFakeImagesToOutput"),
             self.cfg.GetStringValue("CGAN", "TrainDatasetDir"),
             self.cfg.GetStringValue("CGAN", "TestDatasetDir"),
-            self.cfg.GetStringValue("CGAN", "OutputDir"),
+            self.cfg.GetStringValue("CGAN", "InputDir"),
             self.cfg.GetBoolValue("CGAN", "SaveCheckpoints"),
             self.cfg.GetBoolValue("CGAN", "UseSavedModel"),
             self.cfg.GetStringValue("CGAN", "CheckpointPath"),
@@ -111,22 +111,23 @@ class JANGAN():
             self.cfg.GetBoolValue("Classifier", "Retrain"),
             self.cfg.GetStringValue("Classifier", "ModelName"),
             self.cfg.GetStringValue("Classifier", "ModelPath"),
-            self.cfg.GetStringValue("CGAN", "OutputDir"),
+            self.cfg.GetStringValue("Classifier", "TrainDir"),
+            "",
             self.cfg.GetIntValue("Classifier", "BatchSize"),
             self.cfg.GetIntValue("Classifier", "ImageHeight"),
             self.cfg.GetIntValue("Classifier", "ImageWidth"),
             self.cfg.GetIntValue("Classifier", "Seed"),
-            self.cfg.GetIntValue("Classifier", "Split")
+            self.cfg.GetFloatValue("Classifier", "Split"),
             )
 
         #Mount data from GAN
         self.classifier.LoadData()
 
         #Train model
-        self.classifier.TrainClassifier(data)
+        self.classifier.TrainClassifier()
         
         # Produce output
-        vdata = dataLoader.LoadDataSet(self.cfg.GetStringValue("Classifier", "ValidationData"), self.cfg.GetStringValue("ValidationSplit"), self.cfg.GetStringValue("Classifier", "Subset"), self.cfg.GetIntValue("Classifier", "Seed"))
+        #vdata = dataLoader.LoadDataSet(self.cfg.GetStringValue("Classifier", "ValidationData"), self.cfg.GetStringValue("ValidationSplit"), self.cfg.GetStringValue("Classifier", "Subset"), self.cfg.GetIntValue("Classifier", "Seed"))
 
         self.classifier.ProduceStatistics(
             vdata,

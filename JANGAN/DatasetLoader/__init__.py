@@ -9,6 +9,10 @@ import os
 from tqdm import tqdm
 import cv2
 import numpy as np
+from DatasetLoader.FitData import FitData
+import tensorflow
+from multipledispatch import dispatch
+import pathlib
 
 class DiskReader():
     Dir = ""
@@ -69,3 +73,87 @@ class DatasetLoader():
             self.DataSets.append((dr.Images,dr.Labels))
         print(f"A total of {imageCount} have been loaded from '{dir}'!")
         self.TotalImageCount += imageCount
+
+    #CLASSIFIER METHODS
+    def __CacheDataset(self, dataset: tensorflow.data.Dataset):
+        #Cached images are kept in memory after they're loaded - ensures the dataset does not become a bottleneck when training. 
+        '''AUTOTUNE = tensorflow.data.experimental.AUTOTUNE
+        cached_ds = dataset.cache().prefetch(buffer_size=AUTOTUNE)
+        return cached_ds'''
+        return dataset
+
+    '''@dispatch(FitData)
+    def __NormalizePixelRange(self, dataset: FitData.FitData):
+        trainds = self.__NormalizePixelRange(dataset.GetTrainData())
+        valds = self.__NormalizePixelRange(dataset.GetValidationData())
+        dataset.SetTrainData(trainds)
+        dataset.GetValidationData(valds)
+        return dataset'''
+
+    @dispatch(tensorflow.data.Dataset)
+    def __NormalizePixelRange(self, dataset: tensorflow.data.Dataset):
+        normalization_layer = tensorflow.keras.layers.Rescaling(.1/255)
+        normalized_ds = dataset.map(lambda x, y: (normalization_layer(x), y))
+        image_batch, labels_batch = next(iter(normalized_ds))
+        return normalized_ds
+
+    #Method completely loads data from path, creates af FittingData object and preprocesses data for training
+    def LoadFittingData(self, path:str, batch_size, img_height, img_width, seed, split) -> FitData: 
+        ClassCount = 0
+        for entry in os.scandir(self.TrainDir):
+            if entry.is_dir():
+                ClassCount += 1
+        
+        td = self.__LoadFromDir(path, batch_size, img_height, img_width, "training", seed, split)
+        vd = self.__LoadFromDir(path, batch_size, img_height, img_width, "validation", seed, split)
+        td = self.__PreprocessImages(td)
+        vd = self.__PreprocessImages(vd)
+        fd = FitData(td, vd, ClassCount)
+        return fd
+
+    def LoadDataSet(self, path: str, validation_split = 0.2, subset = "validation", seed = 123):
+        data_dir = pathlib.Path(path)
+        ds = tensorflow.keras.utils.image_dataset_from_directory(
+            data_dir, 
+            labels="inferred",
+            label_mode="int",
+            class_names=None,
+            validation_split = validation_split,
+            subset=subset,
+            seed=seed,
+            color_mode="rgb",
+            batch_size=self.batch_size, 
+            image_size=(self.img_height, self.img_width), 
+            shuffle=True, 
+            interpolation="bilinear", 
+            follow_links=False, 
+            crop_to_aspect_ratio=False )
+
+        return self.__PreprocessImages(ds)
+
+    #Caches datasets in FittingData for training and validation set and normalizes pixel range
+    @dispatch(tensorflow.data.Dataset)
+    def __PreprocessImages(self, dataset: tensorflow.data.Dataset):
+        norm_data = self.__NormalizePixelRange(dataset)
+        norm_data = self.__CacheDataset(norm_data)
+        return norm_data
+
+    def __LoadFromDir(self, path: str, batch_size, img_height, img_width, subset, seed, split):
+        data_dir = pathlib.Path(path)
+
+        ds = tensorflow.keras.utils.image_dataset_from_directory(data_dir, 
+                                                                            labels="inferred", 
+                                                                            label_mode="int", 
+                                                                            class_names=None, 
+                                                                            color_mode="rgb", 
+                                                                            batch_size=batch_size, 
+                                                                            image_size=(img_height, img_width), 
+                                                                            shuffle=True, 
+                                                                            seed=seed, 
+                                                                            validation_split=split, 
+                                                                            subset=subset, 
+                                                                            interpolation="bilinear", 
+                                                                            follow_links=False, 
+                                                                            crop_to_aspect_ratio=False)
+
+        return ds

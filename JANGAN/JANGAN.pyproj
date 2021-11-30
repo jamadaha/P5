@@ -37,9 +37,6 @@
     <Compile Include="Classifier\DataLoader.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classifier\FitData.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Classifier\LayerConfigObject.py">
       <SubType>Code</SubType>
     </Compile>
@@ -55,6 +52,7 @@
     <Compile Include="DataGenerator\TextSequence.py" />
     <Compile Include="DataGenerator\__init__.py" />
     <Compile Include="DatasetLoader\DatasetFormatter.py" />
+    <Compile Include="DatasetLoader\FitData.py" />
     <Compile Include="DatasetLoader\__init__.py">
       <SubType>Code</SubType>
     </Compile>
