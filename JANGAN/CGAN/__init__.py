@@ -6,8 +6,8 @@ ap.CheckAndInstall("tqdm")
 from tensorflow import keras
 import os
 
-from CGAN import DatasetLoader as dl
-from CGAN import DatasetFormatter as df
+from DatasetLoader import DatasetLoader as dl
+from DatasetLoader import DatasetFormatter as df
 from CGAN import CGANKerasModel as km
 from CGAN import LayerDefinition as ld
 from CGAN import LetterProducer as lp
