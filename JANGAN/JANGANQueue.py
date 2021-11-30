@@ -2,6 +2,7 @@ import traceback
 from ProjectTools import ConfigHelper    
 import JANGANQueueChecker
 import JANGANModuleReloader
+import CheckMemoryLeak as cml
 
 print(" --- Loading queue config file --- ")
 cfg = ConfigHelper.ConfigHelper("ExperimentQueueConfig.ini")
@@ -13,6 +14,7 @@ print(" --- Checking the queue file --- ")
 queueChecker = JANGANQueueChecker.JANGANQueueChecker(cfg)
 queueChecker.CheckConfig()
 print(" --- Done! --- ")
+print("")
 
 expDict = cfg.GetListValue("EXPERIMENTS","ExperimentList")
 for key in expDict:
@@ -39,7 +41,7 @@ for key in expDict:
         except Exception as e:
             print("")
             print(f"      ERROR! Experiment '{key}' failed with error '{e}'")
-            print("      STACKTRACE")
+            print( "      STACKTRACE")
             print(traceback.format_exc())
             print("")
 
@@ -52,4 +54,3 @@ for key in expDict:
     print("")
     print(f" --- Experiment '{key}' done! --- ")
     print("")
-        

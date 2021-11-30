@@ -1,87 +1,65 @@
 from DataGenerator import FileImporter as fi
 from DataGenerator import DataExtractor as de
-from DataGenerator import TextSequence as ts
 
 class DataGenerator():
-    FileImporter_TextPath = ""
-    FileImporter_LetterDownloadURL = ""
-    FileImporter_TextDownloadURLS = {}
-    FileImporter_TempDownloadLetterPath = ""
-    FileImporter_TempDownloadLetterFileName = ""
-
-    TextSequence_TextPath = ""
-
-    DataExtractor_OutputLetterPath = ""
-    DataExtractor_TempDownloadLetterPath = ""
-    DataExtractor_TempDownloadLetterFileName = ""
-    DataExtractor_MinimumLetterCount = 0
-    DataExtractor_MaximumLetterCount = 0
-    DataExtractor_OutputLetterFormat = ""
-    DataExtractor_IncludeNumbers = False
-    DataExtractor_IncludeLetters = False
+    __LetterOutputFormat = ""
+    __LetterOutputMinCount = 0
+    __LetterOutputMaxCount = 0
 
     __FileImporter = None
     __DataExtractor = None
-    __TextSequence = None
-        
-    def ConfigureFileImporter(self, fi_TextPath, fi_LetterDownloadURL, fi_TextDownloadURLS, fi_TempDownloadLetterPath, fi_TempDownloadLetterFileName):
-        print("Configuring File Importer")
 
-        self.FileImporter_TextPath = fi_TextPath
-        self.FileImporter_LetterDownloadURL = fi_LetterDownloadURL
-        self.FileImporter_TextDownloadURLS = fi_TextDownloadURLS
-        self.FileImporter_TempDownloadLetterPath = fi_TempDownloadLetterPath
-        self.FileImporter_TempDownloadLetterFileName = fi_TempDownloadLetterFileName
+    def __init__(
+        self, 
+        letterDownloadURL, 
+        letterDownloadPath,
+        letterDownloadName,
+        letterOutputPath,
+        letterOutputFormat,
+        letterOutputMinCount,
+        letterOutputMaxCount,
+        textDownloadURLS,
+        textPath,
+        distributionPath,
+        printDistribution,
+        includeNumbers,
+        includeLetters) -> None:
 
-    def ConfigureTextSequence(self, ts_textPath):
-        print("Configuring Test Sequence")
+        self.__LetterOutputFormat = letterOutputFormat
+        self.__LetterOutputMinCount = letterOutputMinCount
+        self.__LetterOutputMaxCount = letterOutputMaxCount
 
-        self.TextSequence_TextPath = ts_textPath
+        self.__FileImporter = fi.FileImporter(
+            textPath,
+            letterDownloadURL,
+            textDownloadURLS,
+            letterDownloadPath,
+            letterDownloadName)
 
-    def ConfigureDataExtractor(self, de_OutputLettersPath, de_TempDownloadLetterPath, de_TempDownloadLetterFileName, de_MinimumLetterCount, de_MaximumLetterCount, de_OutputLetterFormat, de_IncludeNumbers, de_IncludeLetters):
-        print("Configuring Data Extractor")
+        self.__FileImporter.ImportFiles()
 
-        self.DataExtractor_OutputLetterPath = de_OutputLettersPath
-        self.DataExtractor_TempDownloadLetterPath = de_TempDownloadLetterPath
-        self.DataExtractor_TempDownloadLetterFileName = de_TempDownloadLetterFileName
-        self.DataExtractor_MinimumLetterCount = de_MinimumLetterCount
-        self.DataExtractor_MaximumLetterCount = de_MaximumLetterCount
-        self.DataExtractor_OutputLetterFormat = de_OutputLetterFormat
-        self.DataExtractor_IncludeNumbers = de_IncludeNumbers
-        self.DataExtractor_IncludeLetters = de_IncludeLetters
+        self.__DataExtractor = de.DataExtractor(
+            letterOutputPath,
+            letterDownloadPath +
+            letterDownloadName,
+            textPath,
+            distributionPath,
+            printDistribution,
+            includeNumbers,
+            includeLetters)
 
     def GenerateData(self):
         print("Generating dataset...")
 
-        self.__FileImporter = fi.FileImporter(
-            self.FileImporter_TextPath,
-            self.FileImporter_LetterDownloadURL,
-            self.FileImporter_TextDownloadURLS,
-            self.FileImporter_TempDownloadLetterPath,
-            self.FileImporter_TempDownloadLetterFileName)
-
-        self.__FileImporter.ImportFiles()
-
-        self.__TextSequence = ts.TextSequence(
-            self.TextSequence_TextPath)
-
-        self.__DataExtractor = de.DataExtractor(
-            self.DataExtractor_OutputLetterPath,
-            self.DataExtractor_TempDownloadLetterPath +
-            self.DataExtractor_TempDownloadLetterFileName,
-            self.__TextSequence,
-            self.DataExtractor_IncludeNumbers,
-            self.DataExtractor_IncludeLetters)
-
-        if self.DataExtractor_MinimumLetterCount == 0 and self.DataExtractor_MaximumLetterCount == 0:
+        if self.__LetterOutputMinCount == 0 and self.__LetterOutputMaxCount == 0:
             self.__DataExtractor.ExtractSequence(
-                self.DataExtractor_OutputLetterFormat
+                self.__LetterOutputFormat
             )
         else:
             self.__DataExtractor.ExtractSpecifiedDistribution(
-                self.DataExtractor_OutputLetterFormat,
-                self.DataExtractor_MinimumLetterCount,
-                self.DataExtractor_MaximumLetterCount
+                self.__LetterOutputFormat,
+                self.__LetterOutputMinCount,
+                self.__LetterOutputMaxCount
             )
 
         print("Dataset generated!")
