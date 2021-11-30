@@ -13,12 +13,14 @@ class LetterProducer():
     TrainedGenerator = None
     NumberOfClasses = 0
     LatentDimension = 0
+    ImageCountToProduce = 0
 
-    def __init__(self, outputPath, trainedGenerator, numberOfClasses, latentDimension):
+    def __init__(self, outputPath, trainedGenerator, numberOfClasses, latentDimension, imageCountToProduce):
         self.OutputPath = outputPath
         self.TrainedGenerator = trainedGenerator
         self.NumberOfClasses = numberOfClasses
         self.LatentDimension = latentDimension
+        self.ImageCountToProduce = imageCountToProduce
 
     def GenerateLetter(self, classID, imageCountToProduce):
         # Sample noise for the interpolation.
@@ -49,8 +51,8 @@ class LetterProducer():
         #Generate Gif
         imageio.mimsave('out.gif', images)
 
-    def SaveImages(self, id, images):
-        path = self.OutputPath + str(id) + '/'
+    def SaveImages(self, basePath, id, images):
+        path = basePath + str(id) + '/'
 
         if not os.path.isdir(path):
             os.makedirs(path)
@@ -62,3 +64,21 @@ class LetterProducer():
                 path + str(index) + ".png".format(image), image
             )
             index += 1
+
+    def ProduceLetters(self, epoch):
+        """ Returns a sample of each letter produced
+        """
+        from tqdm import tqdm
+
+        imageArray = []
+
+        for i in tqdm(range(self.NumberOfClasses), desc='Producing images'):
+            images = self.GenerateLetter(i, self.ImageCountToProduce)
+            imageArray.append(images[0:1])
+            self.SaveImages(
+                os.path.join(self.OutputPath, 
+                str(epoch) + '/'), 
+                i, 
+                images)
+
+        return imageArray

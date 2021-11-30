@@ -3,7 +3,7 @@ from ProjectTools import AutoPackageInstaller as ap
 ap.CheckAndInstall("csv")
 ap.CheckAndInstall("time")
 
-class Logger:
+class CSVLogger:
     OutputDir = ''
     Name = ''
 

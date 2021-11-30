@@ -7,8 +7,8 @@ import tensorflow as tf
 from tensorflow import keras
 import time
 import os
-import shutil
-from ProjectTools import Logger as lgr
+from ProjectTools import CSVLogger
+from ProjectTools import TFLogger
 from CGAN import LetterProducer as lp
 import tensorboard
 
@@ -21,17 +21,12 @@ class CGANTrainer():
     SaveCheckpoints = False
     CheckpointPath = ""
     LatestCheckpointPath = ""
+    LetterProducer = None
     Logger = None
     SummaryWriter = None
 
-    OutputDir = ""
-    ImageCountToProduce = 0
-    NumberOfClasses = 0
-    LatentDimensions = 0
-
     __latestGLoss = 0
     __latestDLoss = 0
-    #__latestAccuracy = 0
 
     def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath, outputDir, imageCountToProduce, numberOfClasses, latentDimension):
         self.CGAN = cGAN
@@ -41,19 +36,15 @@ class CGANTrainer():
         self.SaveCheckpoints = saveCheckPoints
         self.CheckpointPath = checkpointPath
         self.LatestCheckpointPath = latestCheckpointPath
-        self.Logger = lgr.Logger(logPath, 'TrainingData')
+        self.Logger = CSVLogger.CSVLogger(logPath, 'TrainingData')
         self.Logger.InitCSV(['Epoch', 'GeneratorLoss', 'DiscriminatorLoss'])
         self.SummaryWriter = {
-            'GLoss': tf.summary.create_file_writer(os.path.join(logPath, 'Loss', 'GLoss')),
-            'DLoss': tf.summary.create_file_writer(os.path.join(logPath, 'Loss', 'DLoss')),
-            'DiffLoss': tf.summary.create_file_writer(os.path.join(logPath, 'Loss', 'DiffLoss')),
-            'Images': tf.summary.create_file_writer(os.path.join(logPath, 'Images')),
-            #'Accuracy': tf.summary.create_file_writer(os.path.join(logPath, 'Accuracy'))
+            'GLoss': TFLogger.TFLogger(logPath, 'Loss', 'GLoss'),
+            'DLoss': TFLogger.TFLogger(logPath, 'Loss', 'DLoss'),
+            'DiffLoss': TFLogger.TFLogger(logPath, 'Loss', 'DiffLoss'),
+            'Images': TFLogger.TFLogger(logPath, '', 'DiffLoss'),
         }
-        self.OutputDir = outputDir
-        self.ImageCountToProduce = imageCountToProduce
-        self.NumberOfClasses = numberOfClasses
-        self.LatentDimensions = latentDimension
+        self.LetterProducer = lp.LetterProducer(outputDir, self.CGAN.generator, numberOfClasses, latentDimension, imageCountToProduce)
 
 
     def TrainCGAN(self):
@@ -90,10 +81,6 @@ class CGANTrainer():
         estRemainingTime = ((time.time() - epochTime) / self.RefreshUIEachXStep) * (totalIterations - iteration)
         print(f"Generator loss: {self.__latestGLoss:.4f}. Discriminator loss: {self.__latestDLoss:.4f}. Progress: {((iteration/totalIterations)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainingTime)}    ", end="\r")
 
-    #def __PrintTestStatus(self, iteration, totalIterations, epochTime):
-    #    estRemainingTime = ((time.time() - epochTime) / self.RefreshUIEachXStep) * (totalIterations - iteration)
-    #    print(f"Accuracy: {(self.__latestAccuracy*100):.2f}% Progress: {((iteration/totalIterations)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainingTime)}    ", end="\r")
-
     def __SaveCheckpoint(self):
         if os.path.exists(self.CheckpointPath + 'cgan_checkpoint.index'):
             from ProjectTools import HelperFunctions as hf
@@ -110,21 +97,13 @@ class CGANTrainer():
         with open(ckptPathDest, 'w') as f:
             f.write(f"{ckptPathSrc}")
 
-    def __LogData(self, epoch):
+    def __LogData(self, images, epoch):
         self.Logger.AppendToCSV([epoch + 1, self.__latestGLoss, self.__latestDLoss])
 
-        with self.SummaryWriter['GLoss'].as_default():
-            with tf.name_scope('Loss'):
-                tf.summary.scalar('Loss', self.__latestGLoss, step=epoch)
-        with self.SummaryWriter['DLoss'].as_default():
-            with tf.name_scope('Loss'):
-                tf.summary.scalar('Loss', self.__latestDLoss, step=epoch)
-        with self.SummaryWriter['DiffLoss'].as_default():
-            with tf.name_scope('Loss'):
-                tf.summary.scalar('DiffLoss', abs(self.__latestDLoss - self.__latestGLoss), step=epoch)
-        #with self.SummaryWriter['Accuracy'].as_default():
-        #    with tf.name_scope('Accuracy'):
-        #        tf.summary.scalar('Accuracy', self.__latestAccuracy, step=epoch)
+        self.SummaryWriter['GLoss'].LogNumber(self.__latestGLoss, epoch + 1)
+        self.SummaryWriter['DLoss'].LogNumber(self.__latestDLoss, epoch + 1)
+        self.SummaryWriter['DiffLoss'].LogNumber(abs(self.__latestDLoss - self.__latestGLoss), epoch + 1)
+        self.SummaryWriter['Images'].LogGridImages(images, epoch + 1)
 
     def __EpochRun(self, epoch):
         print("Training CGAN...")
@@ -149,80 +128,8 @@ class CGANTrainer():
         print("")
         print("Done!")
 
-        #print("Testing CGAN...")
-        #iteration = 0
-        #for image_batch in image_batch_test:
-        #    if iteration % self.RefreshUIEachXStep == 0:
-        #        returnTest = self.CGAN.test_step(image_batch, True)
-        #        self.__latestAccuracy = float(returnTest['cgan_accuracy'])
-        #        self.__PrintTestStatus(iteration, totalIterations, epochTime)
-        #        epochTime = time.time()
-        #    else:
-        #        self.CGAN.test_step(image_batch, False)
-        #    iteration += 1
-        #self.CGAN.CGANAccuracy_tracker.reset_state()
-
-        #self.__PrintTestStatus(totalIterations, totalIterations, epochTime)
-        #print("")
-        #print("Done!")
-
         if self.SaveCheckpoints:
             self.__SaveCheckpoint()
-        
-        self.ProduceLetters(epoch + 1)
+        images = self.LetterProducer.ProduceLetters(epoch + 1)
 
-        self.__LogData(epoch)
-
-
-    def ProduceLetters(self, epoch):
-        from tqdm import tqdm
-        import numpy
-        path = os.path.join(self.OutputDir, str(epoch) + '/')
-        letterProducer = lp.LetterProducer(path, self.CGAN.generator, self.NumberOfClasses, self.LatentDimensions)
-
-        imageArray = []
-
-        for i in tqdm(range(self.NumberOfClasses), desc='Producing images'):
-            images = letterProducer.GenerateLetter(i, self.ImageCountToProduce)
-            imageArray.append(images[0:1])
-            letterProducer.SaveImages(i, images)
-
-        imageArray = numpy.reshape(imageArray, (len(imageArray), 28, 28, 1))
-
-        figure = self.FigGrid(imageArray)
-
-        with self.SummaryWriter['Images'].as_default():
-            tf.summary.image("Epoch images", self.PlotToImage(figure), max_outputs=len(imageArray), step=epoch)
-    
-    def FigGrid(self, images):
-        import matplotlib.pyplot as plt
-        import math
-        figure = plt.figure(figsize=(10, 10))
-        gridSize = math.ceil(math.sqrt(len(images)))
-        for i in range(len(images)):
-            plt.subplot(gridSize, gridSize, i + 1)
-            plt.xticks([])
-            plt.yticks([])
-            plt.grid(False)
-            plt.tight_layout()
-            plt.imshow(images[i], cmap=plt.cm.binary)
-        return figure
-
-    #https://www.tensorflow.org/tensorboard/image_summaries
-    def PlotToImage(self, figure):
-        import io
-        import matplotlib.pyplot as plt
-        """Converts the matplotlib plot specified by 'figure' to a PNG image and
-        returns it. The supplied figure is closed and inaccessible after this call."""
-        # Save the plot to a PNG in memory.
-        buf = io.BytesIO()
-        plt.savefig(buf, format='png')
-        # Closing the figure prevents it from being displayed directly inside
-        # the notebook.
-        plt.close(figure)
-        buf.seek(0)
-        # Convert PNG buffer to TF image
-        image = tf.image.decode_png(buf.getvalue(), channels=4)
-        # Add the batch dimension
-        image = tf.expand_dims(image, 0)
-        return image
+        self.__LogData(images, epoch)
