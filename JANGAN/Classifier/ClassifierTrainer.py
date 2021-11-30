@@ -103,7 +103,7 @@ class ClassifierTrainer():
                 tf.summary.scalar('ClassifierLoss', self.__latestLoss, step=epoch)
         with self.SummaryWriter['Accuracy'].as_default():
             with tf.name_scope('Accuracy'):
-                tf.summary.scalar('Accuracy', self.__latestAccuracy, step=epoch)
+                tf.summary.scalar('ClassifierAccuracy', self.__latestAccuracy, step=epoch)
 
     def __EpochRun(self, epoch):
         print("Training Classifier...")
