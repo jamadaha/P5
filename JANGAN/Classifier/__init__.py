@@ -165,14 +165,13 @@ class Classifier():
 
 
     def __GetCheckpointPath(self):
-        pass
-        #if not os.path.exists(self.LatestCheckpointPath):
-        #    return None
+        if not os.path.exists(self.LatestCheckpointPath):
+            return None
 
-        #with open(self.LatestCheckpointPath, 'r') as f:
-        #    ckptPath = f.readline().strip()
+        with open(self.LatestCheckpointPath, 'r') as f:
+            ckptPath = f.readline().strip()
 
-        #if not os.path.exists(f"{ckptPath}.index"):
-        #    return None
-        #else:
-        #    return ckptPath
+        if not os.path.exists(f"{ckptPath}.index"):
+            return None
+        else:
+            return ckptPath
