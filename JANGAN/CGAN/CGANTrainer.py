@@ -10,10 +10,13 @@ import time
 import os
 from ProjectTools import CSVLogger
 from ProjectTools import TFLogger
+from CGAN import LetterProducer
+import tensorboard
 
 class CGANTrainer(baseKeras.BaseKerasModelTrainer):
     Logger = None
     SummaryWriter = None
+    LetterProducer = None
 
     __latestGLoss = 0
     __latestDLoss = 0
@@ -28,7 +31,7 @@ class CGANTrainer(baseKeras.BaseKerasModelTrainer):
             'DiffLoss': TFLogger.TFLogger(logPath, 'Loss', 'DiffLoss'),
             'Images': TFLogger.TFLogger(logPath, '', 'Images')
         }
-        self.LetterProducer = lp.LetterProducer('', self.CGAN.generator, numberOfClasses, latentDimension, 0)
+        self.LetterProducer = LetterProducer.LetterProducer('', self.Model.generator, numberOfClasses, latentDimension, 0)
            
     def PrintStatus(self, iteration, totalIterations, epochTime, epoch):
         estRemainingTime = ((time.time() - epochTime) / self.RefreshUIEachXStep) * (totalIterations - iteration)

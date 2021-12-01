@@ -65,7 +65,7 @@ class CGAN(bm.BaseMLModel):
                 loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
             )
 
-        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
+        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension)
 
     def TrainModel(self):
         super().TrainModel()
