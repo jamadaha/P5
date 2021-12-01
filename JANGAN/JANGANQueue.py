@@ -31,11 +31,15 @@ for key in expDict:
             expJANGAN = jg.JANGAN(cfg.GetStringValue(key, 'ModuleName'), cfg.GetStringValue(key, 'ConfigFile'), throwIfConfigFileBad)
             if cfg.GetBoolValue(key, 'MakeCGANDataset') == True:
                 expJANGAN.MakeCGANDataset()
+            if cfg.GetBoolValue(key, 'MakeClassifierDataset') == True:
+                expJANGAN.MakeClassifyerDataset()
             if cfg.GetBoolValue(key, 'TrainCGAN') == True:
                 expJANGAN.TrainCGAN()
             if cfg.GetBoolValue(key, 'ProduceCGANLetters') == True:
                 expJANGAN.ProduceOutput()
             if cfg.GetBoolValue(key, 'TrainClassifier') == True:
+                expJANGAN.TrainClassifier()
+            if cfg.GetBoolValue(key, 'ClassifyImages') == True:
                 expJANGAN.ClassifyCGANOutput()
 
 
