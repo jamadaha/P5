@@ -15,7 +15,7 @@ class BaseMLModel():
     EpochCount = -1
     RefreshEachStep = -1
     TensorDatasets = None
-    SaveCheckpoints = True
+    SaveCheckpoints = False
     UseSavedModel = False
     CheckpointPath = ""
     LatestCheckpointPath = ""
@@ -51,7 +51,7 @@ class BaseMLModel():
         self.LRScheduler = LRScheduler
 
     def SetupModel(self):
-        print("Model setup not implemented")
+        raise Exception("Model setup not implemented")
 
     def LoadDataset(self):
         dataLoader = dl.DatasetLoader(
@@ -99,5 +99,5 @@ class BaseMLModel():
             return ckptPath
 
     def ProduceOutput(self):
-        print("ML Model not set to produce output!")
+        raise Exception("ML Model not set to produce output!")
            

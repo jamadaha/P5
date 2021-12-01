@@ -162,7 +162,7 @@ class JANGAN():
             self.cfg.GetStringValue("ClassifierTraining", "TrainDatasetDir"),
             self.cfg.GetStringValue("ClassifierTraining", "TestDatasetDir"),
             self.cfg.GetStringValue("ClassifierOutput", "ClassifyDir"),
-            self.cfg.GetStringValue("ClassifierOutput", "OutputDir"),
+            self.cfg.GetStringValue("ClassifierOutput", "LogDir"),
             self.cfg.GetBoolValue("ClassifierTraining", "SaveCheckpoints"),
             self.cfg.GetBoolValue("ClassifierTraining", "UseSavedModel"),
             self.cfg.GetStringValue("ClassifierTraining", "CheckpointPath"),

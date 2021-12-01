@@ -58,10 +58,10 @@ class BaseKerasModelTrainer():
         return time.strftime("%H:%M:%S", time.gmtime(seconds))
 
     def PrintStatus(self, iteration, totalIterations, epochTime, epoch):
-        print("No Train loss text implemented.", end="\r")
+        raise Exception("No Train loss text implemented.")
 
     def PrintTestStatus(self, iteration, totalIterations, epochTime):
-        print("No Test accuracy text implemented.", end="\r")
+        raise Exception("No Test accuracy text implemented.")
 
     def SaveCheckpoint(self):
         if os.path.exists(self.CheckpointPath + 'checkpoint.index'):
@@ -80,7 +80,7 @@ class BaseKerasModelTrainer():
             f.write(f"{ckptPathSrc}")
 
     def LogData(self, epoch):
-        print("No Data logging implemented")
+        raise Exception("No Data logging implemented")
 
     def EpochRun(self, epoch):
         (image_batch_train, image_batch_test) = self.CreateDataSet(self.Datasets)

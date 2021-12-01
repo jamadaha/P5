@@ -99,7 +99,7 @@ class JANGANConfigChecker():
         # Classifier Output
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "ClassifierOutput", "ClassifyDir")
-        self.__CheckKey(cfg, "ClassifierOutput", "OutputDir")
+        self.__CheckKey(cfg, "ClassifierOutput", "LogDir")
         self.__CheckKeyCount(cfg, "ClassifierOutput")
 
         print(" --- Done! --- ")
