@@ -53,7 +53,7 @@ class ConditionalGAN(tf.keras.Model):
         )
 
         # Decode the noise (guided by labels) to fake images.
-        generated_images = self.generator(random_vector_labels)
+        generated_images = self.generator(random_vector_labels, training=True)
 
         # Combine them with real images. Note that we are concatenating the labels
         # with these images here.
@@ -70,7 +70,7 @@ class ConditionalGAN(tf.keras.Model):
 
         # Train the discriminator.
         with tf.GradientTape() as tape:
-            predictions = self.discriminator(combined_images)
+            predictions = self.discriminator(combined_images, training=True)
             d_loss = self.loss_fn(labels, predictions)
         grads = tape.gradient(d_loss, self.discriminator.trainable_weights)
         self.d_optimizer.apply_gradients(
@@ -89,9 +89,9 @@ class ConditionalGAN(tf.keras.Model):
         # Train the generator (note that we should *not* update the weights
         # of the discriminator)!
         with tf.GradientTape() as tape:
-            fake_images = self.generator(random_vector_labels)
+            fake_images = self.generator(random_vector_labels, training=True)
             fake_image_and_labels = tf.concat([fake_images, image_one_hot_labels], -1)
-            predictions = self.discriminator(fake_image_and_labels)
+            predictions = self.discriminator(fake_image_and_labels, training=True)
             g_loss = self.loss_fn(misleading_labels, predictions)
         grads = tape.gradient(g_loss, self.generator.trainable_weights)
         self.g_optimizer.apply_gradients(zip(grads, self.generator.trainable_weights))

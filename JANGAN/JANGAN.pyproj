@@ -26,19 +26,28 @@
   <ItemGroup>
     <Compile Include="CGAN\CGANKerasModel.py" />
     <Compile Include="CGAN\CGANTrainer.py" />
-    <Compile Include="CGAN\DatasetFormatter.py" />
-    <Compile Include="CGAN\DatasetLoader.py" />
     <Compile Include="CGAN\LayerDefinition.py" />
     <Compile Include="CGAN\LetterProducer.py" />
     <Compile Include="CGAN\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CheckMemoryLeak\__init__.py" />
+    <Compile Include="Classifier\ClassifierKerasModel.py" />
+    <Compile Include="Classifier\ClassifierTrainer.py" />
+    <Compile Include="Classifier\LayerDefinition.py" />
+    <Compile Include="Classifier\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DataGenerator\DataExtractor.py" />
     <Compile Include="DataGenerator\FileImporter.py" />
     <Compile Include="DataGenerator\SharedFunctions.py" />
     <Compile Include="DataGenerator\TextSequence.py" />
     <Compile Include="DataGenerator\__init__.py" />
+    <Compile Include="DatasetLoader\DatasetFormatter.py" />
+    <Compile Include="DatasetLoader\DatasetLoader.py" />
+    <Compile Include="DatasetLoader\DiskReader.py" />
+    <Compile Include="DatasetLoader\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ExperimentQueue\BaseRun.py">
       <SubType>Code</SubType>
     </Compile>
@@ -71,8 +80,9 @@
   <ItemGroup>
     <Folder Include="CGAN\" />
     <Folder Include="DataGenerator\" />
+    <Folder Include="DatasetLoader\" />
     <Folder Include="ExperimentQueue\" />
-    <Folder Include="CheckMemoryLeak\" />
+    <Folder Include="Classifier\" />
     <Folder Include="ProjectTools\" />
     <Folder Include="ProjectTools\TestFiles\" />
   </ItemGroup>
