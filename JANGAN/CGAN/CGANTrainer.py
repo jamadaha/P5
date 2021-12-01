@@ -42,7 +42,7 @@ class CGANTrainer():
             'GLoss': TFLogger.TFLogger(logPath, 'Loss', 'GLoss'),
             'DLoss': TFLogger.TFLogger(logPath, 'Loss', 'DLoss'),
             'DiffLoss': TFLogger.TFLogger(logPath, 'Loss', 'DiffLoss'),
-            'Images': TFLogger.TFLogger(logPath, '', 'DiffLoss'),
+            'Images': TFLogger.TFLogger(logPath, '', 'Images'),
         }
         self.LetterProducer = lp.LetterProducer(outputDir, self.CGAN.generator, numberOfClasses, latentDimension, imageCountToProduce)
 

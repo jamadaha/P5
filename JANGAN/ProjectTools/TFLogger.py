@@ -14,8 +14,8 @@ class TFLogger:
 
     def __init__(self, outputDir: str, scope: str, name: str) -> None:
         self.OutputDir = outputDir
-        self.Scope = scope
-        self.Name = name
+        self.__Scope = scope
+        self.__Name = name
         self.__SummaryWriter = tf.summary.create_file_writer(os.path.join(outputDir, scope, name))
 
     def LogNumber(self, number, step):
