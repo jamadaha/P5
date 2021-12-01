@@ -36,7 +36,7 @@ class ClassifierTrainer():
         self.CheckpointPath = checkpointPath
         self.LatestCheckpointPath = latestCheckpointPath
         self.Logger = CSVLogger.CSVLogger(logPath, 'TrainingData')
-        self.Logger.InitCSV(['Time', 'Epoch', 'Loss'])
+        self.Logger.InitCSV(['Epoch', 'Loss'])
         self.SummaryWriter = {
             'CLoss': TFLogger.TFLogger(logPath, 'Loss', 'CLoss'),
             'Accuracy': TFLogger.TFLogger(logPath, 'Accuracy', 'Classifier')

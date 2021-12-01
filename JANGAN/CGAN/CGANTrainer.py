@@ -37,7 +37,7 @@ class CGANTrainer():
         self.CheckpointPath = checkpointPath
         self.LatestCheckpointPath = latestCheckpointPath
         self.Logger = CSVLogger.CSVLogger(logPath, 'TrainingData')
-        self.Logger.InitCSV(['Time', 'Epoch', 'GeneratorLoss', 'DiscriminatorLoss'])
+        self.Logger.InitCSV(['Epoch', 'GeneratorLoss', 'DiscriminatorLoss'])
         self.SummaryWriter = {
             'GLoss': TFLogger.TFLogger(logPath, 'Loss', 'GLoss'),
             'DLoss': TFLogger.TFLogger(logPath, 'Loss', 'DLoss'),
