@@ -7,6 +7,7 @@ import CheckMemoryLeak as cml
 print(" --- Loading queue config file --- ")
 cfg = ConfigHelper.ConfigHelper("ExperimentQueueConfig.ini")
 cfg.LoadConfig()
+throwIfConfigFileBad = cfg.GetBoolValue("EXPERIMENTS", "ThrowIfConfigFileBad")
 print(" --- Done! --- ")
 print("")
 
@@ -27,7 +28,7 @@ for key in expDict:
 
         try:
             import JANGAN as jg
-            expJANGAN = jg.JANGAN(cfg.GetStringValue(key, 'ModuleName'), cfg.GetStringValue(key, 'ConfigFile'))
+            expJANGAN = jg.JANGAN(cfg.GetStringValue(key, 'ModuleName'), cfg.GetStringValue(key, 'ConfigFile'), throwIfConfigFileBad)
             if cfg.GetBoolValue(key, 'MakeCGANDataset') == True:
                 expJANGAN.MakeCGANDataset()
             if cfg.GetBoolValue(key, 'TrainCGAN') == True:
