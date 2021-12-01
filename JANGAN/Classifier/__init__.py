@@ -182,5 +182,5 @@ class Classifier():
         else:
             return ckptPath
 
-   def __LogData(self, index, correct, incorrect):
+    def __LogData(self, index, correct, incorrect):
         self.Logger.AppendToCSV([index, correct, incorrect])
