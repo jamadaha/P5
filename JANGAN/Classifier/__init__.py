@@ -60,7 +60,7 @@ class Classifier():
         self.LatestCheckpointPath = latestCheckpointPath
         self.LogPath = logPath
         self.Logger = CSVLogger.CSVLogger(logPath, 'TestData')
-        self.Logger.InitCSV(['Index', 'Correct', 'Incorrect', 'CorrectPercentage'])
+        self.Logger.InitCSV(['Index', 'Correct', 'Incorrect'])
         self.DatasetSplit = datasetSplit
         self.LRScheduler = LRScheduler
         self.LearningRateClass = learningRateClass
@@ -161,10 +161,9 @@ class Classifier():
                     predictionsCount += 1
                     totalPredictionsCount += 1
 
-            correctPercentage = (correctPredictions/predictionsCount)*100
-            print(f"Classifier predicted: {correctPredictions} correct, {incorrectPredictions} incorrect, {(correctPercentage):.2f}%")
+            print(f"Classifier predicted: {correctPredictions} correct, {incorrectPredictions} incorrect, {((correctPredictions/predictionsCount)*100):.2f}%")
 
-            self.__LogData(index, correctPredictions, predictionsCount, correctPercentage)
+            self.__LogData(index, correctPredictions, predictionsCount)
 
             index += 1
 
