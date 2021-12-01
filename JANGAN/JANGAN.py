@@ -139,3 +139,10 @@ class JANGAN():
         self.classifier.ClassifyData()
 
         print(" --- Done! --- ")
+
+    def ProduceOutput(self):
+        print(" --- Producing output --- ")
+
+        self.cgan.ProduceLetters()
+
+        print(" --- Done! --- ")

@@ -28,7 +28,7 @@ class CGANTrainer():
     __latestGLoss = 0
     __latestDLoss = 0
 
-    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath, outputDir, imageCountToProduce, numberOfClasses, latentDimension):
+    def __init__(self, cGAN, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath, numberOfClasses, latentDimension):
         self.CGAN = cGAN
         self.Datasets = datasets
         self.Epochs = epochs
@@ -44,7 +44,7 @@ class CGANTrainer():
             'DiffLoss': TFLogger.TFLogger(logPath, 'Loss', 'DiffLoss'),
             'Images': TFLogger.TFLogger(logPath, '', 'Images'),
         }
-        self.LetterProducer = lp.LetterProducer(outputDir, self.CGAN.generator, numberOfClasses, latentDimension, imageCountToProduce)
+        self.LetterProducer = lp.LetterProducer('', self.CGAN.generator, numberOfClasses, latentDimension, 0)
 
 
     def TrainCGAN(self):
@@ -130,6 +130,6 @@ class CGANTrainer():
 
         if self.SaveCheckpoints:
             self.__SaveCheckpoint()
-        images = self.LetterProducer.ProduceLetters(epoch + 1)
 
+        images = self.LetterProducer.GetSampleLetters()
         self.__LogData(images, epoch)

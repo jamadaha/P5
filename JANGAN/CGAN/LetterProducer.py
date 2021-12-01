@@ -65,20 +65,23 @@ class LetterProducer():
             )
             index += 1
 
-    def ProduceLetters(self, epoch):
-        """ Returns a sample of each letter produced
-        """
+    def GetSampleLetters(self):
         from tqdm import tqdm
 
         imageArray = []
 
-        for i in tqdm(range(self.NumberOfClasses), desc='Producing images'):
-            images = self.GenerateLetter(i, self.ImageCountToProduce)
-            imageArray.append(images[0:1])
-            self.SaveImages(
-                os.path.join(self.OutputPath, 
-                str(epoch) + '/'), 
-                i, 
-                images)
+        for i in range(self.NumberOfClasses):
+            imageArray.append(self.GenerateLetter(i, 1))
 
         return imageArray
+        
+
+    def ProduceLetters(self):
+        from tqdm import tqdm
+
+        for i in tqdm(range(self.NumberOfClasses), desc='Producing images'):
+            images = self.GenerateLetter(i, self.ImageCountToProduce)
+            self.SaveImages(
+                self.OutputPath, 
+                i, 
+                images)

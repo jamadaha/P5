@@ -11,6 +11,7 @@ from DatasetLoader import DatasetFormatter as df
 from CGAN import CGANKerasModel as km
 from CGAN import LayerDefinition as ld
 from CGAN import CGANTrainer as ct
+from CGAN import LetterProducer
 
 class CGAN():
     BatchSize = -1
@@ -126,7 +127,7 @@ class CGAN():
             if self.TensorDatasets == None:
                 self.LoadDataset()
 
-        cGANTrainer = ct.CGANTrainer(self.CondGAN, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.OutputDir, self.ImageCountToProduce, self.NumberOfClasses, self.LatentDimension)
+        cGANTrainer = ct.CGANTrainer(self.CondGAN, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension)
 
         if self.UseSavedModel:
             print("Attempting to load CGAN model from checkpoint...")
@@ -147,3 +148,8 @@ class CGAN():
             return None
         else:
             return ckptPath
+
+    def ProduceLetters(self):
+        from tqdm import tqdm
+        letterProducer = LetterProducer.LetterProducer(self.OutputDir, self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension, self.ImageCountToProduce)
+        letterProducer.ProduceLetters()
