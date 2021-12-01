@@ -8,7 +8,8 @@ from tensorflow import keras
 import time
 import os
 import shutil
-from ProjectTools import Logger as lgr
+from ProjectTools import CSVLogger
+from ProjectTools import TFLogger
 import tensorboard
 
 class ClassifierTrainer():
@@ -34,11 +35,11 @@ class ClassifierTrainer():
         self.SaveCheckpoints = saveCheckPoints
         self.CheckpointPath = checkpointPath
         self.LatestCheckpointPath = latestCheckpointPath
-        self.Logger = lgr.Logger(logPath, 'TrainingData')
+        self.Logger = CSVLogger.CSVLogger(logPath, 'TrainingData')
         self.Logger.InitCSV(['Epoch', 'GeneratorLoss', 'DiscriminatorLoss'])
         self.SummaryWriter = {
-            'CLoss': tf.summary.create_file_writer(os.path.join(logPath, 'Loss', 'CLoss')),
-            'Accuracy': tf.summary.create_file_writer(os.path.join(logPath, 'Accuracy'))
+            'CLoss': TFLogger.TFLogger(logPath, 'Loss', 'CLoss'),
+            'Accuracy': TFLogger.TFLogger(logPath, 'Classifier', 'Accuracy')
         }
 
     def TrainClassifier(self):
@@ -97,13 +98,8 @@ class ClassifierTrainer():
 
     def __LogData(self, epoch):
         self.Logger.AppendToCSV([epoch + 1, self.__latestLoss])
-
-        with self.SummaryWriter['CLoss'].as_default():
-            with tf.name_scope('Loss'):
-                tf.summary.scalar('ClassifierLoss', self.__latestLoss, step=epoch)
-        with self.SummaryWriter['Accuracy'].as_default():
-            with tf.name_scope('Accuracy'):
-                tf.summary.scalar('ClassifierAccuracy', self.__latestAccuracy, step=epoch)
+        self.SummaryWriter['CLoss'].LogNumber(self.__latestLoss, epoch)
+        self.SummaryWriter['Accuracy'].LogNumber(self.__latestAccuracy, epoch)
 
     def __EpochRun(self, epoch):
         print("Training Classifier...")
