@@ -1,3 +1,4 @@
+from ProjectTools import CSVLogger
 from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
@@ -28,6 +29,7 @@ class Classifier():
     CheckpointPath = ""
     LatestCheckpointPath = ""
     LogPath = ""
+    Logger = None
     ClassifyDir = ""
 
     TrainingDataDir = ""
@@ -57,6 +59,7 @@ class Classifier():
         self.CheckpointPath = checkpointPath
         self.LatestCheckpointPath = latestCheckpointPath
         self.LogPath = logPath
+        self.Logger = CSVLogger.CSVLogger(logPath, 'TrainingData')
         self.DatasetSplit = datasetSplit
         self.LRScheduler = LRScheduler
         self.LearningRateClass = learningRateClass
