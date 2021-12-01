@@ -116,7 +116,7 @@ class Classifier():
 
         if self.UseSavedModel:
             print("Attempting to load Classifier model from checkpoint...")
-            classifierTrainer.Classifier.load_weights(checkpointPath)
+            classifierTrainer.Classifier.load_weights(checkpointPath).expect_partial()
             print("Checkpoint loaded!")
         else:
             classifierTrainer.TrainClassifier()
