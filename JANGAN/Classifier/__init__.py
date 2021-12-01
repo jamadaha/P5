@@ -163,7 +163,7 @@ class Classifier():
 
             print(f"Classifier predicted: {correctPredictions} correct, {incorrectPredictions} incorrect, {((correctPredictions/predictionsCount)*100):.2f}%")
 
-            self.__LogData(index, correctPredictions, predictionsCount)
+            self.__LogData(index, correctPredictions, incorrectPredictions)
 
             index += 1
 
@@ -183,5 +183,5 @@ class Classifier():
         #else:
         #    return ckptPath
 
-    def __LogData(self, index, correct, incorrect, correctPercentage):
-        self.Logger.AppendToCSV([index, correct, incorrect, correctPercentage])
+    def __LogData(self, index, correct, incorrect):
+        self.Logger.AppendToCSV([index, correct, incorrect])
