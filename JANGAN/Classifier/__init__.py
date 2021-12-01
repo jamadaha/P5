@@ -21,7 +21,7 @@ class Classifier(bm.BaseMLModel):
 
     AccuracyThreshold = 0
 
-    LearningRateDis = 0
+    LearningRateClass = 0
 
     Classifier = None
 
@@ -29,8 +29,7 @@ class Classifier(bm.BaseMLModel):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler)
         self.ClassifyDir = classifyDir
         self.AccuracyThreshold = accuracyThresshold
-        self.LearningRateDis = learningRateClass
-
+        self.LearningRateClass = learningRateClass
 
     def SetupModel(self):
         layerDefiniton = ld.LayerDefinition(self.NumberOfClasses)
@@ -64,7 +63,7 @@ class Classifier(bm.BaseMLModel):
     def ProduceOutput(self):
         self.UseSavedModel = True
         if self.Classifier == None:
-            self.TrainGAN()
+            self.TrainModel()
 
         dataLoader = dl.DatasetLoader(
             self.ClassifyDir,

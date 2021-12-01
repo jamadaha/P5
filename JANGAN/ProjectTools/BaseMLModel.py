@@ -65,6 +65,8 @@ class BaseMLModel():
         self.TensorDatasets = bulkDatasetFormatter.ProcessData()
 
     def TrainModel(self):
+        if self.Trainer == None:
+            self.SetupModel()
         if self.UseSavedModel == True:
             checkpointPath = self.__GetCheckpointPath()
             if not checkpointPath:
