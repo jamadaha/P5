@@ -120,7 +120,7 @@ class Classifier():
 
         if self.UseSavedModel:
             print("Attempting to load Classifier model from checkpoint...")
-            classifierTrainer.Classifier.load_weights(checkpointPath)
+            classifierTrainer.Classifier.load_weights(checkpointPath).expect_partial()
             print("Checkpoint loaded!")
         else:
             classifierTrainer.TrainClassifier()
@@ -171,17 +171,16 @@ class Classifier():
 
 
     def __GetCheckpointPath(self):
-        pass
-        #if not os.path.exists(self.LatestCheckpointPath):
-        #    return None
+        if not os.path.exists(self.LatestCheckpointPath):
+            return None
 
-        #with open(self.LatestCheckpointPath, 'r') as f:
-        #    ckptPath = f.readline().strip()
+        with open(self.LatestCheckpointPath, 'r') as f:
+            ckptPath = f.readline().strip()
 
-        #if not os.path.exists(f"{ckptPath}.index"):
-        #    return None
-        #else:
-        #    return ckptPath
+        if not os.path.exists(f"{ckptPath}.index"):
+            return None
+        else:
+            return ckptPath
 
-    def __LogData(self, index, correct, incorrect):
+   def __LogData(self, index, correct, incorrect):
         self.Logger.AppendToCSV([index, correct, incorrect])
