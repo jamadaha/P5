@@ -126,13 +126,14 @@ class CGAN():
         if not checkpointPath:
             print("Checkpoint not found! Training instead")
             self.UseSavedModel = False
-            self.LoadDataset()
+            if self.TensorDatasets == None:
+                self.LoadDataset()
 
         cGANTrainer = ct.CGANTrainer(self.CondGAN, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
 
         if self.UseSavedModel:
             print("Attempting to load CGAN model from checkpoint...")
-            cGANTrainer.CGAN.load_weights(checkpointPath)
+            cGANTrainer.CGAN.load_weights(checkpointPath).expect_partial()
             print("Checkpoint loaded!")
         else:
             cGANTrainer.TrainCGAN()
