@@ -89,7 +89,7 @@ class Classifier():
                 loss_fn=keras.losses.CategoricalCrossentropy(from_logits=True),
             )  
 
-    def LoadDataset(self):
+    def __LoadDataset(self):
         if self.UseSavedModel:
             print("Assuming checkpoint exists. Continuing without loading data...")
             return
@@ -110,18 +110,21 @@ class Classifier():
             print("Checkpoint not found! Training instead")
             self.UseSavedModel = False
             if self.TensorDatasets == None:
-                self.LoadDataset()
+                self.__LoadDataset()
 
         classifierTrainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
 
         if self.UseSavedModel:
             print("Attempting to load Classifier model from checkpoint...")
-            classifierTrainer.Classifier.load_weights(checkpointPath).expect_partial()
+            classifierTrainer.Model.load_weights(checkpointPath).expect_partial()
             print("Checkpoint loaded!")
         else:
-            classifierTrainer.TrainClassifier()
+            classifierTrainer.TrainModel()
 
     def ClassifyData(self):
+        if self.TrainedGenerator == None:
+            self.TrainGAN()
+
         dataLoader = dl.DatasetLoader(
             self.ClassifyDir,
             "",

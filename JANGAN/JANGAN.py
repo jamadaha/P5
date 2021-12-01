@@ -67,13 +67,14 @@ class JANGAN():
         print(" --- Done! --- ")
         print("")
 
-    def TrainCGAN(self):
-        print(" --- Training CGAN --- ")
-
+    def __GetNumberOfClasses(self):
         self.NumberOfClasses = 0
         for entry in os.scandir(self.cfg.GetStringValue("DATAGENERATOR", "LetterPath")):
             if entry.is_dir():
                 self.NumberOfClasses += 1
+
+    def __SetupCGAN(self):
+        self.__GetNumberOfClasses()
 
         self.cgan = cg.CGAN(
             self.cfg.GetIntValue("CGAN", "BatchSize"),
@@ -83,10 +84,10 @@ class JANGAN():
             self.cfg.GetIntValue("CGAN", "LatentDimension"),
             self.cfg.GetIntValue("CGAN", "EpochCount"),
             self.cfg.GetIntValue("CGAN", "RefreshUIEachXIteration"),
-            self.cfg.GetIntValue("CGAN", "NumberOfFakeImagesToOutput"),
+            self.cfg.GetIntValue("CGANOutput", "NumberOfFakeImagesToOutput"),
             self.cfg.GetStringValue("CGAN", "TrainDatasetDir"),
             self.cfg.GetStringValue("CGAN", "TestDatasetDir"),
-            self.cfg.GetStringValue("CGAN", "OutputDir"),
+            self.cfg.GetStringValue("CGANOutput", "OutputDir"),
             self.cfg.GetBoolValue("CGAN", "SaveCheckpoints"),
             self.cfg.GetBoolValue("CGAN", "UseSavedModel"),
             self.cfg.GetStringValue("CGAN", "CheckpointPath"),
@@ -97,8 +98,13 @@ class JANGAN():
             self.cfg.GetFloatValue("CGAN", "LearningRateDiscriminator"),
             self.cfg.GetFloatValue("CGAN", "LearningRateGenerator"))
 
+    def TrainCGAN(self):
+        print(" --- Training CGAN --- ")
+
+        if self.cgan == None:
+            self.__SetupCGAN()
+
         self.cgan.SetupCGAN()
-        self.cgan.LoadDataset()
         self.cgan.TrainGAN()
 
         print(" --- Done! --- ")
@@ -106,18 +112,15 @@ class JANGAN():
     def ProduceOutput(self):
         print(" --- Producing output --- ")
 
+        if self.cgan == None:
+            self.__SetupCGAN()
+
         self.cgan.ProduceLetters()
 
         print(" --- Done! --- ")
 
-    def ClassifyCGANOutput(self):
-        print(" --- Classifying Output of CGAN --- ")
-
-        if self.NumberOfClasses == None:
-            self.NumberOfClasses = 0
-            for entry in os.scandir(self.cfg.GetStringValue("Classifier", "TrainDatasetDir")):
-                if entry.is_dir():
-                    self.NumberOfClasses += 1
+    def __SetupClassifier(self):
+        self.__GetNumberOfClasses()
 
         self.classifier = cf.Classifier(
             self.cfg.GetIntValue("Classifier", "BatchSize"),
@@ -128,7 +131,7 @@ class JANGAN():
             self.cfg.GetIntValue("Classifier", "RefreshUIEachXIteration"),
             self.cfg.GetStringValue("Classifier", "TrainDatasetDir"),
             self.cfg.GetStringValue("Classifier", "TestDatasetDir"),
-            self.cfg.GetStringValue("Classifier", "ClassifyDir"),
+            self.cfg.GetStringValue("ClassifierOutput", "ClassifyDir"),
             self.cfg.GetBoolValue("Classifier", "SaveCheckpoints"),
             self.cfg.GetBoolValue("Classifier", "UseSavedModel"),
             self.cfg.GetStringValue("Classifier", "CheckpointPath"),
@@ -139,9 +142,22 @@ class JANGAN():
             self.cfg.GetFloatValue("Classifier", "LearningRateClassifier"),
             self.cfg.GetFloatValue("Classifier", "AccuracyThreshold"))
 
+    def TrainClassifier(self):
+        print(" --- Training Classifier --- ")
+
+        if self.classifier == None:
+            self.__SetupClassifier()
+
         self.classifier.SetupClassifier()
-        self.classifier.LoadDataset()
         self.classifier.TrainClassifier()
+
+        print(" --- Done! --- ")
+
+    def ClassifyCGANOutput(self):
+        print(" --- Classifying Output of CGAN --- ")
+
+        if self.classifier == None:
+            self.__SetupClassifier()
 
         self.classifier.ClassifyData()
 

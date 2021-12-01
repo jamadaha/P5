@@ -69,6 +69,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ProjectTools\AutoPackageInstaller.py" />
+    <Compile Include="ProjectTools\BaseKerasModelTrainer.py" />
     <Compile Include="ProjectTools\ConfigHelper.py" />
     <Compile Include="ProjectTools\HelperFunctions.py">
       <SubType>Code</SubType>

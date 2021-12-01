@@ -5,6 +5,7 @@ ap.CheckAndInstall("tqdm")
 
 from tensorflow import keras
 import os
+from tqdm import tqdm
 
 from DatasetLoader import DatasetLoader as dl
 from DatasetLoader import DatasetFormatter as df
@@ -32,8 +33,6 @@ class CGAN():
     TrainingDataDir = ""
     TestingDataDir = ""
     DatasetSplit = 0
-
-    #AccuracyThreshold = 0
 
     LRScheduler = ''
     LearningRateDis = 0.0
@@ -77,7 +76,6 @@ class CGAN():
             latentDimension=self.LatentDimension, 
             imageSize=self.ImageSize, 
             numberOfClasses=self.NumberOfClasses,
-            #accuracyThreshold=self.AccuracyThreshold
         )
 
         if self.LRScheduler == 'Constant':
@@ -104,9 +102,7 @@ class CGAN():
                 loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
             )  
 
-        
-
-    def LoadDataset(self):
+    def __LoadDataset(self):
         if self.UseSavedModel:
             print("Assuming checkpoint exists. Continuing without loading data...")
             return
@@ -127,17 +123,17 @@ class CGAN():
             print("Checkpoint not found! Training instead")
             self.UseSavedModel = False
             if self.TensorDatasets == None:
-                self.LoadDataset()
+                self.__LoadDataset()
 
         cGANTrainer = ct.CGANTrainer(self.CondGAN, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
 
         if self.UseSavedModel:
             print("Attempting to load CGAN model from checkpoint...")
-            cGANTrainer.CGAN.load_weights(checkpointPath).expect_partial()
+            cGANTrainer.Model.load_weights(checkpointPath).expect_partial()
             print("Checkpoint loaded!")
         else:
-            cGANTrainer.TrainCGAN()
-        self.TrainedGenerator = cGANTrainer.CGAN.generator
+            cGANTrainer.TrainModel()
+        self.TrainedGenerator = cGANTrainer.Model.generator
 
     def __GetCheckpointPath(self):
         if not os.path.exists(self.LatestCheckpointPath):
@@ -152,7 +148,9 @@ class CGAN():
             return ckptPath
 
     def ProduceLetters(self):
-        from tqdm import tqdm
+        if self.TrainedGenerator == None:
+            self.TrainGAN()
+
         letterProducer = lp.LetterProducer(self.OutputDir, self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension)
         # Warmup letter producer
         #   This is done as it outputs something to console
