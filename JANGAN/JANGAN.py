@@ -28,52 +28,83 @@ class JANGAN():
         print(" --- Done! --- ")
         cfgChecker = JANGANConfigChecker()
         cfgChecker.CheckConfig(self.cfg, self.ThrowIfConfigFileBad)
+        self.cfg.CopyConfigToPath(self.cfg.GetStringValue("GLOBAL", "ConfigCopyPath"))
         print("")
 
-    def PurgeRunDataFolder(self):
+    def PurgeRunDataFolder(self, path):
         print(" --- Purging training data folder --- ")
 
         from ProjectTools import HelperFunctions as hf
-        hf.DeleteFolderAndAllContents(self.cfg.GetStringValue("DATAGENERATOR","LetterPath"))
+        hf.DeleteFolderAndAllContents(path)
 
         print(f" --- Done! --- ")
 
     def MakeCGANDataset(self):
-        if self.cfg.GetBoolValue("DATAGENERATOR", "PurgePreviousData"):
-            self.PurgeRunDataFolder()
+        if self.cfg.GetBoolValue("CGANDATAGENERATOR", "PurgePreviousData"):
+            self.PurgeRunDataFolder(self.cfg.GetStringValue("CGANDATAGENERATOR","LetterPath"))
             
-        self.cfg.CopyConfigToPath(self.cfg.GetStringValue("CGANTraining", "ConfigCopyPath"))
-
-        print(" --- Generating dataset if not there --- ")
+        print(" --- Generating dataset for CGAN if not there --- ")
 
         datagen = dg.DataGenerator(
-            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadURL"),
-            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadPath"),
-            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadName"),
-            self.cfg.GetStringValue("DATAGENERATOR", "LetterPath"),
-            self.cfg.GetStringValue("DATAGENERATOR", "LetterOutputFormat"),
-            self.cfg.GetIntValue("DATAGENERATOR", "MinimumLetterCount"),
-            self.cfg.GetIntValue("DATAGENERATOR", "MaximumLetterCount"),
-            self.cfg.GetJsonValue("DATAGENERATOR", "TextDownloadURLS"),
-            self.cfg.GetStringValue("DATAGENERATOR", "TextPath"),
-            self.cfg.GetStringValue("DATAGENERATOR", "DistributionPath"),
-            self.cfg.GetBoolValue("DATAGENERATOR", "PrintDistribution"),
-            self.cfg.GetBoolValue("DATAGENERATOR", "IncludeNumbers"),
-            self.cfg.GetBoolValue("DATAGENERATOR", "IncludeLetters"),
+            self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterDownloadURL"),
+            self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterDownloadPath"),
+            self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterDownloadName"),
+            self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterPath"),
+            self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterOutputFormat"),
+            self.cfg.GetIntValue("CGANDATAGENERATOR", "MinimumLetterCount"),
+            self.cfg.GetIntValue("CGANDATAGENERATOR", "MaximumLetterCount"),
+            self.cfg.GetJsonValue("CGANDATAGENERATOR", "TextDownloadURLS"),
+            self.cfg.GetStringValue("CGANDATAGENERATOR", "TextPath"),
+            self.cfg.GetStringValue("CGANDATAGENERATOR", "DistributionPath"),
+            self.cfg.GetBoolValue("CGANDATAGENERATOR", "PrintDistribution"),
+            self.cfg.GetBoolValue("CGANDATAGENERATOR", "IncludeNumbers"),
+            self.cfg.GetBoolValue("CGANDATAGENERATOR", "IncludeLetters"),
         )
         datagen.GenerateData()
 
         print(" --- Done! --- ")
         print("")
 
-    def __GetNumberOfClasses(self):
+    def MakeClassifyerDataset(self):
+        if self.cfg.GetBoolValue("ClassifierDATAGENERATOR", "PurgePreviousData"):
+            self.PurgeRunDataFolder(self.cfg.GetStringValue("ClassifierDATAGENERATOR","LetterPath"))
+
+        print(" --- Generating dataset for Classifier if not there --- ")
+
+        datagen = dg.DataGenerator(
+            self.cfg.GetStringValue("ClassifierDATAGENERATOR", "LetterDownloadURL"),
+            self.cfg.GetStringValue("ClassifierDATAGENERATOR", "LetterDownloadPath"),
+            self.cfg.GetStringValue("ClassifierDATAGENERATOR", "LetterDownloadName"),
+            self.cfg.GetStringValue("ClassifierDATAGENERATOR", "LetterPath"),
+            self.cfg.GetStringValue("ClassifierDATAGENERATOR", "LetterOutputFormat"),
+            self.cfg.GetIntValue("ClassifierDATAGENERATOR", "MinimumLetterCount"),
+            self.cfg.GetIntValue("ClassifierDATAGENERATOR", "MaximumLetterCount"),
+            self.cfg.GetJsonValue("ClassifierDATAGENERATOR", "TextDownloadURLS"),
+            self.cfg.GetStringValue("ClassifierDATAGENERATOR", "TextPath"),
+            self.cfg.GetStringValue("ClassifierDATAGENERATOR", "DistributionPath"),
+            self.cfg.GetBoolValue("ClassifierDATAGENERATOR", "PrintDistribution"),
+            self.cfg.GetBoolValue("ClassifierDATAGENERATOR", "IncludeNumbers"),
+            self.cfg.GetBoolValue("ClassifierDATAGENERATOR", "IncludeLetters"),
+        )
+        datagen.GenerateData()
+
+        print(" --- Done! --- ")
+        print("")
+
+    def __GetNumberOfCGANClasses(self):
         self.NumberOfClasses = 0
-        for entry in os.scandir(self.cfg.GetStringValue("DATAGENERATOR", "LetterPath")):
+        for entry in os.scandir(self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterPath")):
+            if entry.is_dir():
+                self.NumberOfClasses += 1
+
+    def __GetNumberOfClassifierClasses(self):
+        self.NumberOfClasses = 0
+        for entry in os.scandir(self.cfg.GetStringValue("ClassifierDATAGENERATOR", "LetterPath")):
             if entry.is_dir():
                 self.NumberOfClasses += 1
 
     def __SetupCGAN(self):
-        self.__GetNumberOfClasses()
+        self.__GetNumberOfCGANClasses()
 
         self.cgan = cg.CGAN(
             self.cfg.GetIntValue("CGANTraining", "BatchSize"),
@@ -119,7 +150,7 @@ class JANGAN():
         print(" --- Done! --- ")
 
     def __SetupClassifier(self):
-        self.__GetNumberOfClasses()
+        self.__GetNumberOfClassifierClasses()
 
         self.classifier = cf.Classifier(
             self.cfg.GetIntValue("ClassifierTraining", "BatchSize"),

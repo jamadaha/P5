@@ -8,30 +8,53 @@ class JANGANConfigChecker():
         self.ThrowIfConfigFileBad = throwIfConfigFileBad
         print(" --- Checking config file integrity --- ")
 
-        # Data Generator
+        # Global
         self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "DATAGENERATOR", "BasePath")
-        self.__CheckKey(cfg, "DATAGENERATOR", "TextPath")
-        self.__CheckKey(cfg, "DATAGENERATOR", "LetterPath")
-        self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadPath")
-        self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadName")
-        self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadURL")
-        self.__CheckKey(cfg, "DATAGENERATOR", "TextDownloadURLS")
-        self.__CheckKey(cfg, "DATAGENERATOR", "PurgePreviousData")
-        self.__CheckKey(cfg, "DATAGENERATOR", "IncludeNumbers")
-        self.__CheckKey(cfg, "DATAGENERATOR", "IncludeLetters")
-        self.__CheckKey(cfg, "DATAGENERATOR", "DistributionPath")
-        self.__CheckKey(cfg, "DATAGENERATOR", "PrintDistribution")
-        self.__CheckKey(cfg, "DATAGENERATOR", "LetterOutputFormat")
-        self.__CheckKey(cfg, "DATAGENERATOR", "MinimumLetterCount")
-        self.__CheckKey(cfg, "DATAGENERATOR", "MaximumLetterCount")
-        self.__CheckKeyCount(cfg, "DATAGENERATOR")
+        self.__CheckKey(cfg, "GLOBAL", "ConfigCopyPath")
+        self.__CheckKeyCount(cfg, "GLOBAL")
+
+        # CGAN Data Generator
+        self.__CheckedKeyCount = 0
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "BasePath")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "TextPath")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterPath")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterDownloadPath")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterDownloadName")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterDownloadURL")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "TextDownloadURLS")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "PurgePreviousData")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "IncludeNumbers")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "IncludeLetters")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "DistributionPath")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "PrintDistribution")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterOutputFormat")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "MinimumLetterCount")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "MaximumLetterCount")
+        self.__CheckKeyCount(cfg, "CGANDATAGENERATOR")
+
+        # Classifier Data Generator
+        self.__CheckedKeyCount = 0
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "BasePath")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "TextPath")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "LetterPath")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "LetterDownloadPath")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "LetterDownloadName")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "LetterDownloadURL")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "TextDownloadURLS")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "PurgePreviousData")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "IncludeNumbers")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "IncludeLetters")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "DistributionPath")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "PrintDistribution")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "LetterOutputFormat")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "MinimumLetterCount")
+        self.__CheckKey(cfg, "ClassifierDATAGENERATOR", "MaximumLetterCount")
+        self.__CheckKeyCount(cfg, "ClassifierDATAGENERATOR")
 
         # CGAN Training
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "CGANTraining", "TrainDatasetDir")
         self.__CheckKey(cfg, "CGANTraining", "TestDatasetDir")
-        self.__CheckKey(cfg, "CGANTraining", "ConfigCopyPath")
         self.__CheckKey(cfg, "CGANTraining", "ImageSize")
         self.__CheckKey(cfg, "CGANTraining", "BatchSize")
         self.__CheckKey(cfg, "CGANTraining", "LatentDimension")
@@ -58,7 +81,6 @@ class JANGANConfigChecker():
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "ClassifierTraining", "TrainDatasetDir")
         self.__CheckKey(cfg, "ClassifierTraining", "TestDatasetDir")
-        self.__CheckKey(cfg, "ClassifierTraining", "ConfigCopyPath")
         self.__CheckKey(cfg, "ClassifierTraining", "ImageSize")
         self.__CheckKey(cfg, "ClassifierTraining", "BatchSize")
         self.__CheckKey(cfg, "ClassifierTraining", "EpochCount")
