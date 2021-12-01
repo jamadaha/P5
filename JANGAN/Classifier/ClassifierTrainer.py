@@ -20,7 +20,7 @@ class ClassifierTrainer(baseKeras.BaseKerasModelTrainer):
     def __init__(self, model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath):
         super().__init__(model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath)
         self.Logger = lgr.Logger(logPath, 'TrainingData')
-        self.Logger.InitCSV(['Epoch', 'GeneratorLoss', 'DiscriminatorLoss'])
+        self.Logger.InitCSV(['Epoch', 'Loss', 'Accuracy'])
         self.SummaryWriter = {
             'CLoss': tf.summary.create_file_writer(os.path.join(logPath, 'Loss', 'CLoss')),
             'Accuracy': tf.summary.create_file_writer(os.path.join(logPath, 'Accuracy'))
@@ -35,7 +35,7 @@ class ClassifierTrainer(baseKeras.BaseKerasModelTrainer):
         print(f"Accuracy: {(self.__latestAccuracy*100):.2f}% Progress: {((iteration/totalIterations)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainingTime)}    ", end="\r")
         
     def LogData(self, epoch):
-        self.Logger.AppendToCSV([epoch + 1, self.__latestLoss])
+        self.Logger.AppendToCSV([epoch + 1, self.__latestLoss, self.__latestAccuracy])
 
         with self.SummaryWriter['CLoss'].as_default():
             with tf.name_scope('Loss'):
