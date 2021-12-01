@@ -1,4 +1,5 @@
 from ProjectTools import AutoPackageInstaller as ap
+from ProjectTools import BaseMLModel as bm
 
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("tqdm")
@@ -7,70 +8,32 @@ from tensorflow import keras
 import os
 from tqdm import tqdm
 
-from DatasetLoader import DatasetLoader as dl
-from DatasetLoader import DatasetFormatter as df
 from CGAN import CGANKerasModel as km
 from CGAN import LayerDefinition as ld
 from CGAN import LetterProducer as lp
 from CGAN import CGANTrainer as ct
 
-class CGAN():
-    BatchSize = -1
-    NumberOfChannels = -1
-    NumberOfClasses = -1
-    ImageSize = -1
-    LatentDimension = -1
-    EpochCount = -1
-    RefreshEachStep = -1
+class CGAN(bm.BaseMLModel):
     ImageCountToProduce = -1
-    TensorDatasets = None
-    SaveCheckpoints = True
-    UseSavedModel = False
-    CheckpointPath = ""
-    LatestCheckpointPath = ""
-    LogPath = ""
 
-    TrainingDataDir = ""
-    TestingDataDir = ""
-    DatasetSplit = 0
-
-    LRScheduler = ''
     LearningRateDis = 0.0
     LearningRateGen = 0.0
 
-    CondGAN = None
-    DataLoader = None
     TrainedGenerator = None
 
     def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen):
-        self.BatchSize = batchSize
-        self.NumberOfChannels = numberOfChannels
-        self.NumberOfClasses = numberOfClasses
-        self.ImageSize = imageSize
-        self.LatentDimension = latentDimension
-        self.EpochCount = epochCount
-        self.RefreshEachStep = refreshEachStep
+        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler)
         self.ImageCountToProduce = imageCountToProduce
-        self.TrainingDataDir = trainingDataDir
-        self.TestingDataDir = testingDataDir
-        self.OutputDir = outputDir
-        self.SaveCheckpoints = saveCheckpoints
-        self.UseSavedModel = useSavedModel
-        self.CheckpointPath = checkpointPath
-        self.LatestCheckpointPath = latestCheckpointPath
-        self.LogPath = logPath
-        self.DatasetSplit = datasetSplit
-        self.LRScheduler = LRScheduler
         self.LearningRateDis = learningRateDis
         self.LearningRateGen = learningRateGen
 
-    def SetupCGAN(self):
+    def SetupModel(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
         discriminator_in_channels = self.NumberOfChannels + self.NumberOfClasses
 
         layerDefiniton = ld.LayerDefinition(discriminator_in_channels,generator_in_channels)
 
-        self.CondGAN = km.ConditionalGAN(
+        self.KerasModel = km.ConditionalGAN(
             discriminator=layerDefiniton.GetDiscriminator(), 
             generator=layerDefiniton.GetGenerator(), 
             latentDimension=self.LatentDimension, 
@@ -79,7 +42,7 @@ class CGAN():
         )
 
         if self.LRScheduler == 'Constant':
-            self.CondGAN.compile(
+            self.KerasModel.compile(
                 d_optimizer=keras.optimizers.Adam(learning_rate=self.LearningRateDis),
                 g_optimizer=keras.optimizers.Adam(learning_rate=self.LearningRateGen),
                 loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
@@ -96,60 +59,20 @@ class CGAN():
                 decay_rate=0.9
             )
 
-            self.CondGAN.compile(
+            self.KerasModel.compile(
                 d_optimizer=keras.optimizers.Adam(learning_rate=disSchedule),
                 g_optimizer=keras.optimizers.Adam(learning_rate=genSchedule),
                 loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
             )  
 
-    def __LoadDataset(self):
-        if self.UseSavedModel:
-            print("Assuming checkpoint exists. Continuing without loading data...")
-            return
+        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
 
-        dataLoader = dl.DatasetLoader(
-            self.TrainingDataDir,
-            self.TestingDataDir,
-            (self.ImageSize,self.ImageSize))
-        dataLoader.LoadTrainDatasets()
-        dataArray = dataLoader.DataSets
+    def TrainModel(self):
+        super().TrainModel()
+        self.TrainedGenerator = self.Trainer.Model.generator
 
-        bulkDatasetFormatter = df.BulkDatasetFormatter(dataArray, self.NumberOfClasses,self.BatchSize, self.DatasetSplit)
-        self.TensorDatasets = bulkDatasetFormatter.ProcessData()
-
-    def TrainGAN(self):
-        checkpointPath = self.__GetCheckpointPath()
-        if not checkpointPath:
-            print("Checkpoint not found! Training instead")
-            self.UseSavedModel = False
-
-        if not self.UseSavedModel:
-            if self.TensorDatasets == None:
-                self.__LoadDataset()
-
-        cGANTrainer = ct.CGANTrainer(self.CondGAN, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
-
-        if self.UseSavedModel:
-            print("Attempting to load CGAN model from checkpoint...")
-            cGANTrainer.Model.load_weights(checkpointPath).expect_partial()
-            print("Checkpoint loaded!")
-        else:
-            cGANTrainer.TrainModel()
-        self.TrainedGenerator = cGANTrainer.Model.generator
-
-    def __GetCheckpointPath(self):
-        if not os.path.exists(self.LatestCheckpointPath):
-            return None
-
-        with open(self.LatestCheckpointPath, 'r') as f:
-            ckptPath = f.readline().strip()
-
-        if not os.path.exists(f"{ckptPath}.index"):
-            return None
-        else:
-            return ckptPath
-
-    def ProduceLetters(self):
+    def ProduceOutput(self):
+        self.UseSavedModel = True
         if self.TrainedGenerator == None:
             self.TrainGAN()
 

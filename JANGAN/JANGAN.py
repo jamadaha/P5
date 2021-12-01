@@ -41,7 +41,6 @@ class JANGAN():
     def MakeCGANDataset(self):
         if self.cfg.GetBoolValue("DATAGENERATOR", "PurgePreviousData"):
             self.PurgeRunDataFolder()
-
             
         self.cfg.CopyConfigToPath(self.cfg.GetStringValue("CGANTraining", "ConfigCopyPath"))
 
@@ -104,8 +103,8 @@ class JANGAN():
         if self.cgan == None:
             self.__SetupCGAN()
 
-        self.cgan.SetupCGAN()
-        self.cgan.TrainGAN()
+        self.cgan.SetupModel()
+        self.cgan.TrainModel()
 
         print(" --- Done! --- ")
 
@@ -115,7 +114,7 @@ class JANGAN():
         if self.cgan == None:
             self.__SetupCGAN()
 
-        self.cgan.ProduceLetters()
+        self.cgan.ProduceOutput()
 
         print(" --- Done! --- ")
 
@@ -132,6 +131,7 @@ class JANGAN():
             self.cfg.GetStringValue("ClassifierTraining", "TrainDatasetDir"),
             self.cfg.GetStringValue("ClassifierTraining", "TestDatasetDir"),
             self.cfg.GetStringValue("ClassifierOutput", "ClassifyDir"),
+            self.cfg.GetStringValue("ClassifierOutput", "OutputDir"),
             self.cfg.GetBoolValue("ClassifierTraining", "SaveCheckpoints"),
             self.cfg.GetBoolValue("ClassifierTraining", "UseSavedModel"),
             self.cfg.GetStringValue("ClassifierTraining", "CheckpointPath"),
@@ -148,8 +148,8 @@ class JANGAN():
         if self.classifier == None:
             self.__SetupClassifier()
 
-        self.classifier.SetupClassifier()
-        self.classifier.TrainClassifier()
+        self.classifier.SetupModel()
+        self.classifier.TrainModel()
 
         print(" --- Done! --- ")
 
@@ -159,6 +159,6 @@ class JANGAN():
         if self.classifier == None:
             self.__SetupClassifier()
 
-        self.classifier.ClassifyData()
+        self.classifier.ProduceOutput()
 
         print(" --- Done! --- ")

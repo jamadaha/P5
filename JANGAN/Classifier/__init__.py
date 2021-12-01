@@ -1,4 +1,5 @@
 from ProjectTools import AutoPackageInstaller as ap
+from ProjectTools import BaseMLModel as bm
 
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("tqdm")
@@ -15,53 +16,23 @@ from Classifier import ClassifierKerasModel as cm
 from Classifier import LayerDefinition as ld
 from Classifier import ClassifierTrainer as ct
 
-class Classifier():
-    BatchSize = -1
-    NumberOfChannels = -1
-    NumberOfClasses = -1
-    ImageSize = -1
-    EpochCount = -1
-    RefreshEachStep = -1
-    TensorDatasets = None
-    SaveCheckpoints = True
-    UseSavedModel = False
-    CheckpointPath = ""
-    LatestCheckpointPath = ""
-    LogPath = ""
+class Classifier(bm.BaseMLModel):
     ClassifyDir = ""
-
-    TrainingDataDir = ""
-    TestingDataDir = ""
-    DatasetSplit = 0
 
     AccuracyThreshold = 0
 
-    LRScheduler = ''
-    LearningRateClass = 0.0
+    LearningRateDis = 0
 
     Classifier = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold):
-        self.BatchSize = batchSize
-        self.NumberOfChannels = numberOfChannels
-        self.NumberOfClasses = numberOfClasses
-        self.ImageSize = imageSize
-        self.EpochCount = epochCount
-        self.RefreshEachStep = refreshEachStep
-        self.TrainingDataDir = trainingDataDir
-        self.TestingDataDir = testingDataDir
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold):
+        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler)
         self.ClassifyDir = classifyDir
-        self.SaveCheckpoints = saveCheckpoints
-        self.UseSavedModel = useSavedModel
-        self.CheckpointPath = checkpointPath
-        self.LatestCheckpointPath = latestCheckpointPath
-        self.LogPath = logPath
-        self.DatasetSplit = datasetSplit
-        self.LRScheduler = LRScheduler
-        self.LearningRateClass = learningRateClass
         self.AccuracyThreshold = accuracyThresshold
+        self.LearningRateDis = learningRateClass
 
-    def SetupClassifier(self):
+
+    def SetupModel(self):
         layerDefiniton = ld.LayerDefinition(self.NumberOfClasses)
 
         self.Classifier = cm.ClassifierModel(
@@ -88,41 +59,10 @@ class Classifier():
                 loss_fn=keras.losses.CategoricalCrossentropy(from_logits=True),
             )  
 
-    def __LoadDataset(self):
-        if self.UseSavedModel:
-            print("Assuming checkpoint exists. Continuing without loading data...")
-            return
+        self.Trainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
 
-        dataLoader = dl.DatasetLoader(
-            self.TrainingDataDir,
-            self.TestingDataDir,
-            (self.ImageSize,self.ImageSize))
-        dataLoader.LoadTrainDatasets()
-        dataArray = dataLoader.DataSets
-
-        bulkDatasetFormatter = df.BulkDatasetFormatter(dataArray, self.NumberOfClasses,self.BatchSize, self.DatasetSplit)
-        self.TensorDatasets = bulkDatasetFormatter.ProcessData()
-
-    def TrainClassifier(self):
-        checkpointPath = self.__GetCheckpointPath()
-        if not checkpointPath:
-            print("Checkpoint not found! Training instead")
-            self.UseSavedModel = False
-
-        if not self.UseSavedModel:
-            if self.TensorDatasets == None:
-                self.__LoadDataset()
-
-        classifierTrainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
-
-        if self.UseSavedModel:
-            print("Attempting to load Classifier model from checkpoint...")
-            classifierTrainer.Model.load_weights(checkpointPath).expect_partial()
-            print("Checkpoint loaded!")
-        else:
-            classifierTrainer.TrainModel()
-
-    def ClassifyData(self):
+    def ProduceOutput(self):
+        self.UseSavedModel = True
         if self.Classifier == None:
             self.TrainGAN()
 
@@ -165,16 +105,3 @@ class Classifier():
             index += 1
 
         print(f"Total accuracy of classified dataset: {totalCorrectPredictions} correct, {totalIncorrectPredictions} incorrect, {((totalCorrectPredictions/totalPredictionsCount)*100):.2f}%")
-
-
-    def __GetCheckpointPath(self):
-        if not os.path.exists(self.LatestCheckpointPath):
-            return None
-
-        with open(self.LatestCheckpointPath, 'r') as f:
-            ckptPath = f.readline().strip()
-
-        if not os.path.exists(f"{ckptPath}.index"):
-            return None
-        else:
-            return ckptPath
