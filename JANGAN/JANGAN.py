@@ -43,7 +43,7 @@ class JANGAN():
             self.PurgeRunDataFolder()
 
             
-        self.cfg.CopyConfigToPath(self.cfg.GetStringValue("CGAN", "ConfigCopyPath"))
+        self.cfg.CopyConfigToPath(self.cfg.GetStringValue("CGANTraining", "ConfigCopyPath"))
 
         print(" --- Generating dataset if not there --- ")
 
@@ -77,26 +77,26 @@ class JANGAN():
         self.__GetNumberOfClasses()
 
         self.cgan = cg.CGAN(
-            self.cfg.GetIntValue("CGAN", "BatchSize"),
+            self.cfg.GetIntValue("CGANTraining", "BatchSize"),
             1,
             self.NumberOfClasses,
-            self.cfg.GetIntValue("CGAN", "ImageSize"),
-            self.cfg.GetIntValue("CGAN", "LatentDimension"),
-            self.cfg.GetIntValue("CGAN", "EpochCount"),
-            self.cfg.GetIntValue("CGAN", "RefreshUIEachXIteration"),
+            self.cfg.GetIntValue("CGANTraining", "ImageSize"),
+            self.cfg.GetIntValue("CGANTraining", "LatentDimension"),
+            self.cfg.GetIntValue("CGANTraining", "EpochCount"),
+            self.cfg.GetIntValue("CGANTraining", "RefreshUIEachXIteration"),
             self.cfg.GetIntValue("CGANOutput", "NumberOfFakeImagesToOutput"),
-            self.cfg.GetStringValue("CGAN", "TrainDatasetDir"),
-            self.cfg.GetStringValue("CGAN", "TestDatasetDir"),
+            self.cfg.GetStringValue("CGANTraining", "TrainDatasetDir"),
+            self.cfg.GetStringValue("CGANTraining", "TestDatasetDir"),
             self.cfg.GetStringValue("CGANOutput", "OutputDir"),
-            self.cfg.GetBoolValue("CGAN", "SaveCheckpoints"),
-            self.cfg.GetBoolValue("CGAN", "UseSavedModel"),
-            self.cfg.GetStringValue("CGAN", "CheckpointPath"),
-            self.cfg.GetStringValue("CGAN", "LatestCheckpointPath"),
-            self.cfg.GetStringValue("CGAN", "LogPath"),
-            self.cfg.GetFloatValue("CGAN", "DatasetSplit"),
-            self.cfg.GetStringValue("CGAN", "LRScheduler"),
-            self.cfg.GetFloatValue("CGAN", "LearningRateDiscriminator"),
-            self.cfg.GetFloatValue("CGAN", "LearningRateGenerator"))
+            self.cfg.GetBoolValue("CGANTraining", "SaveCheckpoints"),
+            self.cfg.GetBoolValue("CGANTraining", "UseSavedModel"),
+            self.cfg.GetStringValue("CGANTraining", "CheckpointPath"),
+            self.cfg.GetStringValue("CGANTraining", "LatestCheckpointPath"),
+            self.cfg.GetStringValue("CGANTraining", "LogPath"),
+            self.cfg.GetFloatValue("CGANTraining", "DatasetSplit"),
+            self.cfg.GetStringValue("CGANTraining", "LRScheduler"),
+            self.cfg.GetFloatValue("CGANTraining", "LearningRateDiscriminator"),
+            self.cfg.GetFloatValue("CGANTraining", "LearningRateGenerator"))
 
     def TrainCGAN(self):
         print(" --- Training CGAN --- ")
@@ -123,24 +123,24 @@ class JANGAN():
         self.__GetNumberOfClasses()
 
         self.classifier = cf.Classifier(
-            self.cfg.GetIntValue("Classifier", "BatchSize"),
+            self.cfg.GetIntValue("ClassifierTraining", "BatchSize"),
             1,
             self.NumberOfClasses,
-            self.cfg.GetIntValue("Classifier", "ImageSize"),
-            self.cfg.GetIntValue("Classifier", "EpochCount"),
-            self.cfg.GetIntValue("Classifier", "RefreshUIEachXIteration"),
-            self.cfg.GetStringValue("Classifier", "TrainDatasetDir"),
-            self.cfg.GetStringValue("Classifier", "TestDatasetDir"),
+            self.cfg.GetIntValue("ClassifierTraining", "ImageSize"),
+            self.cfg.GetIntValue("ClassifierTraining", "EpochCount"),
+            self.cfg.GetIntValue("ClassifierTraining", "RefreshUIEachXIteration"),
+            self.cfg.GetStringValue("ClassifierTraining", "TrainDatasetDir"),
+            self.cfg.GetStringValue("ClassifierTraining", "TestDatasetDir"),
             self.cfg.GetStringValue("ClassifierOutput", "ClassifyDir"),
-            self.cfg.GetBoolValue("Classifier", "SaveCheckpoints"),
-            self.cfg.GetBoolValue("Classifier", "UseSavedModel"),
-            self.cfg.GetStringValue("Classifier", "CheckpointPath"),
-            self.cfg.GetStringValue("Classifier", "LatestCheckpointPath"),
-            self.cfg.GetStringValue("Classifier", "LogPath"),
-            self.cfg.GetFloatValue("Classifier", "DatasetSplit"),
-            self.cfg.GetStringValue("Classifier", "LRScheduler"),
-            self.cfg.GetFloatValue("Classifier", "LearningRateClassifier"),
-            self.cfg.GetFloatValue("Classifier", "AccuracyThreshold"))
+            self.cfg.GetBoolValue("ClassifierTraining", "SaveCheckpoints"),
+            self.cfg.GetBoolValue("ClassifierTraining", "UseSavedModel"),
+            self.cfg.GetStringValue("ClassifierTraining", "CheckpointPath"),
+            self.cfg.GetStringValue("ClassifierTraining", "LatestCheckpointPath"),
+            self.cfg.GetStringValue("ClassifierTraining", "LogPath"),
+            self.cfg.GetFloatValue("ClassifierTraining", "DatasetSplit"),
+            self.cfg.GetStringValue("ClassifierTraining", "LRScheduler"),
+            self.cfg.GetFloatValue("ClassifierTraining", "LearningRateClassifier"),
+            self.cfg.GetFloatValue("ClassifierTraining", "AccuracyThreshold"))
 
     def TrainClassifier(self):
         print(" --- Training Classifier --- ")

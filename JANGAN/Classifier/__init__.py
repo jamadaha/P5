@@ -40,7 +40,6 @@ class Classifier():
     LearningRateClass = 0.0
 
     Classifier = None
-    DataLoader = None
 
     def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold):
         self.BatchSize = batchSize
@@ -109,6 +108,8 @@ class Classifier():
         if not checkpointPath:
             print("Checkpoint not found! Training instead")
             self.UseSavedModel = False
+
+        if not self.UseSavedModel:
             if self.TensorDatasets == None:
                 self.__LoadDataset()
 
@@ -122,7 +123,7 @@ class Classifier():
             classifierTrainer.TrainModel()
 
     def ClassifyData(self):
-        if self.TrainedGenerator == None:
+        if self.Classifier == None:
             self.TrainGAN()
 
         dataLoader = dl.DatasetLoader(
@@ -143,7 +144,6 @@ class Classifier():
             datasetFormatter = df.DatasetFormatter(images, labels, self.NumberOfClasses, self.BatchSize, 1)
             classifyData = datasetFormatter.ProcessData()
 
-            probability_model = tf.keras.Sequential([self.Classifier.classifier, tf.keras.layers.Softmax()])
             correctPredictions = 0
             incorrectPredictions = 0
             predictionsCount = 0

@@ -122,6 +122,8 @@ class CGAN():
         if not checkpointPath:
             print("Checkpoint not found! Training instead")
             self.UseSavedModel = False
+
+        if not self.UseSavedModel:
             if self.TensorDatasets == None:
                 self.__LoadDataset()
 
