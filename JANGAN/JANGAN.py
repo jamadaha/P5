@@ -26,8 +26,8 @@ class JANGAN():
         self.cfg = ConfigHelper.ConfigHelper(configFile)
         self.cfg.LoadConfig()
         print(" --- Done! --- ")
-        cfgCheck = JANGANConfigChecker()
-        cfgCheck.CheckConfig(self.cfg, self.ThrowIfConfigFileBad)
+        cfgChecker = JANGANConfigChecker()
+        cfgChecker.CheckConfig(self.cfg, self.ThrowIfConfigFileBad)
         print("")
 
     def PurgeRunDataFolder(self):
