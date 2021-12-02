@@ -72,7 +72,7 @@ class LetterProducer():
             os.makedirs(basePath)
 
         plt.savefig(
-            fname=basePath + str(id),
+            fname=basePath + str(id) + '.png',
             format='png'
         )
 
