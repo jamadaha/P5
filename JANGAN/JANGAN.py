@@ -118,6 +118,7 @@ class JANGAN():
             self.cfg.GetStringValue("CGANTRAINING", "TrainDatasetDir"),
             self.cfg.GetStringValue("CGANTRAINING", "TestDatasetDir"),
             self.cfg.GetStringValue("CGANOUTPUT", "OutputDir"),
+            self.cfg.GetStringValue("CGANTRAINING", "EpochImgDir"),
             self.cfg.GetBoolValue("CGANTRAINING", "SaveCheckpoints"),
             self.cfg.GetBoolValue("CGANTRAINING", "UseSavedModel"),
             self.cfg.GetStringValue("CGANTRAINING", "CheckpointPath"),

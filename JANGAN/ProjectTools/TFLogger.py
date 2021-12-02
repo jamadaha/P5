@@ -23,28 +23,9 @@ class TFLogger:
             with tf.name_scope(self.__Scope):
                 tf.summary.scalar(self.__Name, number, step=step)
 
-    def LogGridImages(self, images, step):
-        import numpy
-        imageArray = numpy.reshape(images, (len(images), 28, 28, 1))
-
-        figure = self.__FigGrid(imageArray)
-
+    def LogGridImages(self, figure, step):
         with self.__SummaryWriter.as_default():
-            tf.summary.image("Epoch samples", self.__PlotToImage(figure), max_outputs=len(imageArray), step=step)
-
-    def __FigGrid(self, images):
-        import matplotlib.pyplot as plt
-        import math
-        figure = plt.figure(figsize=(10, 10))
-        gridSize = math.ceil(math.sqrt(len(images)))
-        for i in range(len(images)):
-            plt.subplot(gridSize, gridSize, i + 1)
-            plt.xticks([])
-            plt.yticks([])
-            plt.grid(False)
-            plt.tight_layout()
-            plt.imshow(images[i], cmap=plt.cm.binary)
-        return figure
+            tf.summary.image("Epoch samples", self.__PlotToImage(figure), step=step)
 
     #https://www.tensorflow.org/tensorboard/image_summaries
     def __PlotToImage(self, figure):

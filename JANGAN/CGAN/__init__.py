@@ -19,13 +19,16 @@ class CGAN(bm.BaseMLModel):
     LearningRateDis = 0.0
     LearningRateGen = 0.0
 
+    EpochImgDir = ""
+
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, epochImgDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler)
         self.ImageCountToProduce = imageCountToProduce
         self.LearningRateDis = learningRateDis
         self.LearningRateGen = learningRateGen
+        self.EpochImgDir = epochImgDir
 
     def SetupModel(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -65,7 +68,7 @@ class CGAN(bm.BaseMLModel):
                 loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
             )
 
-        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension)
+        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension, self.EpochImgDir)
 
     def TrainModel(self):
         super().TrainModel()

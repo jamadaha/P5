@@ -65,9 +65,18 @@ class LetterProducer():
             )
             index += 1
 
-    def GetSampleLetters(self):
-        from tqdm import tqdm
+    def SaveMatplot(self, basePath, id):
+        import matplotlib.pyplot as plt
 
+        if not os.path.isdir(basePath):
+            os.makedirs(basePath)
+
+        plt.savefig(
+            fname=basePath + str(id),
+            format='png'
+        )
+
+    def GetSampleLetters(self):
         imageArray = []
 
         for i in range(self.NumberOfClasses):
@@ -85,3 +94,25 @@ class LetterProducer():
                 self.OutputPath, 
                 i, 
                 images)
+
+    def ProduceGridLetters(self, id):
+        import matplotlib.pyplot as plt
+        import math
+        import numpy
+
+        images = self.GetSampleLetters()
+        imageArray = numpy.reshape(images, (len(images), 28, 28, 1))
+
+        figure = plt.figure(figsize=(8, 8))
+        gridSize = math.ceil(math.sqrt(len(imageArray)))
+        for i in range(len(imageArray)):
+            plt.subplot(gridSize, gridSize, i + 1)
+            plt.xticks([])
+            plt.yticks([])
+            plt.grid(False)
+            plt.tight_layout()
+            plt.imshow(imageArray[i], cmap=plt.cm.binary)
+
+        self.SaveMatplot(self.OutputPath, id)
+
+        return figure

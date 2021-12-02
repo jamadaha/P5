@@ -21,7 +21,7 @@ class CGANTrainer(baseKeras.BaseKerasModelTrainer):
     __latestGLoss = 0
     __latestDLoss = 0
 
-    def __init__(self, model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath, numberOfClasses, latentDimension):
+    def __init__(self, model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath, numberOfClasses, latentDimension, epochImgDir):
         super().__init__(model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath)
         self.Logger = CSVLogger.CSVLogger(logPath, 'TrainingData')
         self.Logger.InitCSV(['Epoch', 'GeneratorLoss', 'DiscriminatorLoss'])
@@ -31,7 +31,7 @@ class CGANTrainer(baseKeras.BaseKerasModelTrainer):
             'DiffLoss': TFLogger.TFLogger(logPath, 'Loss', 'DiffLoss'),
             'Images': TFLogger.TFLogger(logPath, '', 'Images')
         }
-        self.LetterProducer = LetterProducer.LetterProducer('', self.Model.generator, numberOfClasses, latentDimension, 0)
+        self.LetterProducer = LetterProducer.LetterProducer(epochImgDir, self.Model.generator, numberOfClasses, latentDimension, 0)
            
     def PrintStatus(self, iteration, totalIterations, epochTime, epoch):
         estRemainingTime = ((time.time() - epochTime) / self.RefreshUIEachXStep) * (totalIterations - iteration)
@@ -43,7 +43,7 @@ class CGANTrainer(baseKeras.BaseKerasModelTrainer):
         self.SummaryWriter['GLoss'].LogNumber(self.__latestGLoss, epoch + 1)
         self.SummaryWriter['DLoss'].LogNumber(self.__latestDLoss, epoch + 1)
         self.SummaryWriter['DiffLoss'].LogNumber(abs(self.__latestDLoss - self.__latestGLoss), epoch + 1)
-        self.SummaryWriter['Images'].LogGridImages(self.GenerateSampleImages(), epoch + 1)
+        self.SummaryWriter['Images'].LogGridImages(self.ProduceGridImage(epoch + 1), epoch + 1)
 
     def SetTrainProperties(self, returnVal):
         self.__latestGLoss = float(returnVal['g_loss'])
@@ -51,3 +51,6 @@ class CGANTrainer(baseKeras.BaseKerasModelTrainer):
 
     def GenerateSampleImages(self):
         return self.LetterProducer.GetSampleLetters()
+
+    def ProduceGridImage(self, id):
+        return self.LetterProducer.ProduceGridLetters(id)
