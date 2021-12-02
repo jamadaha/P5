@@ -55,9 +55,6 @@
     <Compile Include="ExperimentQueue\BaseRun.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ExperimentQueue\TestExperiment.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ExperimentQueue\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -105,7 +102,6 @@
     <Content Include="ExperimentQueue\BaseRunConfig.ini">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="ExperimentQueue\TestExperimentConfig.ini" />
     <Content Include="ProjectTools\TestFiles\override-test-config.ini" />
     <Content Include="ProjectTools\TestFiles\test-config.ini" />
   </ItemGroup>
