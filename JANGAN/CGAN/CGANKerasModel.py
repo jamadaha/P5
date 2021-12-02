@@ -15,7 +15,6 @@ class ConditionalGAN(tf.keras.Model):
         self.latent_dim = latentDimension
         self.gen_loss_tracker = tf.keras.metrics.Mean(name="generator_loss")
         self.disc_loss_tracker = tf.keras.metrics.Mean(name="discriminator_loss")
-        #self.CGANAccuracy_tracker = tf.keras.metrics.BinaryAccuracy(name="cgan_accuracy", threshold=accuracyThreshold)
         self.ImageSize = imageSize
         self.NumberOfClasses = numberOfClasses
 
@@ -104,32 +103,3 @@ class ConditionalGAN(tf.keras.Model):
                 "g_loss": self.gen_loss_tracker.result(),
                 "d_loss": self.disc_loss_tracker.result(),
             }
-
-    #@tf.function
-    #def test_step(self, data, returnAccuracy):
-    #    real_images, real_labels = data
-
-    #    # Make base tensor, with correct sizes
-    #    image_frame_and_labels = real_labels[:, :, None, None]
-    #    image_frame_and_labels = tf.repeat(
-    #        image_frame_and_labels, repeats=[self.ImageSize * self.ImageSize]
-    #    )
-    #    image_frame_and_labels = tf.reshape(
-    #        image_frame_and_labels, (-1, self.ImageSize, self.ImageSize, self.NumberOfClasses)
-    #    )
-
-    #    # Make the "correct" labels, consisting of a large array with '1's
-    #    batch_size = tf.shape(real_images)[0]
-    #    correct_labels = tf.ones((batch_size, 1))
-
-    #    # Combine the real images and the base tensor from before, and make a prediction on it
-    #    real_image_and_labels = tf.concat([real_images, image_frame_and_labels], -1)
-    #    predictions = self.discriminator(real_image_and_labels, training=False)
-
-    #    # Update loss for this batch
-    #    self.CGANAccuracy_tracker.update_state(correct_labels, predictions)
-
-    #    if returnAccuracy == True:
-    #        return {
-    #            "cgan_accuracy": self.CGANAccuracy_tracker.result()
-    #        }

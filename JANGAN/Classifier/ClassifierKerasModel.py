@@ -12,13 +12,13 @@ class ClassifierModel(tf.keras.Model):
         super(ClassifierModel, self).__init__()
         self.classifier = classifier
         self.loss_tracker = tf.keras.metrics.Mean(name="classifier_loss")
-        self.accuracy = tf.keras.metrics.BinaryAccuracy(name="classifier_accuracy", threshold=accuracyThreshold)
+        self.Accuracy_tracker = tf.keras.metrics.BinaryAccuracy(name="classifier_accuracy", threshold=accuracyThreshold)
         self.ImageSize = imageSize
         self.NumberOfClasses = numberOfClasses
 
     @property
     def metrics(self):
-        return [self.loss_tracker, self.accuracy]
+        return [self.loss_tracker, self.Accuracy_tracker]
 
     def compile(self, optimizer, loss_fn):
         super(ClassifierModel, self).compile()
@@ -58,9 +58,9 @@ class ClassifierModel(tf.keras.Model):
         predictions = self.classifier(real_images, training=False)
 
         # Update loss for this batch
-        self.accuracy.update_state(real_labels, predictions)
+        self.Accuracy_tracker.update_state(real_labels, predictions)
 
         if returnAccuracy == True:
             return {
-                "classifier_accuracy": self.accuracy.result()
+                "classifier_accuracy": self.Accuracy_tracker.result()
             }
