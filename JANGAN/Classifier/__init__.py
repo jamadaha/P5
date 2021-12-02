@@ -89,7 +89,6 @@ class Classifier(bm.BaseMLModel):
             (images, labels) = data
             datasetFormatter = df.DatasetFormatter(images, labels, self.NumberOfClasses, self.BatchSize, 1)
             classifyData = datasetFormatter.ProcessData()
-            classifyData = classifyData.batch(self.BatchSize)
 
             correctPredictions = 0
             incorrectPredictions = 0
