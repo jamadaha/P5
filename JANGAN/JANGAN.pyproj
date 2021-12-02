@@ -48,10 +48,9 @@
     <Compile Include="DatasetLoader\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ExperimentQueue\Experiment3\InverseUnbalancedDatasetAccuracy.py" />
     <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.py" />
     <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.py" />
-    <Compile Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.py" />
-    <Compile Include="ExperimentQueue\Experiment3\BalancedDatasetAccuracy.py" />
     <Compile Include="ExperimentQueue\BaseRun.py">
       <SubType>Code</SubType>
     </Compile>
@@ -95,10 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ExperimentQueueConfig.ini" />
+    <Content Include="ExperimentQueue\Experiment3\InverseUnbalancedDatasetAccuracy.ini" />
     <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.ini" />
     <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.ini" />
-    <Content Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.ini" />
-    <Content Include="ExperimentQueue\Experiment3\BalancedDatasetAccuracy.ini" />
     <Content Include="ExperimentQueue\BaseRunConfig.ini">
       <SubType>Code</SubType>
     </Content>

@@ -101,6 +101,7 @@ class JANGANConfigChecker():
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "CLASSIFIEROUTPUT", "ClassifyDir")
         self.__CheckKey(cfg, "CLASSIFIEROUTPUT", "LogDir")
+        self.__CheckKey(cfg, "CLASSIFIEROUTPUT", "FormatImages")
         self.__CheckKeyCount(cfg, "CLASSIFIEROUTPUT")
 
         print(" --- Done! --- ")

@@ -14,6 +14,8 @@ class JANGANModuleReloader():
 
         import DataGenerator as dg
         reload(dg.DataExtractor)
+        reload(dg.SharedFunctions)
+        reload(dg.TextSequence)
         reload(dg.FileImporter)
         reload(dg)
 
@@ -25,7 +27,16 @@ class JANGANModuleReloader():
 
         import DatasetLoader as dl
         reload(dl.DatasetFormatter)
+        reload(dl.DatasetLoader)
+        reload(dl.DiskReader)
         reload(dl)
+
+        import ProjectTools as pt
+        reload(pt.BaseKerasModelTrainer)
+        reload(pt.BaseMLModel)
+        reload(pt.CSVLogger)
+        reload(pt.TFLogger)
+        reload(pt)
 
         import JANGAN as jg
         reload(jg)
