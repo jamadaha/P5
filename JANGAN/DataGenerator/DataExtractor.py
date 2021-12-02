@@ -39,9 +39,9 @@ class DataExtractor:
         with zipfile.ZipFile(self.DataPath, "r") as zf:
             zipInfos = self.FilterNameList(zf.infolist())
             self.CountNames(zipInfos)
-            self.HandleDistributionFile(outputFormat)
+            self.HandleDistributionFile(True, outputFormat)
             print("Extracting")
-            for letter in self.Letters:
+            for letter in tqdm(iterable=self.Letters, total=len(self.Letters)):
                 for i in range(0, self.Letters[letter]['DistributionCount']):
                     fileInfo = zipInfos[self.Letters[letter]['StartIndex'] + i]
                     self.ExtractFile(outputFormat, zf, fileInfo, letter)
@@ -60,7 +60,7 @@ class DataExtractor:
             zipInfos = self.FilterNameList(zf.infolist())
             self.CountNames(zipInfos)
             self.RemoveLettersBelowLimit(minCount)
-            self.HandleDistributionFile(outputFormat)
+            self.HandleDistributionFile(False, outputFormat)
             print("Extracting")
             for letter in tqdm(iterable=self.Letters, total=len(self.Letters)):
                 letterMax = min(maxCount, self.Letters[letter]['Count'])
@@ -129,10 +129,12 @@ class DataExtractor:
                             info)
                     self.Letters[letter]['Count'] += 1
 
-    def HandleDistributionFile(self, format):
+    def HandleDistributionFile(self, forceCount, format):
         if self.PrintDistribution:
             self.CountDistribution()
             self.PrintDistributionCSV(format)
+        elif forceCount:
+            self.CountDistribution()
 
     def CountDistribution(self):
         while 1:
