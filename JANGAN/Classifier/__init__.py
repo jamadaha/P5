@@ -27,8 +27,8 @@ class Classifier(bm.BaseMLModel):
     Classifier = None
     Logger = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold):
-        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler)
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold, formatImages):
+        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ClassifyDir = classifyDir
         self.AccuracyThreshold = accuracyThresshold
         self.LearningRateClass = learningRateClass
@@ -72,7 +72,8 @@ class Classifier(bm.BaseMLModel):
         dataLoader = dl.DatasetLoader(
             self.ClassifyDir,
             "",
-            (self.ImageSize,self.ImageSize))
+            (self.ImageSize,self.ImageSize),
+            False)
         dataLoader.DataSets = []
         dataLoader.LoadTrainDatasets()
         dataArray = dataLoader.DataSets
