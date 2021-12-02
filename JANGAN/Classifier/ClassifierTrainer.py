@@ -8,7 +8,8 @@ import tensorflow as tf
 from tensorflow import keras
 import time
 import os
-from ProjectTools import Logger as lgr
+from ProjectTools import CSVLogger
+from ProjectTools import TFLogger
 
 class ClassifierTrainer(baseKeras.BaseKerasModelTrainer):
     Logger = None
@@ -19,11 +20,11 @@ class ClassifierTrainer(baseKeras.BaseKerasModelTrainer):
 
     def __init__(self, model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath):
         super().__init__(model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath)
-        self.Logger = lgr.Logger(logPath, 'TrainingData')
-        self.Logger.InitCSV(['Epoch', 'Loss', 'Accuracy'])
+        self.Logger = CSVLogger.CSVLogger(logPath, 'TrainingData')
+        self.Logger.InitCSV(['Epoch', 'Loss'])
         self.SummaryWriter = {
-            'CLoss': tf.summary.create_file_writer(os.path.join(logPath, 'Loss', 'CLoss')),
-            'Accuracy': tf.summary.create_file_writer(os.path.join(logPath, 'Accuracy'))
+            'CLoss': TFLogger.TFLogger(logPath, 'Loss', 'CLoss'),
+            'Accuracy': TFLogger.TFLogger(logPath, 'Accuracy', 'Classifier')
         }
 
     def PrintStatus(self, iteration, totalIterations, epochTime, epoch):
@@ -36,13 +37,8 @@ class ClassifierTrainer(baseKeras.BaseKerasModelTrainer):
         
     def LogData(self, epoch):
         self.Logger.AppendToCSV([epoch + 1, self.__latestLoss, self.__latestAccuracy])
-
-        with self.SummaryWriter['CLoss'].as_default():
-            with tf.name_scope('Loss'):
-                tf.summary.scalar('ClassifierLoss', self.__latestLoss, step=epoch)
-        with self.SummaryWriter['Accuracy'].as_default():
-            with tf.name_scope('Accuracy'):
-                tf.summary.scalar('ClassifierAccuracy', self.__latestAccuracy, step=epoch)
+        self.SummaryWriter['CLoss'].LogNumber(self.__latestLoss, epoch + 1)
+        self.SummaryWriter['Accuracy'].LogNumber(self.__latestAccuracy, epoch + 1)
 
     def SetTrainProperties(self, returnVal):
         self.__latestLoss = float(returnVal['c_loss'])

@@ -65,6 +65,7 @@ class JANGANConfigChecker():
         self.__CheckKey(cfg, "CGANTRAINING", "SaveCheckpoints")
         self.__CheckKey(cfg, "CGANTRAINING", "UseSavedModel")
         self.__CheckKey(cfg, "CGANTRAINING", "LogPath")
+        self.__CheckKey(cfg, "CGANTRAINING", "EpochImgDir")
         self.__CheckKey(cfg, "CGANTRAINING", "DatasetSplit")
         self.__CheckKey(cfg, "CGANTRAINING", "LRScheduler")
         self.__CheckKey(cfg, "CGANTRAINING", "LearningRateDiscriminator")
