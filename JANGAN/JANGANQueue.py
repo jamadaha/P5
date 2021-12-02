@@ -30,7 +30,7 @@ for key in expDict:
             import JANGAN as jg
             expJANGAN = jg.JANGAN(cfg.GetStringValue(key, 'ModuleName'), cfg.GetStringValue(key, 'ConfigFile'), throwIfConfigFileBad)
             if cfg.GetBoolValue(key, 'MakeCGANDataset') == True:
-                expJANGAN.MakeCGANDataset()
+                expJANGAN.MakeCANDataset()
             if cfg.GetBoolValue(key, 'MakeClassifierDataset') == True:
                 expJANGAN.MakeClassifyerDataset()
             if cfg.GetBoolValue(key, 'TrainCGAN') == True:

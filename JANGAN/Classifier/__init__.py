@@ -1,4 +1,6 @@
+from collections import defaultdict
 from ProjectTools import CSVLogger
+from ProjectTools import TFLogger
 from ProjectTools import AutoPackageInstaller as ap
 from ProjectTools import BaseMLModel as bm
 
@@ -26,6 +28,7 @@ class Classifier(bm.BaseMLModel):
 
     Classifier = None
     Logger = None
+    SummaryWriter = None
 
     def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler)
@@ -34,6 +37,9 @@ class Classifier(bm.BaseMLModel):
         self.LearningRateClass = learningRateClass
         self.Logger = CSVLogger.CSVLogger(logPath, 'TestData')
         self.Logger.InitCSV(['Index', 'Correct', 'Inccorect'])
+        self.SummaryWriter = {
+            'ConfMatrix': TFLogger.TFLogger(logPath, 'ConfMatrix', 'CPredictions'),
+        }
 
     def SetupModel(self):
         layerDefiniton = ld.LayerDefinition(self.NumberOfClasses)
@@ -65,6 +71,7 @@ class Classifier(bm.BaseMLModel):
         self.Trainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
 
     def ProduceOutput(self):
+        import numpy
         self.UseSavedModel = True
         if self.Classifier == None:
             self.TrainModel()
@@ -77,6 +84,8 @@ class Classifier(bm.BaseMLModel):
         dataLoader.LoadTrainDatasets()
         dataArray = dataLoader.DataSets
 
+        distributionMatrix = []
+
         totalCorrectPredictions = 0
         totalIncorrectPredictions = 0
         totalPredictionsCount = 0
@@ -87,6 +96,10 @@ class Classifier(bm.BaseMLModel):
             datasetFormatter = df.DatasetFormatter(images, labels, self.NumberOfClasses, self.BatchSize, 1)
             classifyData = datasetFormatter.ProcessData()
 
+            predictionArray = []
+            for i in range(0, self.NumberOfClasses):
+                predictionArray.append(0)
+
             correctPredictions = 0
             incorrectPredictions = 0
             predictionsCount = 0
@@ -94,6 +107,7 @@ class Classifier(bm.BaseMLModel):
                 predictions = self.Classifier.classifier(images, training=False)
                 for prediction in predictions:
                     predictedClass = np.argmax(prediction)
+                    predictionArray[predictedClass] += 1
                     if predictedClass == index:
                         correctPredictions += 1
                         totalCorrectPredictions += 1
@@ -107,9 +121,25 @@ class Classifier(bm.BaseMLModel):
 
             self.__LogData(index, correctPredictions, incorrectPredictions)
 
+            distributionArray = []
+            for i in predictionArray:
+                distributionArray.append(i / numpy.sum(predictionArray))
+
+            distributionMatrix.append(distributionArray)
+
             index += 1
 
         print(f"Total accuracy of classified dataset: {totalCorrectPredictions} correct, {totalIncorrectPredictions} incorrect, {((totalCorrectPredictions/totalPredictionsCount)*100):.2f}%")
+
+        labelMatrix = []
+        for label in range(self.NumberOfClasses):
+            labelMatrix.append([label] * self.NumberOfClasses)
+
+        labelMatrix = np.array(labelMatrix).flatten()
+        distributionMatrix = np.array(distributionMatrix).flatten()
+
+        confMatrix = tf.math.confusion_matrix(labelMatrix, distributionMatrix, self.NumberOfClasses, dtype=float)
+        self.SummaryWriter["ConfMatrix"].LogConfusionMatrix(confMatrix, 0, False)
 
     def __LogData(self, index, correct, incorrect):
         self.Logger.AppendToCSV([index, correct, incorrect])

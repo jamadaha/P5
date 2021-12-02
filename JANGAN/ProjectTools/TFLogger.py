@@ -27,6 +27,23 @@ class TFLogger:
         with self.__SummaryWriter.as_default():
             tf.summary.image("Epoch samples", self.__PlotToImage(figure), step=step)
 
+    def LogConfusionMatrix(self, matrix, step, saveFig):
+        import matplotlib.pyplot as plt
+        figure = plt.figure(figsize=(8, 8))
+
+        temp = matrix.numpy()
+
+        plt.imshow(matrix, interpolation='nearest', cmap=plt.cm.Blues)
+        plt.colorbar()
+        plt.tight_layout()
+        plt.ylabel('True label')
+        plt.ylabel('Predicted label')
+
+        self.SaveMatplot('./', 'Plot')
+
+        with self.__SummaryWriter.as_default():
+            tf.summary.image("Predictions", self.__PlotToImage(figure), step=step)
+
     #https://www.tensorflow.org/tensorboard/image_summaries
     def __PlotToImage(self, figure):
         import io
@@ -36,8 +53,6 @@ class TFLogger:
         # Save the plot to a PNG in memory.
         buf = io.BytesIO()
         plt.savefig(buf, format='png')
-        # Closing the figure prevents it from being displayed directly inside
-        # the notebook.
         plt.close(figure)
         buf.seek(0)
         # Convert PNG buffer to TF image
@@ -45,3 +60,14 @@ class TFLogger:
         # Add the batch dimension
         image = tf.expand_dims(image, 0)
         return image
+
+    def SaveMatplot(self, basePath, id):
+        import matplotlib.pyplot as plt
+
+        if not os.path.isdir(basePath):
+            os.makedirs(basePath)
+
+        plt.savefig(
+            fname=basePath + str(id) + '.png',
+            format='png'
+        )
