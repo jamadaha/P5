@@ -7,6 +7,7 @@ class JANGANModuleReloader():
 
         import CGAN as cg
         reload(cg.CGANKerasModel)
+        reload(cg.CGANMLModel)
         reload(cg.CGANTrainer)
         reload(cg.LayerDefinition)
         reload(cg.LetterProducer)
@@ -21,6 +22,7 @@ class JANGANModuleReloader():
         import Classifier as cf
         reload(cf.ClassifierKerasModel)
         reload(cf.ClassifierTrainer)
+        reload(cf.ClassifierMLModel)
         reload(cf.LayerDefinition)
         reload(cf)
 

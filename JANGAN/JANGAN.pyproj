@@ -24,6 +24,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CGAN\CGANMLModel.py" />
     <Compile Include="CGAN\CGANKerasModel.py" />
     <Compile Include="CGAN\CGANTrainer.py" />
     <Compile Include="CGAN\LayerDefinition.py" />
@@ -31,6 +32,7 @@
     <Compile Include="CGAN\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classifier\ClassifierMLModel.py" />
     <Compile Include="Classifier\ClassifierKerasModel.py" />
     <Compile Include="Classifier\ClassifierTrainer.py" />
     <Compile Include="Classifier\LayerDefinition.py" />
