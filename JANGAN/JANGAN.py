@@ -133,6 +133,7 @@ class JANGAN():
             self.cfg.GetStringValue("CGANTRAINING", "LRScheduler"),
             self.cfg.GetFloatValue("CGANTRAINING", "LearningRateDiscriminator"),
             self.cfg.GetFloatValue("CGANTRAINING", "LearningRateGenerator"),
+            self.cfg.GetBoolValue("CGANTRAINING", "FormatImages"),
             )
 
     def TrainCGAN(self):
@@ -178,7 +179,9 @@ class JANGAN():
             self.cfg.GetFloatValue("CLASSIFIERTRAINING", "DatasetSplit"),
             self.cfg.GetStringValue("CLASSIFIERTRAINING", "LRScheduler"),
             self.cfg.GetFloatValue("CLASSIFIERTRAINING", "LearningRateClassifier"),
-            self.cfg.GetFloatValue("CLASSIFIERTRAINING", "AccuracyThreshold"))
+            self.cfg.GetFloatValue("CLASSIFIERTRAINING", "AccuracyThreshold"),
+            self.cfg.GetBoolValue("CLASSIFIERTRAINING", "FormatImages")
+            )
 
     def TrainClassifier(self):
         print(" --- Training Classifier --- ")
@@ -198,12 +201,5 @@ class JANGAN():
             self.__SetupClassifier()
 
         self.classifier.ProduceOutput()
-
-        print(" --- Done! --- ")
-
-    def ProduceOutput(self):
-        print(" --- Producing output --- ")
-
-        self.cgan.ProduceOutput()
 
         print(" --- Done! --- ")

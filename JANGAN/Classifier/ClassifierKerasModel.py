@@ -30,10 +30,6 @@ class ClassifierModel(tf.keras.Model):
          # Unpack the data.
         real_images, one_hot_labels = data
 
-        # Make the "correct" labels, consisting of a large array with '1's
-        batch_size = tf.shape(real_images)[0]
-        correct_labels = tf.ones((batch_size, 1))
-
         # Train the classifier.
         with tf.GradientTape() as tape:
             predictions = self.classifier(real_images, training=True)

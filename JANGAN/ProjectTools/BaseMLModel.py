@@ -21,6 +21,7 @@ class BaseMLModel():
     LatestCheckpointPath = ""
     LogPath = ""
     OutputDir = ""
+    FormatImages = True
 
     TrainingDataDir = ""
     TestingDataDir = ""
@@ -31,7 +32,7 @@ class BaseMLModel():
     KerasModel = None
     Trainer : bk.BaseKerasModelTrainer = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -49,6 +50,7 @@ class BaseMLModel():
         self.LogPath = logPath
         self.DatasetSplit = datasetSplit
         self.LRScheduler = LRScheduler
+        self.FormatImages = formatImages
 
     def SetupModel(self):
         raise Exception("Model setup not implemented")
@@ -57,7 +59,8 @@ class BaseMLModel():
         dataLoader = dl.DatasetLoader(
             self.TrainingDataDir,
             self.TestingDataDir,
-            (self.ImageSize,self.ImageSize))
+            (self.ImageSize,self.ImageSize),
+            self.FormatImages)
         dataLoader.LoadTrainDatasets()
         dataArray = dataLoader.DataSets
 
