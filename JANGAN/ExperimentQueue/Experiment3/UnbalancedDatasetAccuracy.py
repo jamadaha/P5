@@ -1,5 +1,6 @@
 # Change functions and methods, to fit the goal of the experiment
 from CGAN import CGANTrainer as cgt
+from Classifier import ClassifierTrainer as ct
 from DatasetLoader import DatasetFormatter as dtf
 
 from ProjectTools import AutoPackageInstaller as ap
@@ -69,6 +70,19 @@ class newCGANTrainer(cgt.CGANTrainer):
 
         return data
 
+class newClassifierTrainer(ct.ClassifierTrainer):
+    def CreateDataSet(self, dataArray):
+        global batchSize
+        (returnTrainSet, returnTestSet) = dataArray[0]
+        for data in dataArray[1:]:
+            (addTrainSet, addTestSet) = data
+            returnTrainSet = returnTrainSet.concatenate(addTrainSet)
+            returnTestSet = returnTestSet.concatenate(addTestSet)
+        
+        returnTrainSet = returnTrainSet.shuffle(buffer_size=1024).batch(batchSize)
+        returnTestSet = returnTestSet.shuffle(buffer_size=1024).batch(batchSize)
+        return (returnTrainSet, returnTestSet)
+
 class newDatasetFormatter(dtf.DatasetFormatter):
     def ProcessData(self):
         # Scale the pixel values to [0, 1] range, add a channel dimension to
@@ -89,4 +103,5 @@ class newDatasetFormatter(dtf.DatasetFormatter):
         return dataset
 
 cgt.CGANTrainer = newCGANTrainer
+ct.ClassifierTrainer = newClassifierTrainer
 dtf.DatasetFormatter = newDatasetFormatter

@@ -28,8 +28,8 @@ class Classifier(bm.BaseMLModel):
     Classifier = None
     Logger = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold, formatImages):
-        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages, formatClassificationImages)
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold, formatImages, formatClassificationImages):
+        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ClassifyDir = classifyDir
         self.AccuracyThreshold = accuracyThresshold
         self.LearningRateClass = learningRateClass
@@ -89,6 +89,7 @@ class Classifier(bm.BaseMLModel):
             (images, labels) = data
             datasetFormatter = df.DatasetFormatter(images, labels, self.NumberOfClasses, self.BatchSize, 1)
             classifyData = datasetFormatter.ProcessData()
+            classifyData = classifyData.batch(self.BatchSize)
 
             correctPredictions = 0
             incorrectPredictions = 0
