@@ -2,28 +2,34 @@ import importlib
 import os
 from JANGANConfigChecker import JANGANConfigChecker
 
-from ProjectTools import ConfigHelper
- 
+from ProjectTools import ConfigHelper as ch
+from ProjectTools import HelperFunctions as hf
+
 import CGAN as cg
 import DataGenerator as dg
 import Classifier as cf
 
 
 class JANGAN():
+    ExperimentName = ""
     cfg = None
     cgan = None
     classifier = None
     NumberOfClasses = None
     ThrowIfConfigFileBad = True
 
-    def __init__(self, expFile, configFile, throwIfConfigFileBad):
+    def __init__(self, expName, expFile, configFile, throwIfConfigFileBad):
         importlib.import_module(expFile)
         self.ThrowIfConfigFileBad = throwIfConfigFileBad
+        self.ExperimentName = expName;
         self.LoadConfig(configFile)
 
     def LoadConfig(self, configFile):
         print(" --- Loading experiment config file --- ")
-        self.cfg = ConfigHelper.ConfigHelper(configFile)
+        self.cfg = ch.ConfigHelper(configFile)
+        newTokens = self.cfg.TokenReplacements.copy()
+        newTokens.append(("{EXPERIMENTNAME}", self.ExperimentName))
+        self.cfg.UpdateTokenReplacements(newTokens)
         self.cfg.LoadConfig()
         print(" --- Done! --- ")
         cfgChecker = JANGANConfigChecker()
@@ -34,7 +40,6 @@ class JANGAN():
     def PurgeRunDataFolder(self, path):
         print(" --- Purging training data folder --- ")
 
-        from ProjectTools import HelperFunctions as hf
         hf.DeleteFolderAndAllContents(path)
 
         print(f" --- Done! --- ")
