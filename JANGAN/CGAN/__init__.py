@@ -23,8 +23,8 @@ class CGAN(bm.BaseMLModel):
 
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, epochImgDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen):
-        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler)
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, epochImgDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen, formatImages):
+        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ImageCountToProduce = imageCountToProduce
         self.LearningRateDis = learningRateDis
         self.LearningRateGen = learningRateGen
@@ -77,7 +77,7 @@ class CGAN(bm.BaseMLModel):
     def ProduceOutput(self):
         self.UseSavedModel = True
         if self.TrainedGenerator == None:
-            self.TrainGAN()
+            self.TrainModel()
 
         letterProducer = LetterProducer.LetterProducer(self.OutputDir, self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension, self.ImageCountToProduce)
         letterProducer.ProduceLetters()

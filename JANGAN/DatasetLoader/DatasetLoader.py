@@ -16,11 +16,13 @@ class DatasetLoader():
     DataSets = []
     ImageSize = ()
     NumberOfLabels = 0
+    FormatImages = True
 
-    def __init__(self, trainDir, testDir, imageSize):
+    def __init__(self, trainDir, testDir, imageSize, formatImages):
         self.TrainDir = trainDir
         self.TestDir = testDir
         self.ImageSize = imageSize
+        self.FormatImages = formatImages
 
     def LoadTestDatasets(self):
         self.LoadDataset(self.TestDir)
@@ -33,7 +35,7 @@ class DatasetLoader():
         imageCount = 0
         print(f"Loading data from '{dir}'...")
         for dirID in tqdm(iterable=dataDir, total=len(dataDir)):
-            dr = ds.DiskReader(dir + dirID, dirID, self.ImageSize)
+            dr = ds.DiskReader(dir + dirID, dirID, self.ImageSize, self.FormatImages)
             dr.ReadImagesAndLabelsFromDisc()
             imageCount += dr.DataSize
             self.DataSets.append((dr.Images,dr.Labels))

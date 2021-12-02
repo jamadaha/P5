@@ -12,12 +12,17 @@ class ConfigHelper():
     __config = None
     ConfigPath = ""
     ConfigOverridePath = ""
+    ConfigFileName = ""
     TokenReplacements = [("{TIMESTAMP}", time.strftime("%Y%m%d-%H%M%S"))]
 
-    def __init__(self, configPath = "config.ini", configOverridePath = "override-config.ini", tokenReplacements = []):
+    def __init__(self, configPath = "config.ini", configOverridePath = "override-config.ini", tokenReplacements = None):
         self.ConfigPath = configPath;
         self.ConfigOverridePath = configOverridePath
-        TokenReplacements = tokenReplacements
+        if tokenReplacements != None:
+            self.TokenReplacements = tokenReplacements
+
+    def UpdateTokenReplacements(self, tokenReplacements):
+        self.TokenReplacements = tokenReplacements
 
     def LoadConfig(self):
         self.__config = configparser.ConfigParser()
