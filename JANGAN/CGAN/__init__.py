@@ -10,8 +10,8 @@ from tqdm import tqdm
 
 from CGAN import CGANKerasModel as km
 from CGAN import LayerDefinition as ld
-from CGAN import LetterProducer as lp
 from CGAN import CGANTrainer as ct
+from CGAN import LetterProducer
 
 class CGAN(bm.BaseMLModel):
     ImageCountToProduce = -1
@@ -19,13 +19,16 @@ class CGAN(bm.BaseMLModel):
     LearningRateDis = 0.0
     LearningRateGen = 0.0
 
+    EpochImgDir = ""
+
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, epochImgDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler)
         self.ImageCountToProduce = imageCountToProduce
         self.LearningRateDis = learningRateDis
         self.LearningRateGen = learningRateGen
+        self.EpochImgDir = epochImgDir
 
     def SetupModel(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -63,9 +66,9 @@ class CGAN(bm.BaseMLModel):
                 d_optimizer=keras.optimizers.Adam(learning_rate=disSchedule),
                 g_optimizer=keras.optimizers.Adam(learning_rate=genSchedule),
                 loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
-            )  
+            )
 
-        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
+        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension, self.EpochImgDir)
 
     def TrainModel(self):
         super().TrainModel()
@@ -76,12 +79,5 @@ class CGAN(bm.BaseMLModel):
         if self.TrainedGenerator == None:
             self.TrainGAN()
 
-        letterProducer = lp.LetterProducer(self.OutputDir, self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension)
-        # Warmup letter producer
-        #   This is done as it outputs something to console
-        letterProducer.GenerateLetter(0, 1)
-
-        for i in tqdm(range(self.NumberOfClasses), desc='Producing images'):
-            images = letterProducer.GenerateLetter(i, self.ImageCountToProduce)
-            letterProducer.SaveImages(i, images)
-           
+        letterProducer = LetterProducer.LetterProducer(self.OutputDir, self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension, self.ImageCountToProduce)
+        letterProducer.ProduceLetters()

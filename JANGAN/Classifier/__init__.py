@@ -1,3 +1,4 @@
+from ProjectTools import CSVLogger
 from ProjectTools import AutoPackageInstaller as ap
 from ProjectTools import BaseMLModel as bm
 
@@ -24,12 +25,15 @@ class Classifier(bm.BaseMLModel):
     LearningRateClass = 0
 
     Classifier = None
+    Logger = None
 
     def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler)
         self.ClassifyDir = classifyDir
         self.AccuracyThreshold = accuracyThresshold
         self.LearningRateClass = learningRateClass
+        self.Logger = CSVLogger.CSVLogger(logPath, 'TestData')
+        self.Logger.InitCSV(['Index', 'Correct', 'Inccorect'])
 
     def SetupModel(self):
         layerDefiniton = ld.LayerDefinition(self.NumberOfClasses)
@@ -101,6 +105,11 @@ class Classifier(bm.BaseMLModel):
 
             print(f"Classifier predicted: {correctPredictions} correct, {incorrectPredictions} incorrect, {((correctPredictions/predictionsCount)*100):.2f}%")
 
+            self.__LogData(index, correctPredictions, incorrectPredictions)
+
             index += 1
 
         print(f"Total accuracy of classified dataset: {totalCorrectPredictions} correct, {totalIncorrectPredictions} incorrect, {((totalCorrectPredictions/totalPredictionsCount)*100):.2f}%")
+
+    def __LogData(self, index, correct, incorrect):
+        self.Logger.AppendToCSV([index, correct, incorrect])
