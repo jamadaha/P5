@@ -70,6 +70,7 @@ class JANGANConfigChecker():
         self.__CheckKey(cfg, "CGANTRAINING", "LRScheduler")
         self.__CheckKey(cfg, "CGANTRAINING", "LearningRateDiscriminator")
         self.__CheckKey(cfg, "CGANTRAINING", "LearningRateGenerator")
+        self.__CheckKey(cfg, "CGANTRAINING", "FormatImages")
         self.__CheckKeyCount(cfg, "CGANTRAINING")
 
         # CGAN Output
@@ -95,6 +96,7 @@ class JANGANConfigChecker():
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "AccuracyThreshold")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LRScheduler")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LearningRateClassifier")
+        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "FormatImages")
         self.__CheckKeyCount(cfg, "CLASSIFIERTRAINING")
 
         # Classifier Output
