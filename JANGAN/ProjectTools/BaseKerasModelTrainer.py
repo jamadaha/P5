@@ -84,8 +84,8 @@ class BaseKerasModelTrainer():
 
     def EpochRun(self, epoch):
         (image_batch_train, image_batch_test) = self.CreateDataSet(self.Datasets)
-        totalTrainIterations = tf.data.experimental.cardinality(image_batch_train).numpy()
-        totalTestIterations = tf.data.experimental.cardinality(image_batch_test).numpy()
+        totalTrainIterations = self.GetDatasetSize(image_batch_train)
+        totalTestIterations = self.GetDatasetSize(image_batch_test)
 
         if totalTrainIterations > 0:
             print("Training Model...")
@@ -129,6 +129,9 @@ class BaseKerasModelTrainer():
             self.SaveCheckpoint()
 
         self.LogData(epoch)
+
+    def GetDatasetSize(self, data):
+        return tf.data.experimental.cardinality(data).numpy()
 
     def SetTrainProperties(self, returnVal):
         pass

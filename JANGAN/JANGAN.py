@@ -180,7 +180,8 @@ class JANGAN():
             self.cfg.GetStringValue("CLASSIFIERTRAINING", "LRScheduler"),
             self.cfg.GetFloatValue("CLASSIFIERTRAINING", "LearningRateClassifier"),
             self.cfg.GetFloatValue("CLASSIFIERTRAINING", "AccuracyThreshold"),
-            self.cfg.GetBoolValue("CLASSIFIERTRAINING", "FormatImages")
+            self.cfg.GetBoolValue("CLASSIFIERTRAINING", "FormatImages"),
+            self.cfg.GetBoolValue("CLASSIFIEROUTPUT", "FormatImages")
             )
 
     def TrainClassifier(self):

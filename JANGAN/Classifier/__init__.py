@@ -19,6 +19,7 @@ from Classifier import ClassifierTrainer as ct
 
 class Classifier(bm.BaseMLModel):
     ClassifyDir = ""
+    FormatClassificationImages = False
 
     AccuracyThreshold = 0
 
@@ -28,12 +29,13 @@ class Classifier(bm.BaseMLModel):
     Logger = None
 
     def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold, formatImages):
-        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
+        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages, formatClassificationImages)
         self.ClassifyDir = classifyDir
         self.AccuracyThreshold = accuracyThresshold
         self.LearningRateClass = learningRateClass
         self.Logger = CSVLogger.CSVLogger(logPath, 'TestData')
         self.Logger.InitCSV(['Index', 'Correct', 'Inccorect'])
+        self.FormatClassificationImages = formatClassificationImages
 
     def SetupModel(self):
         layerDefiniton = ld.LayerDefinition(self.NumberOfClasses)
@@ -73,7 +75,7 @@ class Classifier(bm.BaseMLModel):
             self.ClassifyDir,
             "",
             (self.ImageSize,self.ImageSize),
-            False)
+            self.FormatClassificationImages)
         dataLoader.DataSets = []
         dataLoader.LoadTrainDatasets()
         dataArray = dataLoader.DataSets
