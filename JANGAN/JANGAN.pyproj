@@ -48,8 +48,10 @@
     <Compile Include="DatasetLoader\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ExperimentQueue\Experiment2\Dataset\BalancedDataset.py" />
-    <Compile Include="ExperimentQueue\Experiment2\Dataset\UnbalancedDataset.py" />
+    <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.py" />
+    <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.py" />
+    <Compile Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.py" />
+    <Compile Include="ExperimentQueue\Experiment3\BalancedDatasetAccuracy.py" />
     <Compile Include="ExperimentQueue\BaseRun.py">
       <SubType>Code</SubType>
     </Compile>
@@ -89,16 +91,17 @@
     <Folder Include="DatasetLoader\" />
     <Folder Include="ExperimentQueue\" />
     <Folder Include="CheckMemoryLeak\" />
-    <Folder Include="ExperimentQueue\Experiment2\" />
-    <Folder Include="ExperimentQueue\Experiment2\Dataset\" />
+    <Folder Include="ExperimentQueue\Experiment3\" />
     <Folder Include="Classifier\" />
     <Folder Include="ProjectTools\" />
     <Folder Include="ProjectTools\TestFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ExperimentQueueConfig.ini" />
-    <Content Include="ExperimentQueue\Experiment2\Dataset\BalancedDataset.ini" />
-    <Content Include="ExperimentQueue\Experiment2\Dataset\UnbalancedDataset.ini" />
+    <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.ini" />
+    <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.ini" />
+    <Content Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.ini" />
+    <Content Include="ExperimentQueue\Experiment3\BalancedDatasetAccuracy.ini" />
     <Content Include="ExperimentQueue\BaseRunConfig.ini">
       <SubType>Code</SubType>
     </Content>
