@@ -8,14 +8,12 @@ import tensorflow as tf
 import CGAN
 class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
     def GetDiscriminator(self):
-        init = tf.keras.RandomNormal(stddev=0.02)
+        init = tf.keras.initializers.RandomNormal(stddev=0.02)
         model = tf.keras.Sequential(
             name='discriminator'
         )
         model.add(
-            tf.keras.layers.InputLayer(
-                tf.keras.layers.InputLayer((28, 28, self.DiscriminatorInChannels))
-            )
+            tf.keras.layers.InputLayer((28, 28, self.DiscriminatorInChannels))
         )
         model.add(
             tf.keras.layers.Conv2D(64, (3, 3), strides=(2, 2), padding="same", kernel_initializer=init)
@@ -38,7 +36,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
         return model
 
     def GetGenerator(self):
-        init = tf.keras.RandomNormal(stddev=0.02)
+        init = tf.keras.initializers.RandomNormal(stddev=0.02)
         model = tf.keras.Sequential(
             name='generator'
         )

@@ -12,9 +12,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             name='discriminator'
         )
         model.add(
-            tf.keras.layers.InputLayer(
-                tf.keras.layers.InputLayer((28, 28, self.DiscriminatorInChannels))
-            )
+            tf.keras.layers.InputLayer((28, 28, self.DiscriminatorInChannels))
         )
         model.add(
             tf.keras.layers.Conv2D(64, (3, 3), strides=(2, 2), padding="same")
