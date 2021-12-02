@@ -72,12 +72,13 @@
     <Compile Include="ProjectTools\BaseKerasModelTrainer.py" />
     <Compile Include="ProjectTools\BaseMLModel.py" />
     <Compile Include="ProjectTools\ConfigHelper.py" />
+    <Compile Include="ProjectTools\CSVLogger.py" />
     <Compile Include="ProjectTools\HelperFunctions.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ProjectTools\InstallScript.py" />
     <Compile Include="ProjectTools\ConfigHelperTests.py" />
-    <Compile Include="ProjectTools\Logger.py" />
+    <Compile Include="ProjectTools\TFLogger.py" />
     <Compile Include="ProjectTools\__init__.py" />
   </ItemGroup>
   <ItemGroup>
