@@ -15,7 +15,6 @@ class ConditionalGAN(tf.keras.Model):
         self.latent_dim = latentDimension
         self.gen_loss_tracker = tf.keras.metrics.Mean(name="generator_loss")
         self.disc_loss_tracker = tf.keras.metrics.Mean(name="discriminator_loss")
-        #self.CGANAccuracy_tracker = tf.keras.metrics.BinaryAccuracy(name="cgan_accuracy", threshold=accuracyThreshold)
         self.ImageSize = imageSize
         self.NumberOfClasses = numberOfClasses
 
@@ -53,7 +52,7 @@ class ConditionalGAN(tf.keras.Model):
         )
 
         # Decode the noise (guided by labels) to fake images.
-        generated_images = self.generator(random_vector_labels)
+        generated_images = self.generator(random_vector_labels, training=True)
 
         # Combine them with real images. Note that we are concatenating the labels
         # with these images here.
@@ -70,7 +69,7 @@ class ConditionalGAN(tf.keras.Model):
 
         # Train the discriminator.
         with tf.GradientTape() as tape:
-            predictions = self.discriminator(combined_images)
+            predictions = self.discriminator(combined_images, training=True)
             d_loss = self.loss_fn(labels, predictions)
         grads = tape.gradient(d_loss, self.discriminator.trainable_weights)
         self.d_optimizer.apply_gradients(
@@ -89,9 +88,9 @@ class ConditionalGAN(tf.keras.Model):
         # Train the generator (note that we should *not* update the weights
         # of the discriminator)!
         with tf.GradientTape() as tape:
-            fake_images = self.generator(random_vector_labels)
+            fake_images = self.generator(random_vector_labels, training=True)
             fake_image_and_labels = tf.concat([fake_images, image_one_hot_labels], -1)
-            predictions = self.discriminator(fake_image_and_labels)
+            predictions = self.discriminator(fake_image_and_labels, training=True)
             g_loss = self.loss_fn(misleading_labels, predictions)
         grads = tape.gradient(g_loss, self.generator.trainable_weights)
         self.g_optimizer.apply_gradients(zip(grads, self.generator.trainable_weights))
@@ -104,32 +103,3 @@ class ConditionalGAN(tf.keras.Model):
                 "g_loss": self.gen_loss_tracker.result(),
                 "d_loss": self.disc_loss_tracker.result(),
             }
-
-    #@tf.function
-    #def test_step(self, data, returnAccuracy):
-    #    real_images, real_labels = data
-
-    #    # Make base tensor, with correct sizes
-    #    image_frame_and_labels = real_labels[:, :, None, None]
-    #    image_frame_and_labels = tf.repeat(
-    #        image_frame_and_labels, repeats=[self.ImageSize * self.ImageSize]
-    #    )
-    #    image_frame_and_labels = tf.reshape(
-    #        image_frame_and_labels, (-1, self.ImageSize, self.ImageSize, self.NumberOfClasses)
-    #    )
-
-    #    # Make the "correct" labels, consisting of a large array with '1's
-    #    batch_size = tf.shape(real_images)[0]
-    #    correct_labels = tf.ones((batch_size, 1))
-
-    #    # Combine the real images and the base tensor from before, and make a prediction on it
-    #    real_image_and_labels = tf.concat([real_images, image_frame_and_labels], -1)
-    #    predictions = self.discriminator(real_image_and_labels, training=False)
-
-    #    # Update loss for this batch
-    #    self.CGANAccuracy_tracker.update_state(correct_labels, predictions)
-
-    #    if returnAccuracy == True:
-    #        return {
-    #            "cgan_accuracy": self.CGANAccuracy_tracker.result()
-    #        }
