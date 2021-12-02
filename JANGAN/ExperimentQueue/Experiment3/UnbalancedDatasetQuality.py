@@ -1,6 +1,6 @@
 # Change functions and methods, to fit the goal of the experiment
 from CGAN import CGANTrainer as cgt
-from Classifier import ClassifierMLModel as ct
+from Classifier import ClassifierMLModel as cf
 from DatasetLoader import DatasetFormatter as dtf
 
 from ProjectTools import AutoPackageInstaller as ap
@@ -71,7 +71,7 @@ class newCGANTrainer(cgt.CGANTrainer):
 
         return data
 
-class newClassifier(ct.ClassifierMLModel):
+class newClassifier(cf.ClassifierMLModel):
     def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold, formatImages, formatClassificationImages):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold, formatImages, formatClassificationImages)
         import DatasetLoader as dl
