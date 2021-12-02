@@ -70,7 +70,7 @@ class newCGANTrainer(cgt.CGANTrainer):
 
         return data
 
-class newClassifier(ct.Classifier):
+class newClassifier(ct):
     def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold, formatImages, formatClassificationImages):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold, formatImages, formatClassificationImages)
         import DatasetLoader as dl
@@ -99,5 +99,5 @@ class newDatasetFormatter(dtf.DatasetFormatter):
         return dataset
 
 cgt.CGANTrainer = newCGANTrainer
-ct.Classifier = newClassifier
+ct = newClassifier
 dtf.DatasetFormatter = newDatasetFormatter
