@@ -45,24 +45,26 @@ class Classifier(bm.BaseMLModel):
             accuracyThreshold=self.AccuracyThreshold
         )
 
+        learningSchedule = self.__GetLearningSchedule()
+
+        self.Classifier.compile(
+            optimizer=keras.optimizers.Adam(learning_rate=learningSchedule),
+            loss_fn=keras.losses.CategoricalCrossentropy(from_logits=True),
+        )  
+
+        self.Trainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
+
+    def __GetLearningSchedule(self):
         if self.LRScheduler == 'Constant':
-            self.Classifier.compile(
-                optimizer=keras.optimizers.Adam(learning_rate=self.LearningRateClass),
-                loss_fn=keras.losses.CategoricalCrossentropy(from_logits=True),
-            )  
+            return self.LearningRateClass
         elif self.LRScheduler == 'ExponentialDecay':
-            classSchedule = keras.optimizers.schedules.ExponentialDecay(
+            return (
+                keras.optimizers.schedules.ExponentialDecay(
                 initial_learning_rate=self.LearningRateClass,
                 decay_steps=10000,
                 decay_rate=0.9
+                )  
             )
-
-            self.Classifier.compile(
-                optimizer=keras.optimizers.Adam(learning_rate=classSchedule),
-                loss_fn=keras.losses.CategoricalCrossentropy(from_logits=True),
-            )  
-
-        self.Trainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
 
     def ProduceOutput(self):
         self.UseSavedModel = True
