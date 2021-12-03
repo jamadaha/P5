@@ -50,11 +50,18 @@ class Classifier(bm.BaseMLModel):
         self.Trainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
 
     def __Compile(self):
-        learningSchedule = self.__GetLearningSchedule()
+        optimizer = self.__GetOptimizer()
+        lossFunc = self.__GetLossFunction()
 
         self.Classifier.compile(
-            optimizer=keras.optimizers.Adam(learning_rate=learningSchedule),
-            loss_fn=keras.losses.CategoricalCrossentropy(from_logits=True),
+            optimizer=optimizer,
+            loss_fn=lossFunc
+        )
+    
+    def __GetOptimizer(self):
+        learningSchedule = self.__GetLearningSchedule()
+        return (
+            keras.optimizers.Adam(learning_rate=learningSchedule)
         )
 
     def __GetLearningSchedule(self):
@@ -68,6 +75,9 @@ class Classifier(bm.BaseMLModel):
                 decay_rate=0.9
                 )  
             )
+    
+    def __GetLossFunction(self): 
+        return keras.losses.BinaryCrossentropy(from_logits=True)
 
     def ProduceOutput(self):
         self.UseSavedModel = True

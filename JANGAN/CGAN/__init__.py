@@ -49,12 +49,19 @@ class CGAN(bm.BaseMLModel):
         self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension, self.EpochImgDir)
 
     def __Compile(self):
-        (disSchedule, genSchedule) = self.__GetLearningSchedule()
-
+        (disOptimizer, genOptimizer) = self.__GetOptimizer()
+        lossFunc = self.__GetLossFunction()
         self.KerasModel.compile(
-                d_optimizer=keras.optimizers.Adam(learning_rate=disSchedule),
-                g_optimizer=keras.optimizers.Adam(learning_rate=genSchedule),
-                loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
+                d_optimizer=disOptimizer,
+                g_optimizer=genOptimizer,
+                loss_fn=lossFunc
+        )
+
+    def __GetOptimizer(self):
+        (disSchedule, genSchedule) = self.__GetLearningSchedule()
+        return (
+            keras.optimizers.Adam(learning_rate=disSchedule),
+            keras.optimizers.Adam(learning_rate=genSchedule)
         )
 
     def __GetLearningSchedule(self):
@@ -73,6 +80,9 @@ class CGAN(bm.BaseMLModel):
                 decay_rate=0.9
                 )   
             )
+
+    def __GetLossFunction(self): 
+        return keras.losses.BinaryCrossentropy(from_logits=True)
 
     def TrainModel(self):
         super().TrainModel()
