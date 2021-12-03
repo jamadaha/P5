@@ -45,14 +45,17 @@ class Classifier(bm.BaseMLModel):
             accuracyThreshold=self.AccuracyThreshold
         )
 
+        self.__Compile()
+
+        self.Trainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
+
+    def __Compile(self):
         learningSchedule = self.__GetLearningSchedule()
 
         self.Classifier.compile(
             optimizer=keras.optimizers.Adam(learning_rate=learningSchedule),
             loss_fn=keras.losses.CategoricalCrossentropy(from_logits=True),
-        )  
-
-        self.Trainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
+        )
 
     def __GetLearningSchedule(self):
         if self.LRScheduler == 'Constant':

@@ -44,6 +44,11 @@ class CGAN(bm.BaseMLModel):
             numberOfClasses=self.NumberOfClasses,
         )
 
+        self.__Compile()
+
+        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension, self.EpochImgDir)
+
+    def __Compile(self):
         (disSchedule, genSchedule) = self.__GetLearningSchedule()
 
         self.KerasModel.compile(
@@ -51,8 +56,6 @@ class CGAN(bm.BaseMLModel):
                 g_optimizer=keras.optimizers.Adam(learning_rate=genSchedule),
                 loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
         )
-
-        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension, self.EpochImgDir)
 
     def __GetLearningSchedule(self):
         if self.LRScheduler == 'Constant':
