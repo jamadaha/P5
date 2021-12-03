@@ -32,7 +32,7 @@ class DiskReader():
                 img = cv2.imread(os.path.join(self.Dir, img_name), cv2.IMREAD_GRAYSCALE)
                 if self.FormatImages == True:
                     img = cv2.bitwise_not(img)
-                    img = cv2.resize(img, self.ImageSize)
+                img = cv2.resize(img, self.ImageSize)
                 features.append(img)
                 labels.append(self.LableID)
                 self.DataSize += 1
