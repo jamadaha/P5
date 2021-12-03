@@ -85,7 +85,8 @@ class Classifier(bm.BaseMLModel):
         dataLoader.LoadTrainDatasets()
         dataArray = dataLoader.DataSets
 
-        distributionMatrix = []
+        predictionArray = []
+        labelArray = []
 
         totalCorrectPredictions = 0
         totalIncorrectPredictions = 0
@@ -97,10 +98,6 @@ class Classifier(bm.BaseMLModel):
             datasetFormatter = df.DatasetFormatter(images, labels, self.NumberOfClasses, self.BatchSize, 1)
             classifyData = datasetFormatter.ProcessData()
 
-            predictionArray = []
-            for i in range(0, self.NumberOfClasses):
-                predictionArray.append(0)
-
             correctPredictions = 0
             incorrectPredictions = 0
             predictionsCount = 0
@@ -108,7 +105,7 @@ class Classifier(bm.BaseMLModel):
                 predictions = self.Classifier.classifier(images, training=False)
                 for prediction in predictions:
                     predictedClass = np.argmax(prediction)
-                    predictionArray[predictedClass] += 1
+                    predictionArray.append(predictedClass)
                     if predictedClass == index:
                         correctPredictions += 1
                         totalCorrectPredictions += 1
@@ -122,25 +119,15 @@ class Classifier(bm.BaseMLModel):
 
             self.__LogData(index, correctPredictions, incorrectPredictions)
 
-            distributionArray = []
-            for i in predictionArray:
-                distributionArray.append(i / numpy.sum(predictionArray))
+            labelArray.extend([index] * predictionsCount)
 
-            distributionMatrix.append(distributionArray)
 
             index += 1
 
         print(f"Total accuracy of classified dataset: {totalCorrectPredictions} correct, {totalIncorrectPredictions} incorrect, {((totalCorrectPredictions/totalPredictionsCount)*100):.2f}%")
 
-        labelMatrix = []
-        for label in range(self.NumberOfClasses):
-            labelMatrix.append([label] * self.NumberOfClasses)
-
-        labelMatrix = np.array(labelMatrix).flatten()
-        distributionMatrix = np.array(distributionMatrix).flatten()
-
-        confMatrix = tf.math.confusion_matrix(labelMatrix, distributionMatrix, self.NumberOfClasses, dtype=float)
-        self.SummaryWriter["ConfMatrix"].LogConfusionMatrix(confMatrix, 0, False)
+        confMatrix = tf.math.confusion_matrix(labelArray, predictionArray, self.NumberOfClasses)
+        self.SummaryWriter["ConfMatrix"].LogConfusionMatrix(confMatrix, 0, True)
 
     def __LogData(self, index, correct, incorrect):
         self.Logger.AppendToCSV([index, correct, incorrect])

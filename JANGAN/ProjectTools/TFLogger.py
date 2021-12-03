@@ -1,3 +1,4 @@
+from numpy.core.numeric import normalize_axis_tuple
 from ProjectTools import AutoPackageInstaller as ap
 import tensorflow as tf
 import os
@@ -29,17 +30,16 @@ class TFLogger:
 
     def LogConfusionMatrix(self, matrix, step, saveFig):
         import matplotlib.pyplot as plt
+        import numpy
         figure = plt.figure(figsize=(8, 8))
-
-        temp = matrix.numpy()
 
         plt.imshow(matrix, interpolation='nearest', cmap=plt.cm.Blues)
         plt.colorbar()
-        plt.tight_layout()
         plt.ylabel('True label')
-        plt.ylabel('Predicted label')
+        plt.xlabel('Predicted label')
 
-        self.SaveMatplot('./', 'Plot')
+        if saveFig:
+            self.SaveMatplot(self.OutputDir, 'Confusion matrix')
 
         with self.__SummaryWriter.as_default():
             tf.summary.image("Predictions", self.__PlotToImage(figure), step=step)
