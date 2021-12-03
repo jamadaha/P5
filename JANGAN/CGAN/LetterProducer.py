@@ -25,12 +25,15 @@ class LetterProducer():
     def GenerateLetter(self, classID, imageCountToProduce):
         returnImages = None
         if imageCountToProduce > 500:
+            returnImages = self.GenerateLetterBatch(classID, 500)
+            imageCountToProduce -= 500
             while imageCountToProduce > 0:
                 if imageCountToProduce > 500:
-                    returnImages.append(self.GenerateLetterBatch(classID, 500))
+                    returnImages = tf.concat([returnImages, (self.GenerateLetterBatch(classID, 500))], 0)
                     imageCountToProduce -= 500
                 else:
-                    returnImages.append(self.GenerateLetterBatch(classID, imageCountToProduce))
+                    returnImages = tf.concat([returnImages, (self.GenerateLetterBatch(classID, imageCountToProduce))], 0)
+                    imageCountToProduce -= 500
         else:
             returnImages = self.GenerateLetterBatch(classID, imageCountToProduce)
         return returnImages
