@@ -79,7 +79,6 @@ class ClassifierMLModel(bm.BaseMLModel):
         totalCorrectPredictions = 0
         totalIncorrectPredictions = 0
         totalPredictionsCount = 0
-        index = 0
         for data in dataArray:
             (images, labels) = data
             datasetFormatter = df.DatasetFormatter(images, labels, self.NumberOfClasses, self.BatchSize, 1)
@@ -105,9 +104,7 @@ class ClassifierMLModel(bm.BaseMLModel):
 
             print(f"[Index {currentClass}] Classifier predicted: {correctPredictions} correct, {incorrectPredictions} incorrect, {((correctPredictions/predictionsCount)*100):.2f}%")
 
-            self.__LogData(index, correctPredictions, incorrectPredictions)
-
-            index += 1
+            self.__LogData(currentClass, correctPredictions, incorrectPredictions)
 
         print(f"Total accuracy of classified dataset: {totalCorrectPredictions} correct, {totalIncorrectPredictions} incorrect, {((totalCorrectPredictions/totalPredictionsCount)*100):.2f}%")
 
