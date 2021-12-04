@@ -85,7 +85,6 @@ class ClassifierMLModel(bm.BaseMLModel):
         totalPredictionsCount = 0
         index = 0
         for data in dataArray:
-            print(f"Predictions for index {index}")
             (images, labels) = data
             datasetFormatter = df.DatasetFormatter(images, labels, self.NumberOfClasses, self.BatchSize, 1)
             classifyData = datasetFormatter.ProcessData()
@@ -93,11 +92,13 @@ class ClassifierMLModel(bm.BaseMLModel):
             correctPredictions = 0
             incorrectPredictions = 0
             predictionsCount = 0
+            currentClass = 0
             for (images, labels) in classifyData:
+                currentClass = np.argmax(labels[0])
                 predictions = self.Classifier.classifier(images, training=False)
                 for prediction in predictions:
                     predictedClass = np.argmax(prediction)
-                    if predictedClass == index:
+                    if predictedClass == currentClass:
                         correctPredictions += 1
                         totalCorrectPredictions += 1
                     else:
@@ -106,7 +107,7 @@ class ClassifierMLModel(bm.BaseMLModel):
                     predictionsCount += 1
                     totalPredictionsCount += 1
 
-            print(f"Classifier predicted: {correctPredictions} correct, {incorrectPredictions} incorrect, {((correctPredictions/predictionsCount)*100):.2f}%")
+            print(f"[Index {currentClass}] Classifier predicted: {correctPredictions} correct, {incorrectPredictions} incorrect, {((correctPredictions/predictionsCount)*100):.2f}%")
 
             self.__LogData(index, correctPredictions, incorrectPredictions)
 

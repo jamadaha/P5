@@ -12,7 +12,7 @@ class ClassifierModel(tf.keras.Model):
         super(ClassifierModel, self).__init__()
         self.classifier = classifier
         self.loss_tracker = tf.keras.metrics.Mean(name="classifier_loss")
-        self.Accuracy_tracker = tf.keras.metrics.BinaryAccuracy(name="classifier_accuracy", threshold=accuracyThreshold)
+        self.Accuracy_tracker = tf.keras.metrics.CategoricalAccuracy(name="classifier_accuracy", threshold=accuracyThreshold)
         self.ImageSize = imageSize
         self.NumberOfClasses = numberOfClasses
 
