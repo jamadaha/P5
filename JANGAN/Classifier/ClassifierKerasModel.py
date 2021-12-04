@@ -8,11 +8,11 @@ class ClassifierModel(tf.keras.Model):
     ImageSize = 0
     NumberOfClasses = 0
 
-    def __init__(self, classifier, imageSize, numberOfClasses, accuracyThreshold):
+    def __init__(self, classifier, imageSize, numberOfClasses):
         super(ClassifierModel, self).__init__()
         self.classifier = classifier
         self.loss_tracker = tf.keras.metrics.Mean(name="classifier_loss")
-        self.Accuracy_tracker = tf.keras.metrics.CategoricalAccuracy(name="classifier_accuracy", threshold=accuracyThreshold)
+        self.Accuracy_tracker = tf.keras.metrics.CategoricalAccuracy(name="classifier_accuracy")
         self.ImageSize = imageSize
         self.NumberOfClasses = numberOfClasses
 

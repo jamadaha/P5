@@ -21,17 +21,14 @@ class ClassifierMLModel(bm.BaseMLModel):
     ClassifyDir = ""
     FormatClassificationImages = False
 
-    AccuracyThreshold = 0
-
     LearningRateClass = 0
 
     Classifier = None
     Logger = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, accuracyThresshold, formatImages, formatClassificationImages):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ClassifyDir = classifyDir
-        self.AccuracyThreshold = accuracyThresshold
         self.LearningRateClass = learningRateClass
         self.Logger = CSVLogger.CSVLogger(logPath, 'TestData')
         self.Logger.InitCSV(['Index', 'Correct', 'Inccorect'])
@@ -43,8 +40,7 @@ class ClassifierMLModel(bm.BaseMLModel):
         self.Classifier = cm.ClassifierModel(
             classifier=layerDefiniton.GetClassifier(), 
             imageSize=self.ImageSize, 
-            numberOfClasses=self.NumberOfClasses,
-            accuracyThreshold=self.AccuracyThreshold
+            numberOfClasses=self.NumberOfClasses
         )
 
         if self.LRScheduler == 'Constant':

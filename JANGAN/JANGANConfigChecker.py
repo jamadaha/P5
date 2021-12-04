@@ -93,7 +93,6 @@ class JANGANConfigChecker():
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "UseSavedModel")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LogPath")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "DatasetSplit")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "AccuracyThreshold")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LRScheduler")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LearningRateClassifier")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "FormatImages")
