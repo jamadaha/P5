@@ -14,11 +14,14 @@ class LayerDefinition():
         return tf.keras.Sequential(
             [
                 tf.keras.layers.InputLayer((28, 28, 1)),
-                tf.keras.layers.Conv2D(64, (3, 3), strides=(2, 2), padding="same"),
-                tf.keras.layers.LeakyReLU(alpha=0.2),
-                tf.keras.layers.Conv2D(128, (3, 3), strides=(2, 2), padding="same"),
-                tf.keras.layers.LeakyReLU(alpha=0.2),
-                tf.keras.layers.GlobalMaxPooling2D(),
+                tf.keras.layers.Conv2D(16, (3, 3), padding='same', activation='relu'),
+                tf.keras.layers.MaxPooling2D(),
+                tf.keras.layers.Conv2D(32, (3, 3), padding='same', activation='relu'),
+                tf.keras.layers.MaxPooling2D(),
+                tf.keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu'),
+                tf.keras.layers.MaxPooling2D(),
+                tf.keras.layers.Flatten(),
+                tf.keras.layers.Dense(128, activation='relu'),
                 tf.keras.layers.Dense(self.NumberOfClasses)
             ],
             name="classifier",
