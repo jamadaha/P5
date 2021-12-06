@@ -80,7 +80,7 @@ class ClassifierMLModel(bm.BaseMLModel):
             )
     
     def __GetLossFunction(self): 
-        return keras.losses.BinaryCrossentropy(from_logits=True)
+        return keras.losses.CategoricalCrossentropy(from_logits=True),
     
     def ProduceOutput(self):
         self.UseSavedModel = True
