@@ -14,6 +14,7 @@ class LetterProducer():
     NumberOfClasses = 0
     LatentDimension = 0
     ImageCountToProduce = 0
+    MaxImageBatch = 500
 
     def __init__(self, outputPath, trainedGenerator, numberOfClasses, latentDimension, imageCountToProduce):
         self.OutputPath = outputPath
@@ -23,6 +24,22 @@ class LetterProducer():
         self.ImageCountToProduce = imageCountToProduce
 
     def GenerateLetter(self, classID, imageCountToProduce):
+        returnImages = None
+        if imageCountToProduce > self.MaxImageBatch:
+            returnImages = self.GenerateLetterBatch(classID, self.MaxImageBatch)
+            imageCountToProduce -= self.MaxImageBatch
+            while imageCountToProduce > 0:
+                if imageCountToProduce > self.MaxImageBatch:
+                    returnImages = tf.concat([returnImages, (self.GenerateLetterBatch(classID, self.MaxImageBatch))], 0)
+                    imageCountToProduce -= self.MaxImageBatch
+                else:
+                    returnImages = tf.concat([returnImages, (self.GenerateLetterBatch(classID, imageCountToProduce))], 0)
+                    imageCountToProduce -= self.MaxImageBatch
+        else:
+            returnImages = self.GenerateLetterBatch(classID, imageCountToProduce)
+        return returnImages
+
+    def GenerateLetterBatch(self, classID, imageCountToProduce):
         # Sample noise for the interpolation.
         interpolation_noise = tf.random.normal(shape=(1, self.LatentDimension))
         interpolation_noise = tf.repeat(interpolation_noise, repeats=imageCountToProduce)

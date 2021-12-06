@@ -8,11 +8,11 @@ class ClassifierModel(tf.keras.Model):
     ImageSize = 0
     NumberOfClasses = 0
 
-    def __init__(self, classifier, imageSize, numberOfClasses, accuracyThreshold):
+    def __init__(self, classifier, imageSize, numberOfClasses):
         super(ClassifierModel, self).__init__()
         self.classifier = classifier
         self.loss_tracker = tf.keras.metrics.Mean(name="classifier_loss")
-        self.Accuracy_tracker = tf.keras.metrics.BinaryAccuracy(name="classifier_accuracy", threshold=accuracyThreshold)
+        self.Accuracy_tracker = tf.keras.metrics.CategoricalAccuracy(name="classifier_accuracy")
         self.ImageSize = imageSize
         self.NumberOfClasses = numberOfClasses
 
@@ -29,10 +29,6 @@ class ClassifierModel(tf.keras.Model):
     def train_step(self, data, returnLoss):
          # Unpack the data.
         real_images, one_hot_labels = data
-
-        # Make the "correct" labels, consisting of a large array with '1's
-        batch_size = tf.shape(real_images)[0]
-        correct_labels = tf.ones((batch_size, 1))
 
         # Train the classifier.
         with tf.GradientTape() as tape:

@@ -2,28 +2,34 @@ import importlib
 import os
 from JANGANConfigChecker import JANGANConfigChecker
 
-from ProjectTools import ConfigHelper
- 
-import CGAN as cg
+from ProjectTools import ConfigHelper as ch
+from ProjectTools import HelperFunctions as hf
+
+from CGAN import CGANMLModel as cg
+from Classifier import ClassifierMLModel as cf
 import DataGenerator as dg
-import Classifier as cf
 
 
 class JANGAN():
+    ExperimentName = ""
     cfg = None
     cgan = None
     classifier = None
     NumberOfClasses = None
     ThrowIfConfigFileBad = True
 
-    def __init__(self, expFile, configFile, throwIfConfigFileBad):
+    def __init__(self, expName, expFile, configFile, throwIfConfigFileBad):
         importlib.import_module(expFile)
         self.ThrowIfConfigFileBad = throwIfConfigFileBad
+        self.ExperimentName = expName;
         self.LoadConfig(configFile)
 
     def LoadConfig(self, configFile):
         print(" --- Loading experiment config file --- ")
-        self.cfg = ConfigHelper.ConfigHelper(configFile)
+        self.cfg = ch.ConfigHelper(configFile)
+        newTokens = self.cfg.TokenReplacements.copy()
+        newTokens.append(("{EXPERIMENTNAME}", self.ExperimentName))
+        self.cfg.UpdateTokenReplacements(newTokens)
         self.cfg.LoadConfig()
         print(" --- Done! --- ")
         cfgChecker = JANGANConfigChecker()
@@ -34,7 +40,6 @@ class JANGAN():
     def PurgeRunDataFolder(self, path):
         print(" --- Purging training data folder --- ")
 
-        from ProjectTools import HelperFunctions as hf
         hf.DeleteFolderAndAllContents(path)
 
         print(f" --- Done! --- ")
@@ -106,7 +111,7 @@ class JANGAN():
     def __SetupCGAN(self):
         self.__GetNumberOfCGANClasses()
 
-        self.cgan = cg.CGAN(
+        self.cgan = cg.CGANMLModel(
             self.cfg.GetIntValue("CGANTRAINING", "BatchSize"),
             1,
             self.NumberOfClasses,
@@ -128,6 +133,7 @@ class JANGAN():
             self.cfg.GetStringValue("CGANTRAINING", "LRScheduler"),
             self.cfg.GetFloatValue("CGANTRAINING", "LearningRateDiscriminator"),
             self.cfg.GetFloatValue("CGANTRAINING", "LearningRateGenerator"),
+            self.cfg.GetBoolValue("CGANTRAINING", "FormatImages"),
             )
 
     def TrainCGAN(self):
@@ -154,7 +160,7 @@ class JANGAN():
     def __SetupClassifier(self):
         self.__GetNumberOfClassifierClasses()
 
-        self.classifier = cf.Classifier(
+        self.classifier = cf.ClassifierMLModel(
             self.cfg.GetIntValue("CLASSIFIERTRAINING", "BatchSize"),
             1,
             self.NumberOfClasses,
@@ -173,7 +179,9 @@ class JANGAN():
             self.cfg.GetFloatValue("CLASSIFIERTRAINING", "DatasetSplit"),
             self.cfg.GetStringValue("CLASSIFIERTRAINING", "LRScheduler"),
             self.cfg.GetFloatValue("CLASSIFIERTRAINING", "LearningRateClassifier"),
-            self.cfg.GetFloatValue("CLASSIFIERTRAINING", "AccuracyThreshold"))
+            self.cfg.GetBoolValue("CLASSIFIERTRAINING", "FormatImages"),
+            self.cfg.GetBoolValue("CLASSIFIEROUTPUT", "FormatImages")
+            )
 
     def TrainClassifier(self):
         print(" --- Training Classifier --- ")
@@ -193,12 +201,5 @@ class JANGAN():
             self.__SetupClassifier()
 
         self.classifier.ProduceOutput()
-
-        print(" --- Done! --- ")
-
-    def ProduceOutput(self):
-        print(" --- Producing output --- ")
-
-        self.cgan.ProduceOutput()
 
         print(" --- Done! --- ")

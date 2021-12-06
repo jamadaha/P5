@@ -24,6 +24,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CGAN\CGANMLModel.py" />
     <Compile Include="CGAN\CGANKerasModel.py" />
     <Compile Include="CGAN\CGANTrainer.py" />
     <Compile Include="CGAN\LayerDefinition.py" />
@@ -31,6 +32,7 @@
     <Compile Include="CGAN\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classifier\ClassifierMLModel.py" />
     <Compile Include="Classifier\ClassifierKerasModel.py" />
     <Compile Include="Classifier\ClassifierTrainer.py" />
     <Compile Include="Classifier\LayerDefinition.py" />
@@ -48,10 +50,11 @@
     <Compile Include="DatasetLoader\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ExperimentQueue\Experiment3\BalancedDatasetAccuracy.py" />
+    <Compile Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.py" />
+    <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.py" />
+    <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.py" />
     <Compile Include="ExperimentQueue\BaseRun.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ExperimentQueue\TestExperiment.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ExperimentQueue\__init__.py">
@@ -86,16 +89,21 @@
     <Folder Include="DataGenerator\" />
     <Folder Include="DatasetLoader\" />
     <Folder Include="ExperimentQueue\" />
+    <Folder Include="CheckMemoryLeak\" />
+    <Folder Include="ExperimentQueue\Experiment3\" />
     <Folder Include="Classifier\" />
     <Folder Include="ProjectTools\" />
     <Folder Include="ProjectTools\TestFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ExperimentQueueConfig.ini" />
+    <Content Include="ExperimentQueue\Experiment3\BalancedDatasetAccuracy.ini" />
+    <Content Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.ini" />
+    <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.ini" />
+    <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.ini" />
     <Content Include="ExperimentQueue\BaseRunConfig.ini">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="ExperimentQueue\TestExperimentConfig.ini" />
     <Content Include="ProjectTools\TestFiles\override-test-config.ini" />
     <Content Include="ProjectTools\TestFiles\test-config.ini" />
   </ItemGroup>

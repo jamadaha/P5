@@ -70,6 +70,7 @@ class JANGANConfigChecker():
         self.__CheckKey(cfg, "CGANTRAINING", "LRScheduler")
         self.__CheckKey(cfg, "CGANTRAINING", "LearningRateDiscriminator")
         self.__CheckKey(cfg, "CGANTRAINING", "LearningRateGenerator")
+        self.__CheckKey(cfg, "CGANTRAINING", "FormatImages")
         self.__CheckKeyCount(cfg, "CGANTRAINING")
 
         # CGAN Output
@@ -92,15 +93,16 @@ class JANGANConfigChecker():
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "UseSavedModel")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LogPath")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "DatasetSplit")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "AccuracyThreshold")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LRScheduler")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LearningRateClassifier")
+        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "FormatImages")
         self.__CheckKeyCount(cfg, "CLASSIFIERTRAINING")
 
         # Classifier Output
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "CLASSIFIEROUTPUT", "ClassifyDir")
         self.__CheckKey(cfg, "CLASSIFIEROUTPUT", "LogDir")
+        self.__CheckKey(cfg, "CLASSIFIEROUTPUT", "FormatImages")
         self.__CheckKeyCount(cfg, "CLASSIFIEROUTPUT")
 
         print(" --- Done! --- ")
