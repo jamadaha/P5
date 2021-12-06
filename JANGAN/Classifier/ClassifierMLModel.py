@@ -10,6 +10,7 @@ import tensorflow as tf
 from tensorflow import keras
 import os
 import numpy as np
+from tqdm import tqdm
 
 from DatasetLoader import DatasetLoader as dl
 from DatasetLoader import DatasetFormatter as df
@@ -22,6 +23,10 @@ class ClassifierMLModel(bm.BaseMLModel):
     FormatClassificationImages = False
 
     LearningRateClass = 0
+
+    PredictionCount = {}
+    CorrectPredictions = {}
+    IncorrectPredictions = {}
 
     Classifier = None
     Logger = None
@@ -76,17 +81,18 @@ class ClassifierMLModel(bm.BaseMLModel):
         dataLoader.LoadTrainDatasets()
         dataArray = dataLoader.DataSets
 
+        print("Predicting dataset...")
+
         totalCorrectPredictions = 0
         totalIncorrectPredictions = 0
         totalPredictionsCount = 0
-        for data in dataArray:
+        for data in tqdm(iterable=dataArray, total=len(dataArray)):
             (images, labels) = data
             datasetFormatter = df.DatasetFormatter(images, labels, self.NumberOfClasses, self.BatchSize, 1)
             classifyData = datasetFormatter.ProcessData()
 
             correctPredictions = 0
             incorrectPredictions = 0
-            predictionsCount = 0
             currentClass = 0
             for (images, labels) in classifyData:
                 currentClass = np.argmax(labels[0])
@@ -94,17 +100,31 @@ class ClassifierMLModel(bm.BaseMLModel):
                 for prediction in predictions:
                     predictedClass = np.argmax(prediction)
                     if predictedClass == currentClass:
+                        if str(currentClass) in self.CorrectPredictions:
+                            self.CorrectPredictions[str(currentClass)] = int(self.CorrectPredictions[str(currentClass)]) + 1
+                        else:
+                            self.CorrectPredictions[str(currentClass)] = 1
                         correctPredictions += 1
                         totalCorrectPredictions += 1
                     else:
+                        if str(currentClass) in self.IncorrectPredictions:
+                            self.IncorrectPredictions[str(currentClass)] = int(self.IncorrectPredictions[str(currentClass)]) + 1
+                        else:
+                            self.IncorrectPredictions[str(currentClass)] = 1
                         incorrectPredictions += 1
                         totalIncorrectPredictions += 1
-                    predictionsCount += 1
+
+                    if str(currentClass) in self.PredictionCount:
+                        self.PredictionCount[str(currentClass)] = int(self.PredictionCount[str(currentClass)]) + 1
+                    else:
+                        self.PredictionCount[str(currentClass)] = 1
                     totalPredictionsCount += 1
 
-            print(f"[Index {currentClass}] Classifier predicted: {correctPredictions} correct, {incorrectPredictions} incorrect, {((correctPredictions/predictionsCount)*100):.2f}%")
+        print("Prediction complete!")
 
-            self.__LogData(currentClass, correctPredictions, incorrectPredictions)
+        for key in self.CorrectPredictions:
+            print(f"[Index {key}] Classifier predicted: {self.CorrectPredictions[str(key)]} correct, {self.IncorrectPredictions[str(key)]} incorrect, {((self.CorrectPredictions[str(key)]/self.PredictionCount[str(key)])*100):.2f}%")
+            self.__LogData(key, self.CorrectPredictions[key], self.IncorrectPredictions[key])
 
         print(f"Total accuracy of classified dataset: {totalCorrectPredictions} correct, {totalIncorrectPredictions} incorrect, {((totalCorrectPredictions/totalPredictionsCount)*100):.2f}%")
 
