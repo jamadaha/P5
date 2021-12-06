@@ -5,9 +5,9 @@ from JANGANConfigChecker import JANGANConfigChecker
 from ProjectTools import ConfigHelper as ch
 from ProjectTools import HelperFunctions as hf
 
-import CGAN as cg
+from CGAN import CGANMLModel as cg
+from Classifier import ClassifierMLModel as cf
 import DataGenerator as dg
-import Classifier as cf
 
 
 class JANGAN():
@@ -111,7 +111,7 @@ class JANGAN():
     def __SetupCGAN(self):
         self.__GetNumberOfCGANClasses()
 
-        self.cgan = cg.CGAN(
+        self.cgan = cg.CGANMLModel(
             self.cfg.GetIntValue("CGANTRAINING", "BatchSize"),
             1,
             self.NumberOfClasses,
@@ -160,7 +160,7 @@ class JANGAN():
     def __SetupClassifier(self):
         self.__GetNumberOfClassifierClasses()
 
-        self.classifier = cf.Classifier(
+        self.classifier = cf.ClassifierMLModel(
             self.cfg.GetIntValue("CLASSIFIERTRAINING", "BatchSize"),
             1,
             self.NumberOfClasses,
@@ -179,8 +179,8 @@ class JANGAN():
             self.cfg.GetFloatValue("CLASSIFIERTRAINING", "DatasetSplit"),
             self.cfg.GetStringValue("CLASSIFIERTRAINING", "LRScheduler"),
             self.cfg.GetFloatValue("CLASSIFIERTRAINING", "LearningRateClassifier"),
-            self.cfg.GetFloatValue("CLASSIFIERTRAINING", "AccuracyThreshold"),
-            self.cfg.GetBoolValue("CLASSIFIERTRAINING", "FormatImages")
+            self.cfg.GetBoolValue("CLASSIFIERTRAINING", "FormatImages"),
+            self.cfg.GetBoolValue("CLASSIFIEROUTPUT", "FormatImages")
             )
 
     def TrainClassifier(self):
