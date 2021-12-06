@@ -1,4 +1,5 @@
 from ProjectTools import CSVLogger
+from ProjectTools import TFLogger
 from ProjectTools import AutoPackageInstaller as ap
 from ProjectTools import BaseMLModel as bm
 
@@ -30,14 +31,18 @@ class ClassifierMLModel(bm.BaseMLModel):
 
     Classifier = None
     Logger = None
+    SummaryWriter = None
 
     def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ClassifyDir = classifyDir
         self.LearningRateClass = learningRateClass
+        self.FormatClassificationImages = formatClassificationImages
         self.Logger = CSVLogger.CSVLogger(logPath, 'TestData')
         self.Logger.InitCSV(['Index', 'Correct', 'Inccorect'])
-        self.FormatClassificationImages = formatClassificationImages
+        self.SummaryWriter = {
+            'ConfMatrix': TFLogger.TFLogger(logPath, 'ConfMatrix', 'CPredictions')
+        }
 
     def SetupModel(self):
         layerDefiniton = ld.LayerDefinition(self.NumberOfClasses)
@@ -81,6 +86,9 @@ class ClassifierMLModel(bm.BaseMLModel):
         dataLoader.LoadTrainDatasets()
         dataArray = dataLoader.DataSets
 
+        predictionArray = []
+        labelArray = []
+
         print("Predicting dataset...")
 
         totalCorrectPredictions = 0
@@ -106,6 +114,9 @@ class ClassifierMLModel(bm.BaseMLModel):
                 predictions = self.Classifier.classifier(images, training=False)
                 for prediction in predictions:
                     predictedClass = np.argmax(prediction)
+                    predictionArray.append(predictedClass)
+                    labelArray.append(currentClass)
+
                     if predictedClass == currentClass:
                         self.CorrectPredictions[str(currentClass)] = int(self.CorrectPredictions[str(currentClass)]) + 1
                         correctPredictions += 1
@@ -117,7 +128,9 @@ class ClassifierMLModel(bm.BaseMLModel):
 
                     self.PredictionCount[str(currentClass)] = int(self.PredictionCount[str(currentClass)]) + 1
                     totalPredictionsCount += 1
+                
 
+                
         print("Prediction complete!")
 
         for key in self.CorrectPredictions:
@@ -125,6 +138,9 @@ class ClassifierMLModel(bm.BaseMLModel):
             self.__LogData(key, self.CorrectPredictions[key], self.IncorrectPredictions[key])
 
         print(f"Total accuracy of classified dataset: {totalCorrectPredictions} correct, {totalIncorrectPredictions} incorrect, {((totalCorrectPredictions/totalPredictionsCount)*100):.2f}%")
+
+        confMatrix = tf.math.confusion_matrix(labelArray, predictionArray, self.NumberOfClasses)
+        self.SummaryWriter["ConfMatrix"].LogConfusionMatrix(confMatrix, 0, True)
 
     def __LogData(self, index, correct, incorrect):
         self.Logger.AppendToCSV([index, correct, incorrect])
