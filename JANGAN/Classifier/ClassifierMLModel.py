@@ -45,8 +45,7 @@ class ClassifierMLModel(bm.BaseMLModel):
         self.Classifier = cm.ClassifierModel(
             classifier=layerDefiniton.GetClassifier(), 
             imageSize=self.ImageSize, 
-            numberOfClasses=self.NumberOfClasses,
-            accuracyThreshold=self.AccuracyThreshold
+            numberOfClasses=self.NumberOfClasses
         )
 
         self.__Compile()
