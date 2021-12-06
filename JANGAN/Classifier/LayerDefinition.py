@@ -13,7 +13,14 @@ class LayerDefinition():
     def GetClassifier(self):
         return tf.keras.Sequential(
             [
-                tf.keras.layers.Flatten(input_shape=(28, 28)),
+                tf.keras.layers.InputLayer((28, 28, 1)),
+                tf.keras.layers.Conv2D(16, (3, 3), padding='same', activation='relu'),
+                tf.keras.layers.MaxPooling2D(),
+                tf.keras.layers.Conv2D(32, (3, 3), padding='same', activation='relu'),
+                tf.keras.layers.MaxPooling2D(),
+                tf.keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu'),
+                tf.keras.layers.MaxPooling2D(),
+                tf.keras.layers.Flatten(),
                 tf.keras.layers.Dense(128, activation='relu'),
                 tf.keras.layers.Dense(self.NumberOfClasses)
             ],
