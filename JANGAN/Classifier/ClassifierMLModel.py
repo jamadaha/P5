@@ -53,25 +53,40 @@ class ClassifierMLModel(bm.BaseMLModel):
             numberOfClasses=self.NumberOfClasses
         )
 
-        if self.LRScheduler == 'Constant':
-            self.Classifier.compile(
-                optimizer=keras.optimizers.Adam(learning_rate=self.LearningRateClass),
-                loss_fn=keras.losses.CategoricalCrossentropy(from_logits=True),
-            )  
-        elif self.LRScheduler == 'ExponentialDecay':
-            classSchedule = keras.optimizers.schedules.ExponentialDecay(
-                initial_learning_rate=self.LearningRateClass,
-                decay_steps=10000,
-                decay_rate=0.9
-            )
-
-            self.Classifier.compile(
-                optimizer=keras.optimizers.Adam(learning_rate=classSchedule),
-                loss_fn=keras.losses.CategoricalCrossentropy(from_logits=True),
-            )  
+        self.__Compile()
 
         self.Trainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
 
+    def __Compile(self):
+        optimizer = self.__GetOptimizer()
+        lossFunc = self.__GetLossFunction()
+
+        self.Classifier.compile(
+            optimizer=optimizer,
+            loss_fn=lossFunc
+        )
+    
+    def __GetOptimizer(self):
+        learningSchedule = self.__GetLearningSchedule()
+        return (
+            keras.optimizers.Adam(learning_rate=learningSchedule)
+        )
+
+    def __GetLearningSchedule(self):
+        if self.LRScheduler == 'Constant':
+            return self.LearningRateClass
+        elif self.LRScheduler == 'ExponentialDecay':
+            return (
+                keras.optimizers.schedules.ExponentialDecay(
+                initial_learning_rate=self.LearningRateClass,
+                decay_steps=10000,
+                decay_rate=0.9
+                )  
+            )
+    
+    def __GetLossFunction(self): 
+        return keras.losses.CategoricalCrossentropy(from_logits=True)
+    
     def ProduceOutput(self):
         self.UseSavedModel = True
         if self.Classifier == None:
