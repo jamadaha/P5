@@ -63,9 +63,6 @@ class newCGANTrainer(cgt.CGANTrainer):
         returnTrainSet = returnTrainSet.shuffle(buffer_size=1024).take(takeSize)
         returnTestSet = returnTestSet.shuffle(buffer_size=1024).take(takeSize)
 
-        #print(f"Amount of label '{self.CSVDataLabels[str(index)]}' train set: {self.GetDatasetSize(returnTrainSet)}")
-        #print(f"Amount of label '{self.CSVDataLabels[str(index)]}' test set: {self.GetDatasetSize(returnTestSet)}")
-
         global batchSize
         data = (returnTrainSet.batch(batchSize), returnTestSet.batch(batchSize))
 
