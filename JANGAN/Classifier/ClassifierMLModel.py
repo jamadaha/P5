@@ -96,28 +96,26 @@ class ClassifierMLModel(bm.BaseMLModel):
             currentClass = 0
             for (images, labels) in classifyData:
                 currentClass = np.argmax(labels[0])
+                if not str(currentClass) in self.CorrectPredictions:
+                    self.CorrectPredictions[str(currentClass)] = 0
+                if not str(currentClass) in self.IncorrectPredictions:
+                    self.IncorrectPredictions[str(currentClass)] = 0
+                if not str(currentClass) in self.PredictionCount:
+                    self.PredictionCount[str(currentClass)] = 0
+
                 predictions = self.Classifier.classifier(images, training=False)
                 for prediction in predictions:
                     predictedClass = np.argmax(prediction)
                     if predictedClass == currentClass:
-                        if str(currentClass) in self.CorrectPredictions:
-                            self.CorrectPredictions[str(currentClass)] = int(self.CorrectPredictions[str(currentClass)]) + 1
-                        else:
-                            self.CorrectPredictions[str(currentClass)] = 1
+                        self.CorrectPredictions[str(currentClass)] = int(self.CorrectPredictions[str(currentClass)]) + 1
                         correctPredictions += 1
                         totalCorrectPredictions += 1
                     else:
-                        if str(currentClass) in self.IncorrectPredictions:
-                            self.IncorrectPredictions[str(currentClass)] = int(self.IncorrectPredictions[str(currentClass)]) + 1
-                        else:
-                            self.IncorrectPredictions[str(currentClass)] = 1
+                        self.IncorrectPredictions[str(currentClass)] = int(self.IncorrectPredictions[str(currentClass)]) + 1
                         incorrectPredictions += 1
                         totalIncorrectPredictions += 1
 
-                    if str(currentClass) in self.PredictionCount:
-                        self.PredictionCount[str(currentClass)] = int(self.PredictionCount[str(currentClass)]) + 1
-                    else:
-                        self.PredictionCount[str(currentClass)] = 1
+                    self.PredictionCount[str(currentClass)] = int(self.PredictionCount[str(currentClass)]) + 1
                     totalPredictionsCount += 1
 
         print("Prediction complete!")
