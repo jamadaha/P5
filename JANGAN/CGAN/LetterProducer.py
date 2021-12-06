@@ -14,6 +14,7 @@ class LetterProducer():
     NumberOfClasses = 0
     LatentDimension = 0
     ImageCountToProduce = 0
+    MaxImageBatch = 500
 
     def __init__(self, outputPath, trainedGenerator, numberOfClasses, latentDimension, imageCountToProduce):
         self.OutputPath = outputPath
@@ -24,16 +25,16 @@ class LetterProducer():
 
     def GenerateLetter(self, classID, imageCountToProduce):
         returnImages = None
-        if imageCountToProduce > 500:
-            returnImages = self.GenerateLetterBatch(classID, 500)
-            imageCountToProduce -= 500
+        if imageCountToProduce > self.MaxImageBatch:
+            returnImages = self.GenerateLetterBatch(classID, self.MaxImageBatch)
+            imageCountToProduce -= self.MaxImageBatch
             while imageCountToProduce > 0:
-                if imageCountToProduce > 500:
-                    returnImages = tf.concat([returnImages, (self.GenerateLetterBatch(classID, 500))], 0)
-                    imageCountToProduce -= 500
+                if imageCountToProduce > self.MaxImageBatch:
+                    returnImages = tf.concat([returnImages, (self.GenerateLetterBatch(classID, self.MaxImageBatch))], 0)
+                    imageCountToProduce -= self.MaxImageBatch
                 else:
                     returnImages = tf.concat([returnImages, (self.GenerateLetterBatch(classID, imageCountToProduce))], 0)
-                    imageCountToProduce -= 500
+                    imageCountToProduce -= self.MaxImageBatch
         else:
             returnImages = self.GenerateLetterBatch(classID, imageCountToProduce)
         return returnImages
