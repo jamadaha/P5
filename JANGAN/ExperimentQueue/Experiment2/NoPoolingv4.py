@@ -24,7 +24,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             stride=2,
             padding="same",
             bias=True,
-            batchNorm=True,
+            batchNorm=False,
             dropout=True,
             dropAmount=0.5
         )
@@ -37,7 +37,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             stride=2,
             padding="same",
             bias=True,
-            batchNorm=True,
+            batchNorm=False,
             dropout=True,
             dropAmount=0.5
         )
@@ -50,7 +50,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             stride=2,
             padding="same",
             bias=True,
-            batchNorm=True,
+            batchNorm=False,
             dropout=True,
             dropAmount=0.5
         )
@@ -90,9 +90,9 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             kernelSize=4,
             stride=2,
             padding="same",
-            bias=True,
+            bias=False,
             batchNorm=True,
-            dropout=True,
+            dropout=False,
             dropAmount=0.5
         )
         model = self.ConvTransLayer(
@@ -103,9 +103,9 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             kernelSize=4,
             stride=2,
             padding="same",
-            bias=True,
+            bias=False,
             batchNorm=True,
-            dropout=True,
+            dropout=False,
             dropAmount=0.5
         )
         model.add(
