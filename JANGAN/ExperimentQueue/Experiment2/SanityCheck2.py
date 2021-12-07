@@ -19,8 +19,8 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             model=model,
             init=init,
             activation=tf.keras.layers.LeakyReLU(alpha=0.2),
-            filterCount=128,
-            kernelSize=4,
+            filterCount=64,
+            kernelSize=3,
             stride=2,
             padding="same",
             batchNorm=False,
@@ -30,7 +30,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             model=model,
             init=init,
             activation=tf.keras.layers.LeakyReLU(alpha=0.2),
-            filterCount=64,
+            filterCount=128,
             kernelSize=3,
             stride=2,
             padding="same",
@@ -38,10 +38,10 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             dropout=False
         )
         model.add(
-            tf.keras.layers.Flatten()
+            tf.keras.layers.GlobalMaxPooling2D()
         )
         model.add(
-            tf.keras.layers.Dense(1, activation='sigmoid')
+            tf.keras.layers.Dense(1)
         )
         return model
 
@@ -87,7 +87,12 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             dropAmount=0.5
         )
         model.add(
-            tf.keras.layers.Conv2D(1, (7, 7), padding="same", activation="tanh", kernel_initializer=init)
+            tf.keras.layers.Conv2D(
+                1, 
+                (7, 7), 
+                padding="same",
+                activation="sigmoid"
+            )
         )
         return model
 
@@ -95,10 +100,10 @@ CGAN.LayerDefinition.LayerDefinition = LayerDefinition
 
 class CGANMLModel(CGAN.CGANMLModel.CGANMLModel):
     def GetOptimizer(self):
-        (disSchedule, genSchedule) = self.__GetLearningSchedule()
+        (disSchedule, genSchedule) = self.GetLearningSchedule()
         return (
-            tf.keras.optimizers.Adam(learning_rate=disSchedule, beta_1=1.2),
-            tf.keras.optimizers.Adam(learning_rate=genSchedule, beta_1=1.2)
+            tf.keras.optimizers.Adam(learning_rate=disSchedule),
+            tf.keras.optimizers.Adam(learning_rate=genSchedule)
         )
     
     def GetLossFunction(self): 
