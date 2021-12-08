@@ -7,7 +7,6 @@ import tensorflow as tf
 class ConditionalGAN(tf.keras.Model):
     ImageSize = 0
     NumberOfClasses = 0
-    LatestImage = None
     TrackModeCollapse = False
 
     def __init__(self, discriminator, generator, latentDimension, imageSize, numberOfClasses, trackModeCollapse):
