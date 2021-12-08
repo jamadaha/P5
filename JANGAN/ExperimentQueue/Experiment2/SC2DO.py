@@ -24,7 +24,8 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             stride=2,
             padding="same",
             batchNorm=False,
-            dropout=True
+            dropout=True,
+            dropAmount=0.1
         )
         model = self.ConvLayer(
             model=model,
@@ -71,7 +72,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             stride=2,
             padding="same",
             batchNorm=False,
-            dropout=True,
+            dropout=False,
             dropAmount=0.5
         )
         model = self.ConvTransLayer(
