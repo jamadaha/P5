@@ -34,11 +34,8 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             kernelSize=3,
             stride=2,
             padding="same",
-            batchNorm=True,
+            batchNorm=False,
             dropout=False
-        )
-        model.add(
-            tf.keras.layers.GlobalMaxPooling2D()
         )
         model.add(
             tf.keras.layers.Dense(1)
@@ -70,7 +67,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             kernelSize=4,
             stride=2,
             padding="same",
-            batchNorm=True,
+            batchNorm=False,
             dropout=False,
             dropAmount=0.5
         )
@@ -82,7 +79,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             kernelSize=4,
             stride=2,
             padding="same",
-            batchNorm=True,
+            batchNorm=False,
             dropout=False,
             dropAmount=0.5
         )
