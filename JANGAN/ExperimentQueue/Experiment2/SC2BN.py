@@ -38,6 +38,9 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             dropout=False
         )
         model.add(
+            tf.keras.layers.Flatten()
+        )
+        model.add(
             tf.keras.layers.Dense(1)
         )
         return model
