@@ -19,12 +19,13 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             model=model,
             init=init,
             activation=tf.keras.layers.LeakyReLU(alpha=0.2),
-            filterCount=64,
+            filterCount=256,
             kernelSize=3,
             stride=2,
             padding="same",
             batchNorm=False,
-            dropout=False
+            dropout=True,
+            dropAmount=0.1
         )
         model = self.ConvLayer(
             model=model,
