@@ -59,8 +59,7 @@ class CGANMLModel(bm.BaseMLModel):
         self.KerasModel.compile(
                 d_optimizer=disOptimizer,
                 g_optimizer=genOptimizer,
-                loss_fn=self.__GetLossFunction(True),
-                mode_collapse_loss_fn=self.__GetLossFunction(False)
+                loss_fn=self.__GetLossFunction()
         )
 
     def __GetOptimizer(self):
@@ -87,8 +86,8 @@ class CGANMLModel(bm.BaseMLModel):
                 )   
             )
 
-    def __GetLossFunction(self, fromLogits): 
-        return keras.losses.BinaryCrossentropy(from_logits=fromLogits)
+    def __GetLossFunction(self): 
+        return keras.losses.BinaryCrossentropy(from_logits=True)
         
     def TrainModel(self):
         super().TrainModel()

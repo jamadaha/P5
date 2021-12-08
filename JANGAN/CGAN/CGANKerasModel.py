@@ -25,12 +25,11 @@ class ConditionalGAN(tf.keras.Model):
     def metrics(self):
         return [self.gen_loss_tracker, self.disc_loss_tracker, self.mode_collapse_tracker]
 
-    def compile(self, d_optimizer, g_optimizer, loss_fn, mode_collapse_loss_fn):
+    def compile(self, d_optimizer, g_optimizer, loss_fn):
         super(ConditionalGAN, self).compile()
         self.d_optimizer = d_optimizer
         self.g_optimizer = g_optimizer
         self.loss_fn = loss_fn
-        self.mode_collapse_loss_fn = mode_collapse_loss_fn
 
     @tf.function
     def train_step(self, data, returnLoss):
