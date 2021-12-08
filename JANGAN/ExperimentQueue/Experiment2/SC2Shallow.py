@@ -19,13 +19,13 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             model=model,
             init=init,
             activation=tf.keras.layers.LeakyReLU(alpha=0.2),
-            filterCount=256,
+            filterCount=64,
             kernelSize=3,
             stride=2,
             padding="same",
             batchNorm=False,
-            dropout=True,
-            dropAmount=0.1
+            dropout=False,
+            dropAmount=0.2
         )
         model = self.ConvLayer(
             model=model,
@@ -67,7 +67,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             model=model,
             init=init,
             activation=tf.keras.layers.LeakyReLU(alpha=0.2),
-            filterCount=128,
+            filterCount=64,
             kernelSize=4,
             stride=2,
             padding="same",
@@ -79,7 +79,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             model=model,
             init=init,
             activation=tf.keras.layers.LeakyReLU(alpha=0.2),
-            filterCount=128,
+            filterCount=64,
             kernelSize=4,
             stride=2,
             padding="same",
