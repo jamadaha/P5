@@ -59,6 +59,10 @@ class ConditionalGAN(tf.keras.Model):
         # Decode the noise (guided by labels) to fake images.
         generated_images = self.generator(random_vector_labels, training=True)
 
+        if self.TrackModeCollapse == True:
+            if returnLoss == True:
+                modeLoss = tf.reduce_sum(tf.image.total_variation(generated_images))
+
         # Combine them with real images. Note that we are concatenating the labels
         # with these images here.
         fake_image_and_labels = tf.concat([generated_images, image_one_hot_labels], -1)
@@ -100,21 +104,12 @@ class ConditionalGAN(tf.keras.Model):
         grads = tape.gradient(g_loss, self.generator.trainable_weights)
         self.g_optimizer.apply_gradients(zip(grads, self.generator.trainable_weights))
 
-        if self.TrackModeCollapse == True:
-            random_latent_vectors = tf.random.normal(shape=(batch_size, self.latent_dim))
-            random_vector_labels = tf.concat(
-                [random_latent_vectors, one_hot_labels], axis=1
-            )
-
-            generated_images = self.generator(random_vector_labels, training=False)
-        
-            modeLoss = tf.reduce_sum(tf.image.total_variation(generated_images))
-
         # Monitor loss.
         if returnLoss == True:
             self.gen_loss_tracker.update_state(g_loss)
             self.disc_loss_tracker.update_state(d_loss)
-            self.mode_collapse_tracker.update_state(modeLoss)
+            if self.TrackModeCollapse == True:
+                self.mode_collapse_tracker.update_state(modeLoss)
             return {
                 "g_loss": self.gen_loss_tracker.result(),
                 "d_loss": self.disc_loss_tracker.result(),
