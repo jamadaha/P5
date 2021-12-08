@@ -134,6 +134,8 @@ class JANGAN():
             self.cfg.GetFloatValue("CGANTRAINING", "LearningRateDiscriminator"),
             self.cfg.GetFloatValue("CGANTRAINING", "LearningRateGenerator"),
             self.cfg.GetBoolValue("CGANTRAINING", "FormatImages"),
+            self.cfg.GetBoolValue("CGANTRAINING", "TrackModeCollapse"),
+            self.cfg.GetIntValue("CGANTRAINING", "ModeCollpseThreshold"),
             )
 
     def TrainCGAN(self):

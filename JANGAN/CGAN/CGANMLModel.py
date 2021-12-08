@@ -23,12 +23,17 @@ class CGANMLModel(bm.BaseMLModel):
 
     TrainedGenerator = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, epochImgDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen, formatImages):
+    TrackModeCollapse = False
+    ModeCollapseThreshold = 0
+
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, epochImgDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen, formatImages, trackModeCollapse, modeCollapseThreshold):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ImageCountToProduce = imageCountToProduce
         self.LearningRateDis = learningRateDis
         self.LearningRateGen = learningRateGen
         self.EpochImgDir = epochImgDir
+        self.TrackModeCollapse = trackModeCollapse
+        self.ModeCollapseThreshold = modeCollapseThreshold
 
     def SetupModel(self):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
@@ -42,19 +47,20 @@ class CGANMLModel(bm.BaseMLModel):
             latentDimension=self.LatentDimension, 
             imageSize=self.ImageSize, 
             numberOfClasses=self.NumberOfClasses,
+            trackModeCollapse=self.TrackModeCollapse
         )
 
         self.__Compile()
 
-        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension, self.EpochImgDir)
+        self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension, self.EpochImgDir, self.TrackModeCollapse, self.ModeCollapseThreshold)
 
     def __Compile(self):
         (disOptimizer, genOptimizer) = self.__GetOptimizer()
-        lossFunc = self.__GetLossFunction()
         self.KerasModel.compile(
                 d_optimizer=disOptimizer,
                 g_optimizer=genOptimizer,
-                loss_fn=lossFunc
+                loss_fn=self.__GetLossFunction(True),
+                mode_collapse_loss_fn=self.__GetLossFunction(False)
         )
 
     def __GetOptimizer(self):
@@ -81,8 +87,8 @@ class CGANMLModel(bm.BaseMLModel):
                 )   
             )
 
-    def __GetLossFunction(self): 
-        return keras.losses.BinaryCrossentropy(from_logits=True)
+    def __GetLossFunction(self, fromLogits): 
+        return keras.losses.BinaryCrossentropy(from_logits=fromLogits)
         
     def TrainModel(self):
         super().TrainModel()
