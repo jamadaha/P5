@@ -28,7 +28,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             dropAmount=0.2
         )
         model.add(
-            tf.keras.layers.GlobalMaxPooling2D()
+            tf.keras.layers.AveragePooling2D()
         )
         model = self.ConvLayer(
             model=model,
