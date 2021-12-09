@@ -11,11 +11,11 @@ class JANGANConfigChecker():
         # Global
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "GLOBAL", "ConfigCopyPath")
+        self.__CheckKey(cfg, "GLOBAL", "BasePath")
         self.__CheckKeyCount(cfg, "GLOBAL")
 
         # Data generator General
         self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "DATAGENERATOR", "BasePath")
         self.__CheckKey(cfg, "DATAGENERATOR", "TextPath")
         self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadPath")
         self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadName")

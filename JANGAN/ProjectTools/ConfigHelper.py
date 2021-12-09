@@ -25,6 +25,7 @@ class ConfigHelper():
         self.TokenReplacements = tokenReplacements
 
     def LoadConfig(self):
+        self.__config = None
         self.__config = configparser.ConfigParser()
         if not os.path.exists(self.ConfigPath):
             raise ConfigFileNotFoundException(f"path: '{os.path.abspath(os.getcwd())}', file: '{self.ConfigPath}' not found!")

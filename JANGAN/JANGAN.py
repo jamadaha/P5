@@ -27,8 +27,10 @@ class JANGAN():
     def LoadConfig(self, configFile):
         print(" --- Loading experiment config file --- ")
         self.cfg = ch.ConfigHelper(configFile)
+        self.cfg.LoadConfig()
         newTokens = self.cfg.TokenReplacements.copy()
         newTokens.append(("{EXPERIMENTNAME}", self.ExperimentName))
+        newTokens.append(("{BASEPATH}", self.cfg.GetStringValue("GLOBAL", "BasePath")))
         self.cfg.UpdateTokenReplacements(newTokens)
         self.cfg.LoadConfig()
         print(" --- Done! --- ")
