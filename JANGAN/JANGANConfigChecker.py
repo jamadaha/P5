@@ -69,6 +69,8 @@ class JANGANConfigChecker():
         self.__CheckKey(cfg, "CGANTRAINING", "LearningRateDiscriminator")
         self.__CheckKey(cfg, "CGANTRAINING", "LearningRateGenerator")
         self.__CheckKey(cfg, "CGANTRAINING", "FormatImages")
+        self.__CheckKey(cfg, "CGANTRAINING", "TrackModeCollapse")
+        self.__CheckKey(cfg, "CGANTRAINING", "ModeCollpseThreshold")
         self.__CheckKeyCount(cfg, "CGANTRAINING")
 
         # CGAN Output
