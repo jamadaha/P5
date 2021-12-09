@@ -28,7 +28,6 @@ class newCGANTrainer(cgt.CGANTrainer):
     CSVPath = ""
     CSVData = {}
     CSVDataLabels = {}
-    HighestValue = 0
 
     def __init__(self, model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath, numberOfClasses, latentDimension, epochImgDir, trackModeCollapse, modeCollapseThreshold):
         super().__init__(model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath, numberOfClasses, latentDimension, epochImgDir, trackModeCollapse, modeCollapseThreshold)
@@ -40,8 +39,6 @@ class newCGANTrainer(cgt.CGANTrainer):
                 if lineCount > 0:
                     self.CSVData[row[1]] = row[2]
                     self.CSVDataLabels[row[1]] = row[0]
-                    if int(row[2]) > self.HighestValue:
-                        self.HighestValue = int(row[2])
                 lineCount += 1
 
     def CreateDataSet(self, dataArray):
