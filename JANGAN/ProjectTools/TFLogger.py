@@ -13,6 +13,8 @@ class TFLogger:
     
     __SummaryWriter = None
 
+    __Letters = []
+
     def __init__(self, outputDir: str, scope: str, name: str) -> None:
         self.OutputDir = outputDir
         self.__Scope = scope
@@ -28,7 +30,7 @@ class TFLogger:
         with self.__SummaryWriter.as_default():
             tf.summary.image("Epoch samples", self.__PlotToImage(figure), step=step)
 
-    def LogConfusionMatrix(self, matrix, step, saveFig):
+    def LogConfusionMatrix(self, matrix, step, saveFig, distributionPath):
         import matplotlib.pyplot as plt
         import numpy
         figure = plt.figure(figsize=(8, 8))
@@ -37,6 +39,13 @@ class TFLogger:
         plt.colorbar()
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
+
+        if not self.__Letters:
+            self.__GetLabels(distributionPath)
+
+        tickMarks = numpy.arange(len(self.__Letters))
+        plt.xticks(tickMarks, self.__Letters, rotation=45)
+        plt.yticks(tickMarks, self.__Letters)
 
         if saveFig:
             self.SaveMatplot(self.OutputDir, 'Confusion matrix')
@@ -71,3 +80,12 @@ class TFLogger:
             fname=basePath + str(id) + '.png',
             format='png'
         )
+    
+    def __GetLabels(self, distributionPath):
+        if not distributionPath:
+            return
+        import csv
+        with open(distributionPath, "r") as file:
+            dataReader = csv.reader(file)
+            for row in dataReader:
+                self.__Letters.append(str(row[0]))
