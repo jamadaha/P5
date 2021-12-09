@@ -11,13 +11,11 @@ import shutil
 class ConfigHelper():
     __config = None
     ConfigPath = ""
-    ConfigOverridePath = ""
     ConfigFileName = ""
     TokenReplacements = [("{TIMESTAMP}", time.strftime("%Y%m%d-%H%M%S"))]
 
-    def __init__(self, configPath = "config.ini", configOverridePath = "override-config.ini", tokenReplacements = None):
+    def __init__(self, configPath = "config.ini", tokenReplacements = None):
         self.ConfigPath = configPath;
-        self.ConfigOverridePath = configOverridePath
         if tokenReplacements != None:
             self.TokenReplacements = tokenReplacements
 
@@ -29,10 +27,7 @@ class ConfigHelper():
         self.__config = configparser.ConfigParser()
         if not os.path.exists(self.ConfigPath):
             raise ConfigFileNotFoundException(f"path: '{os.path.abspath(os.getcwd())}', file: '{self.ConfigPath}' not found!")
-        if os.path.exists(self.ConfigOverridePath):
-            self.__config.read([self.ConfigPath, self.ConfigOverridePath])
-        else:
-            self.__config.read(self.ConfigPath)
+        self.__config.read(self.ConfigPath)
 
     def CopyConfigToPath(self, path):
         os.makedirs(path)

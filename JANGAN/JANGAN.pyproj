@@ -79,7 +79,6 @@
     <Compile Include="ProjectTools\HelperFunctions.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ProjectTools\InstallScript.py" />
     <Compile Include="ProjectTools\ConfigHelperTests.py" />
     <Compile Include="ProjectTools\TFLogger.py" />
     <Compile Include="ProjectTools\__init__.py" />
