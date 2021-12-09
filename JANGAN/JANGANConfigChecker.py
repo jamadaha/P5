@@ -11,42 +11,40 @@ class JANGANConfigChecker():
         # Global
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "GLOBAL", "ConfigCopyPath")
+        self.__CheckKey(cfg, "GLOBAL", "BasePath")
         self.__CheckKeyCount(cfg, "GLOBAL")
+
+        # Data generator General
+        self.__CheckedKeyCount = 0
+        self.__CheckKey(cfg, "DATAGENERATOR", "TextPath")
+        self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadPath")
+        self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadName")
+        self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadURL")
+        self.__CheckKey(cfg, "DATAGENERATOR", "TextDownloadURLS")
+        self.__CheckKeyCount(cfg, "DATAGENERATOR")
 
         # CGAN Data Generator
         self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "BasePath")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "TextPath")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterPath")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterDownloadPath")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterDownloadName")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterDownloadURL")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "TextDownloadURLS")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "OutputPath")
+        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterOutputFormat")
         self.__CheckKey(cfg, "CGANDATAGENERATOR", "PurgePreviousData")
         self.__CheckKey(cfg, "CGANDATAGENERATOR", "IncludeNumbers")
         self.__CheckKey(cfg, "CGANDATAGENERATOR", "IncludeLetters")
         self.__CheckKey(cfg, "CGANDATAGENERATOR", "DistributionPath")
         self.__CheckKey(cfg, "CGANDATAGENERATOR", "PrintDistribution")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterOutputFormat")
         self.__CheckKey(cfg, "CGANDATAGENERATOR", "MinimumLetterCount")
         self.__CheckKey(cfg, "CGANDATAGENERATOR", "MaximumLetterCount")
         self.__CheckKeyCount(cfg, "CGANDATAGENERATOR")
 
         # Classifier Data Generator
         self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "BasePath")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "TextPath")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "LetterPath")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "LetterDownloadPath")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "LetterDownloadName")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "LetterDownloadURL")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "TextDownloadURLS")
+        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "OutputPath")
+        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "LetterOutputFormat")
         self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "PurgePreviousData")
         self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "IncludeNumbers")
         self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "IncludeLetters")
         self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "DistributionPath")
         self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "PrintDistribution")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "LetterOutputFormat")
         self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "MinimumLetterCount")
         self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "MaximumLetterCount")
         self.__CheckKeyCount(cfg, "CLASSIFIERDATAGENERATOR")
@@ -54,8 +52,8 @@ class JANGANConfigChecker():
         # CGAN Training
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "CGANTRAINING", "TrainDatasetDir")
-        self.__CheckKey(cfg, "CGANTRAINING", "TestDatasetDir")
         self.__CheckKey(cfg, "CGANTRAINING", "ImageSize")
+        self.__CheckKey(cfg, "CGANTRAINING", "ImageChannels")
         self.__CheckKey(cfg, "CGANTRAINING", "BatchSize")
         self.__CheckKey(cfg, "CGANTRAINING", "LatentDimension")
         self.__CheckKey(cfg, "CGANTRAINING", "EpochCount")
@@ -84,8 +82,8 @@ class JANGANConfigChecker():
         # Classifier Training
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "TrainDatasetDir")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "TestDatasetDir")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "ImageSize")
+        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "ImageChannels")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "BatchSize")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "EpochCount")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "RefreshUIEachXIteration")

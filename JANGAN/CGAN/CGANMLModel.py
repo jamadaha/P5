@@ -26,8 +26,8 @@ class CGANMLModel(bm.BaseMLModel):
     TrackModeCollapse = False
     ModeCollapseThreshold = 0
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, testingDataDir, outputDir, epochImgDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen, formatImages, trackModeCollapse, modeCollapseThreshold):
-        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, imageCountToProduce, trainingDataDir, outputDir, epochImgDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateDis, learningRateGen, formatImages, trackModeCollapse, modeCollapseThreshold):
+        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ImageCountToProduce = imageCountToProduce
         self.LearningRateDis = learningRateDis
         self.LearningRateGen = learningRateGen
@@ -39,7 +39,7 @@ class CGANMLModel(bm.BaseMLModel):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
         discriminator_in_channels = self.NumberOfChannels + self.NumberOfClasses
 
-        layerDefiniton = ld.LayerDefinition(discriminator_in_channels,generator_in_channels)
+        layerDefiniton = ld.LayerDefinition(self.ImageSize, discriminator_in_channels,generator_in_channels)
 
         self.KerasModel = km.ConditionalGAN(
             discriminator=layerDefiniton.GetDiscriminator(), 
