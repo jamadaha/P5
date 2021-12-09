@@ -54,7 +54,6 @@ class JANGANConfigChecker():
         # CGAN Training
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "CGANTRAINING", "TrainDatasetDir")
-        self.__CheckKey(cfg, "CGANTRAINING", "TestDatasetDir")
         self.__CheckKey(cfg, "CGANTRAINING", "ImageSize")
         self.__CheckKey(cfg, "CGANTRAINING", "ImageChannels")
         self.__CheckKey(cfg, "CGANTRAINING", "BatchSize")
@@ -83,7 +82,6 @@ class JANGANConfigChecker():
         # Classifier Training
         self.__CheckedKeyCount = 0
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "TrainDatasetDir")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "TestDatasetDir")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "ImageSize")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "ImageChannels")
         self.__CheckKey(cfg, "CLASSIFIERTRAINING", "BatchSize")

@@ -33,8 +33,8 @@ class ClassifierMLModel(bm.BaseMLModel):
     Logger = None
     SummaryWriter = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages):
-        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages):
+        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ClassifyDir = classifyDir
         self.LearningRateClass = learningRateClass
         self.FormatClassificationImages = formatClassificationImages
@@ -94,11 +94,10 @@ class ClassifierMLModel(bm.BaseMLModel):
 
         dataLoader = dl.DatasetLoader(
             self.ClassifyDir,
-            "",
             (self.ImageSize,self.ImageSize),
             self.FormatClassificationImages)
         dataLoader.DataSets = []
-        dataLoader.LoadTrainDatasets()
+        dataLoader.LoadDatasets()
         dataArray = dataLoader.DataSets
 
         predictionArray = []

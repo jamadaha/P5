@@ -24,7 +24,6 @@ class BaseMLModel():
     FormatImages = True
 
     TrainingDataDir = ""
-    TestingDataDir = ""
     DatasetSplit = 0
 
     LRScheduler = ''
@@ -32,7 +31,7 @@ class BaseMLModel():
     KerasModel = None
     Trainer : bk.BaseKerasModelTrainer = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, latentDimension, epochCount, refreshEachStep, trainingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages):
         self.BatchSize = batchSize
         self.NumberOfChannels = numberOfChannels
         self.NumberOfClasses = numberOfClasses
@@ -41,7 +40,6 @@ class BaseMLModel():
         self.EpochCount = epochCount
         self.RefreshEachStep = refreshEachStep
         self.TrainingDataDir = trainingDataDir
-        self.TestingDataDir = testingDataDir
         self.OutputDir = outputDir
         self.SaveCheckpoints = saveCheckpoints
         self.UseSavedModel = useSavedModel
@@ -58,10 +56,9 @@ class BaseMLModel():
     def LoadDataset(self):
         dataLoader = dl.DatasetLoader(
             self.TrainingDataDir,
-            self.TestingDataDir,
             (self.ImageSize,self.ImageSize),
             self.FormatImages)
-        dataLoader.LoadTrainDatasets()
+        dataLoader.LoadDatasets()
         dataArray = dataLoader.DataSets
 
         bulkDatasetFormatter = df.BulkDatasetFormatter(dataArray, self.NumberOfClasses,self.BatchSize, self.DatasetSplit)
