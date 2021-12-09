@@ -45,7 +45,7 @@ class ClassifierMLModel(bm.BaseMLModel):
         }
 
     def SetupModel(self):
-        layerDefiniton = ld.LayerDefinition(self.NumberOfClasses)
+        layerDefiniton = ld.LayerDefinition(self.NumberOfClasses, self.ImageSize, self.NumberOfChannels)
 
         self.Classifier = cm.ClassifierModel(
             classifier=layerDefiniton.GetClassifier(), 

@@ -113,7 +113,7 @@ class JANGAN():
 
         self.cgan = cg.CGANMLModel(
             self.cfg.GetIntValue("CGANTRAINING", "BatchSize"),
-            1,
+            self.cfg.GetIntValue("CGANTRAINING", "ImageChannels"),
             self.NumberOfClasses,
             self.cfg.GetIntValue("CGANTRAINING", "ImageSize"),
             self.cfg.GetIntValue("CGANTRAINING", "LatentDimension"),
@@ -162,7 +162,7 @@ class JANGAN():
 
         self.classifier = cf.ClassifierMLModel(
             self.cfg.GetIntValue("CLASSIFIERTRAINING", "BatchSize"),
-            1,
+            self.cfg.GetIntValue("CGANTRAINING", "ImageChannels"),
             self.NumberOfClasses,
             self.cfg.GetIntValue("CLASSIFIERTRAINING", "ImageSize"),
             self.cfg.GetIntValue("CLASSIFIERTRAINING", "EpochCount"),

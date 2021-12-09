@@ -34,7 +34,7 @@ class CGANMLModel(bm.BaseMLModel):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
         discriminator_in_channels = self.NumberOfChannels + self.NumberOfClasses
 
-        layerDefiniton = ld.LayerDefinition(discriminator_in_channels,generator_in_channels)
+        layerDefiniton = ld.LayerDefinition(self.ImageSize, discriminator_in_channels,generator_in_channels)
 
         self.KerasModel = km.ConditionalGAN(
             discriminator=layerDefiniton.GetDiscriminator(), 
