@@ -16,6 +16,7 @@ class JANGAN():
     cgan = None
     classifier = None
     NumberOfClasses = None
+    ClassNames = None
     ThrowIfConfigFileBad = True
 
     def __init__(self, expName, expFile, configFile, throwIfConfigFileBad):
@@ -107,6 +108,12 @@ class JANGAN():
         for entry in os.scandir(self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "LetterPath")):
             if entry.is_dir():
                 self.NumberOfClasses += 1
+    
+    def GetClassNames(self):    
+        self.ClassNames = []
+        for entry in os.listdir(self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterPath")):
+            self.ClassNames.append(entry)
+            print(entry)
 
     def __SetupCGAN(self):
         self.__GetNumberOfCGANClasses()
@@ -133,7 +140,7 @@ class JANGAN():
             self.cfg.GetStringValue("CGANTRAINING", "LRScheduler"),
             self.cfg.GetFloatValue("CGANTRAINING", "LearningRateDiscriminator"),
             self.cfg.GetFloatValue("CGANTRAINING", "LearningRateGenerator"),
-            self.cfg.GetBoolValue("CGANTRAINING", "FormatImages"),
+            self.cfg.GetBoolValue("CGANTRAINING", "FormatImages")
             )
 
     def TrainCGAN(self):
@@ -180,7 +187,9 @@ class JANGAN():
             self.cfg.GetStringValue("CLASSIFIERTRAINING", "LRScheduler"),
             self.cfg.GetFloatValue("CLASSIFIERTRAINING", "LearningRateClassifier"),
             self.cfg.GetBoolValue("CLASSIFIERTRAINING", "FormatImages"),
-            self.cfg.GetBoolValue("CLASSIFIEROUTPUT", "FormatImages")
+            self.cfg.GetBoolValue("CLASSIFIEROUTPUT", "FormatImages"),
+            self.cfg.GetBoolValue("CLASSIFIERDATAGENERATOR", "IncludeLetters"),
+            self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "DistributionPath"),
             )
 
     def TrainClassifier(self):

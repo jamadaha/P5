@@ -1,3 +1,5 @@
+from tensorflow._api.v2 import data
+from tensorflow.python.ops.math_ops import truediv
 from ProjectTools import CSVLogger
 from ProjectTools import TFLogger
 from ProjectTools import AutoPackageInstaller as ap
@@ -33,13 +35,18 @@ class ClassifierMLModel(bm.BaseMLModel):
     Logger = None
     SummaryWriter = None
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages):
+    IncludeLetters = False
+    DistributionPath = ""
+
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages, includeLetters, distributionPath):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ClassifyDir = classifyDir
         self.LearningRateClass = learningRateClass
         self.FormatClassificationImages = formatClassificationImages
         self.Logger = CSVLogger.CSVLogger(logPath, 'TestData')
         self.Logger.InitCSV(['Index', 'Correct', 'Inccorect'])
+        self.IncludeLetters = includeLetters
+        self.DistributionPath = distributionPath
         self.SummaryWriter = {
             'ConfMatrix': TFLogger.TFLogger(logPath, 'ConfMatrix', 'CPredictions')
         }
@@ -154,8 +161,32 @@ class ClassifierMLModel(bm.BaseMLModel):
 
         print(f"Total accuracy of classified dataset: {totalCorrectPredictions} correct, {totalIncorrectPredictions} incorrect, {((totalCorrectPredictions/totalPredictionsCount)*100):.2f}%")
 
+        if self.IncludeLetters:           
+            labelArray = self.__GetClassNames(labelArray)
+        
         confMatrix = tf.math.confusion_matrix(labelArray, predictionArray, self.NumberOfClasses)
         self.SummaryWriter["ConfMatrix"].LogConfusionMatrix(confMatrix, 0, True)
 
     def __LogData(self, index, correct, incorrect):
         self.Logger.AppendToCSV([index, correct, incorrect])
+
+    def __GetClassNames(self, labels):
+        if not self.DistributionPath:
+            return
+        
+        import csv
+        classNames = []
+        for label in labels:
+            with open(self.DistributionPath, "r") as file:
+                dataReader = csv.reader(file)
+                for row in dataReader:
+                    if label == row[1]:
+                        print(row[1])
+                        print(type(row[1]))
+                        classNames.append(str(row[0]))
+                        break
+                    
+        return classNames
+                    
+
+
