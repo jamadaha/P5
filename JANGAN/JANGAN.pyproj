@@ -32,6 +32,7 @@
     <Compile Include="CGAN\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CheckMemoryLeak\__init__.py" />
     <Compile Include="Classifier\ClassifierMLModel.py" />
     <Compile Include="Classifier\ClassifierKerasModel.py" />
     <Compile Include="Classifier\ClassifierTrainer.py" />
