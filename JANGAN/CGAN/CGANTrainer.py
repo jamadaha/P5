@@ -32,7 +32,7 @@ class CGANTrainer(baseKeras.BaseKerasModelTrainer):
         self.SummaryWriter = {
             'GLoss': TFLogger.TFLogger(logPath, 'Loss', 'GLoss'),
             'DLoss': TFLogger.TFLogger(logPath, 'Loss', 'DLoss'),
-            'ModeCollapseValue': TFLogger.TFLogger(logPath, 'Loss', 'ModeCollapseValue'),
+            'ModeCollapseValue': TFLogger.TFLogger(logPath, 'ModeCollapse', 'GAN'),
             'DiffLoss': TFLogger.TFLogger(logPath, 'Loss', 'DiffLoss'),
             'Images': TFLogger.TFLogger(logPath, '', 'Images')
         }
