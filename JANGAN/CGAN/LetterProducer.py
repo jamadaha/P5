@@ -2,7 +2,6 @@ from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
-ap.CheckAndInstall("os")
 
 import tensorflow as tf
 import imageio

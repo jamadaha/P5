@@ -5,8 +5,6 @@ ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("tqdm")
 
 from tensorflow import keras
-import os
-from tqdm import tqdm
 
 from CGAN import CGANKerasModel as km
 from CGAN import LayerDefinition as ld

@@ -1,13 +1,7 @@
 from ProjectTools import AutoPackageInstaller as ap
 from ProjectTools import BaseKerasModelTrainer as baseKeras
 
-ap.CheckAndInstall("tensorflow")
-ap.CheckAndInstall("time")
-
-import tensorflow as tf
-from tensorflow import keras
 import time
-import os
 from ProjectTools import CSVLogger
 from ProjectTools import TFLogger
 

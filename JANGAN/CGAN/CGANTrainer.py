@@ -1,17 +1,10 @@
 from ProjectTools import AutoPackageInstaller as ap
 from ProjectTools import BaseKerasModelTrainer as baseKeras
 
-ap.CheckAndInstall("tensorflow")
-ap.CheckAndInstall("time")
-
-import tensorflow as tf
-from tensorflow import keras
 import time
-import os
 from ProjectTools import CSVLogger
 from ProjectTools import TFLogger
 from CGAN import LetterProducer
-import tensorboard
 
 class CGANTrainer(baseKeras.BaseKerasModelTrainer):
     Logger = None
@@ -42,7 +35,7 @@ class CGANTrainer(baseKeras.BaseKerasModelTrainer):
            
     def PrintStatus(self, iteration, totalIterations, epochTime, epoch):
         estRemainingTime = ((time.time() - epochTime) / self.RefreshUIEachXStep) * (totalIterations - iteration)
-        print(f"Generator loss: {self.__latestGLoss:.4f}. Discriminator loss: {self.__latestDLoss:.4f}. Is in mode collapse?: {self.GetModeCollapseValue()}. Progress: {((iteration/totalIterations)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainingTime)}                              ", end="\r")
+        print(f"Generator loss: {self.__latestGLoss:.4f}. Discriminator loss: {self.__latestDLoss:.4f}. Is in mode collapse?: {self.GetModeCollapseValue()}. Progress: {((iteration/totalIterations)*100):.2f}%. Est time left: {self.GetDatetimeFromSeconds(estRemainingTime)}              ", end="\r")
 
     def GetModeCollapseValue(self):
         if self.TrackModeCollapse == True:
