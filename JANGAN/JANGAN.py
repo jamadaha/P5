@@ -36,8 +36,8 @@ class JANGAN():
         self.cfg.UpdateTokenReplacements(newTokens)
         self.cfg.LoadConfig()
         print(" --- Done! --- ")
-        cfgChecker = JANGANConfigChecker()
-        cfgChecker.CheckConfig(self.cfg, self.ThrowIfConfigFileBad)
+        cfgChecker = JANGANConfigChecker(self.cfg, self.ThrowIfConfigFileBad)
+        cfgChecker.CheckConfig()
         self.cfg.CopyConfigToPath(self.cfg.GetStringValue("GLOBAL", "ConfigCopyPath"))
         print("")
 

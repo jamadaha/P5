@@ -15,7 +15,7 @@ print(" --- Done! --- ")
 print("")
 
 print(" --- Checking the queue file --- ")
-queueChecker = JANGANQueueChecker.JANGANQueueChecker(cfg)
+queueChecker = JANGANQueueChecker.JANGANQueueChecker(cfg, throwIfConfigFileBad)
 queueChecker.CheckConfig()
 print(" --- Done! --- ")
 print("")
