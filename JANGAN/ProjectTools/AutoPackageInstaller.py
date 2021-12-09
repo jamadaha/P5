@@ -1,11 +1,13 @@
 import sys
 import subprocess
 import os
+import importlib
 
 def CheckAndInstall(packageName, installName = None):
-    try:
-        return __import__(packageName)
-    except ImportError:
+    spam_loader = importlib.find_loader(packageName)
+    found = spam_loader is not None
+
+    if not found:
         if not installName:
             installName = packageName
 
