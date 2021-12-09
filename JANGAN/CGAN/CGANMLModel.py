@@ -37,15 +37,15 @@ class CGANMLModel(bm.BaseMLModel):
         generator_in_channels = self.LatentDimension + self.NumberOfClasses
         discriminator_in_channels = self.NumberOfChannels + self.NumberOfClasses
 
-        layerDefiniton = ld.LayerDefinition(self.ImageSize, discriminator_in_channels,generator_in_channels)
+        layerDefiniton = ld.LayerDefinition(self.ImageSize, discriminator_in_channels, generator_in_channels)
 
-        self.KerasModel = km.ConditionalGAN(
-            discriminator=layerDefiniton.GetDiscriminator(), 
-            generator=layerDefiniton.GetGenerator(), 
-            latentDimension=self.LatentDimension, 
-            imageSize=self.ImageSize, 
-            numberOfClasses=self.NumberOfClasses,
-            trackModeCollapse=self.TrackModeCollapse
+        self.KerasModel = km.CGANKerasModel(
+            layerDefiniton.GetDiscriminator(), 
+            layerDefiniton.GetGenerator(), 
+            self.LatentDimension, 
+            self.ImageSize, 
+            self.NumberOfClasses,
+            self.TrackModeCollapse
         )
 
         self.__Compile()
@@ -55,9 +55,9 @@ class CGANMLModel(bm.BaseMLModel):
     def __Compile(self):
         (disOptimizer, genOptimizer) = self.__GetOptimizer()
         self.KerasModel.compile(
-                d_optimizer=disOptimizer,
-                g_optimizer=genOptimizer,
-                loss_fn=self.__GetLossFunction()
+                disOptimizer,
+                genOptimizer,
+                self.__GetLossFunction()
         )
 
     def __GetOptimizer(self):
@@ -89,7 +89,7 @@ class CGANMLModel(bm.BaseMLModel):
         
     def TrainModel(self):
         super().TrainModel()
-        self.TrainedGenerator = self.Trainer.Model.generator
+        self.TrainedGenerator = self.Trainer.Model.Generator
 
     def ProduceOutput(self):
         self.UseSavedModel = True

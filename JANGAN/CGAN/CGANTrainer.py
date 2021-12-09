@@ -4,7 +4,7 @@ from ProjectTools import BaseKerasModelTrainer as baseKeras
 import time
 from ProjectTools import CSVLogger
 from ProjectTools import TFLogger
-from CGAN import LetterProducer
+from CGAN import CGANKerasModel, LetterProducer
 
 class CGANTrainer(baseKeras.BaseKerasModelTrainer):
     Logger = None
@@ -29,7 +29,7 @@ class CGANTrainer(baseKeras.BaseKerasModelTrainer):
             'DiffLoss': TFLogger.TFLogger(logPath, 'Loss', 'DiffLoss'),
             'Images': TFLogger.TFLogger(logPath, '', 'Images')
         }
-        self.LetterProducer = LetterProducer.LetterProducer(epochImgDir, self.Model.generator, numberOfClasses, latentDimension, 0)
+        self.LetterProducer = LetterProducer.LetterProducer(epochImgDir, self.Model.Generator, numberOfClasses, latentDimension, 0)
         self.ModeCollapseThreshold = modeCollapseThreshold
         self.TrackModeCollapse = trackModeCollapse
            

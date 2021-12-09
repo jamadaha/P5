@@ -4,59 +4,68 @@ ap.CheckAndInstall("tensorflow")
 
 import tensorflow as tf
 
-class ClassifierModel(tf.keras.Model):
+class ClassifierKerasModel(tf.keras.Model):
+    ImageSize = 0
+    NumberOfClasses = 0
+    Classifier = None
+    LossTracker = None
+    AccuracyTracker = None
     ImageSize = 0
     NumberOfClasses = 0
 
+    Optimizer = None
+
+    LossFunction = None
+
     def __init__(self, classifier, imageSize, numberOfClasses):
-        super(ClassifierModel, self).__init__()
-        self.classifier = classifier
-        self.loss_tracker = tf.keras.metrics.Mean(name="classifier_loss")
-        self.Accuracy_tracker = tf.keras.metrics.CategoricalAccuracy(name="classifier_accuracy")
+        super(ClassifierKerasModel, self).__init__()
+        self.Classifier = classifier
+        self.LossTracker = tf.keras.metrics.Mean(name="classifier_loss")
+        self.AccuracyTracker = tf.keras.metrics.CategoricalAccuracy(name="classifier_accuracy")
         self.ImageSize = imageSize
         self.NumberOfClasses = numberOfClasses
 
     @property
     def metrics(self):
-        return [self.loss_tracker, self.Accuracy_tracker]
+        return [self.LossTracker, self.AccuracyTracker]
 
-    def compile(self, optimizer, loss_fn):
-        super(ClassifierModel, self).compile()
-        self.optimizer = optimizer
-        self.loss_fn = loss_fn
+    def compile(self, optimizer, lossFunction):
+        super(ClassifierKerasModel, self).compile()
+        self.Optimizer = optimizer
+        self.LossFunction = lossFunction
 
     @tf.function
     def train_step(self, data, returnLoss):
          # Unpack the data.
-        real_images, one_hot_labels = data
+        realImages, oneHotLabels = data
 
         # Train the classifier.
         with tf.GradientTape() as tape:
-            predictions = self.classifier(real_images, training=True)
-            c_loss = self.loss_fn(one_hot_labels, predictions)
-        grads = tape.gradient(c_loss, self.classifier.trainable_weights)
+            predictions = self.Classifier(realImages, training=True)
+            classifierLoss = self.LossFunction(oneHotLabels, predictions)
+        grads = tape.gradient(classifierLoss, self.Classifier.trainable_weights)
         self.optimizer.apply_gradients(
-            zip(grads, self.classifier.trainable_weights)
+            zip(grads, self.Classifier.trainable_weights)
         )
         
         # Monitor loss.
         if returnLoss == True:
-            self.loss_tracker.update_state(c_loss)
+            self.LossTracker.update_state(classifierLoss)
             return {
-                "c_loss": self.loss_tracker.result()
+                "c_loss": self.LossTracker.result()
             }
 
     @tf.function
     def test_step(self, data, returnAccuracy):
-        real_images, real_labels = data
+        realImages, realLabels = data
 
         # Combine the real images and the base tensor from before, and make a prediction on it
-        predictions = self.classifier(real_images, training=False)
+        predictions = self.Classifier(realImages, training=False)
 
         # Update loss for this batch
-        self.Accuracy_tracker.update_state(real_labels, predictions)
+        self.AccuracyTracker.update_state(realLabels, predictions)
 
         if returnAccuracy == True:
             return {
-                "classifier_accuracy": self.Accuracy_tracker.result()
+                "classifier_accuracy": self.AccuracyTracker.result()
             }

@@ -39,3 +39,7 @@ class ClassifierTrainer(baseKeras.BaseKerasModelTrainer):
 
     def SetTestProperties(self, returnTest):
         self.__latestAccuracy = float(returnTest['classifier_accuracy'])
+
+    def EpochRun(self, epoch):
+        super().EpochRun(epoch)
+        self.Model.AccuracyTracker.reset_state()
