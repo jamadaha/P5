@@ -1,8 +1,11 @@
-import traceback
+from ProjectTools import AutoPackageInstaller as ap
 from ProjectTools import ConfigHelper    
 import JANGANQueueChecker
 import JANGANModuleReloader
-import CheckMemoryLeak as cml
+
+ap.CheckAndInstall("traceback")
+
+import traceback
 
 print(" --- Loading queue config file --- ")
 cfg = ConfigHelper.ConfigHelper("ExperimentQueueConfig.ini")

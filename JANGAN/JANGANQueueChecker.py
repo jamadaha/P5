@@ -1,4 +1,8 @@
+from ProjectTools import AutoPackageInstaller as ap
 from ProjectTools import ConfigHelper  
+
+ap.CheckAndInstall("importlib")
+ap.CheckAndInstall("os")
 
 import importlib
 import os
