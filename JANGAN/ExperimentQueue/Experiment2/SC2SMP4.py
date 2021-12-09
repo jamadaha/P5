@@ -107,6 +107,7 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
                 activation="sigmoid"
             )
         )
+        print(model.summary())
         return model
 
 CGAN.LayerDefinition.LayerDefinition = LayerDefinition
