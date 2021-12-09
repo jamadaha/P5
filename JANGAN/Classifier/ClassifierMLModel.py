@@ -160,10 +160,11 @@ class ClassifierMLModel(bm.BaseMLModel):
             self.__LogData(key, self.CorrectPredictions[key], self.IncorrectPredictions[key])
 
         print(f"Total accuracy of classified dataset: {totalCorrectPredictions} correct, {totalIncorrectPredictions} incorrect, {((totalCorrectPredictions/totalPredictionsCount)*100):.2f}%")
-
-        if self.IncludeLetters:           
-            labelArray = self.__GetClassNames(labelArray)
         
+        if self.DistributionPath:
+            labelArray = self.__GetClassNames(labelArray)
+            predictionArray = self.__GetClassNames(predictionArray)
+
         confMatrix = tf.math.confusion_matrix(labelArray, predictionArray, self.NumberOfClasses)
         self.SummaryWriter["ConfMatrix"].LogConfusionMatrix(confMatrix, 0, True)
 
@@ -181,8 +182,6 @@ class ClassifierMLModel(bm.BaseMLModel):
                 dataReader = csv.reader(file)
                 for row in dataReader:
                     if label == row[1]:
-                        print(row[1])
-                        print(type(row[1]))
                         classNames.append(str(row[0]))
                         break
                     
