@@ -15,9 +15,6 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
         model.add(
             tf.keras.layers.InputLayer((28, 28, self.DiscriminatorInChannels))
         )
-        model.add(
-            tf.keras.layers.AveragePooling2D()
-        )
         model = self.ConvLayer(
             model=model,
             init=init,
@@ -30,8 +27,17 @@ class LayerDefinition(CGAN.LayerDefinition.LayerDefinition):
             dropout=False,
             dropAmount=0.2
         )
-        model.add(
-            tf.keras.layers.AveragePooling2D()
+        model = self.ConvLayer(
+            model=model,
+            init=init,
+            activation=tf.keras.layers.LeakyReLU(alpha=0.2),
+            filterCount=32,
+            kernelSize=2,
+            stride=2,
+            padding="same",
+            batchNorm=False,
+            dropout=False,
+            dropAmount=0.2
         )
         model = self.ConvLayer(
             model=model,
