@@ -42,7 +42,8 @@ class LetterProducer():
     def GenerateLetterBatch(self, classID, imageCountToProduce):
         # Sample noise for the interpolation.
         interpolation_noise = tf.random.normal(shape=(1, self.LatentDimension))
-        interpolation_noise = tf.repeat(interpolation_noise, repeats=imageCountToProduce)
+        for index in range(imageCountToProduce - 1):
+            interpolation_noise = tf.concat([interpolation_noise, tf.random.normal(shape=(1, self.LatentDimension))], 0)
         interpolation_noise = tf.reshape(interpolation_noise, (imageCountToProduce, self.LatentDimension))
 
         first_label = tf.keras.utils.to_categorical([classID], self.NumberOfClasses)
