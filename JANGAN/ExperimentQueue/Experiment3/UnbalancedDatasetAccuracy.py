@@ -11,13 +11,7 @@ ap.CheckAndInstall("csv")
 ap.CheckAndInstall("tqdm")
 
 import tensorflow as tf
-from tensorflow import keras
-import time
-import os
-import shutil
-import tensorboard
 import numpy as np
-from tqdm import tqdm
 from importlib import reload
 
 import csv
