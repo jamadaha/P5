@@ -54,11 +54,10 @@ class CGANMLModel(bm.BaseMLModel):
 
     def Compile(self):
         (disOptimizer, genOptimizer) = self.GetOptimizer()
-        lossFunc = self.GetLossFunction()
         self.KerasModel.compile(
                 disOptimizer,
                 genOptimizer,
-                self.__GetLossFunction()
+                self.GetLossFunction()
         )
 
     def GetOptimizer(self):
