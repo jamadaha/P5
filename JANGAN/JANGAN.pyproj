@@ -82,6 +82,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ProjectTools\ConfigHelperTests.py" />
+    <Compile Include="ProjectTools\LabelHelper.py" />
     <Compile Include="ProjectTools\TFLogger.py" />
     <Compile Include="ProjectTools\__init__.py" />
   </ItemGroup>
