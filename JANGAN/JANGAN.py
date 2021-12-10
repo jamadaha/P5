@@ -1,14 +1,16 @@
-import importlib
-import os
+from ProjectTools import AutoPackageInstaller as ap
 from JANGANConfigChecker import JANGANConfigChecker
-
 from ProjectTools import ConfigHelper as ch
 from ProjectTools import HelperFunctions as hf
-
 from CGAN import CGANMLModel as cg
 from Classifier import ClassifierMLModel as cf
 import DataGenerator as dg
 
+ap.CheckAndInstall("importlib")
+ap.CheckAndInstall("os")
+
+import importlib
+import os
 
 class JANGAN():
     ExperimentName = ""
@@ -34,8 +36,8 @@ class JANGAN():
         self.cfg.UpdateTokenReplacements(newTokens)
         self.cfg.LoadConfig()
         print(" --- Done! --- ")
-        cfgChecker = JANGANConfigChecker()
-        cfgChecker.CheckConfig(self.cfg, self.ThrowIfConfigFileBad)
+        cfgChecker = JANGANConfigChecker(self.cfg, self.ThrowIfConfigFileBad)
+        cfgChecker.CheckConfig()
         self.cfg.CopyConfigToPath(self.cfg.GetStringValue("GLOBAL", "ConfigCopyPath"))
         print("")
 

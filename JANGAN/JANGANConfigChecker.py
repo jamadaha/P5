@@ -1,126 +1,104 @@
-from ProjectTools import ConfigHelper as cfgh
+from ProjectTools import BaseConfigChecker as bcc
 
-class JANGANConfigChecker():
-    ThrowIfConfigFileBad = True
-    __CheckedKeyCount = 0
-
-    def CheckConfig(self, cfg : cfgh.ConfigHelper, throwIfConfigFileBad):
-        self.ThrowIfConfigFileBad = throwIfConfigFileBad
+class JANGANConfigChecker(bcc.BaseConfigChecker):
+    def CheckConfig(self):
         print(" --- Checking config file integrity --- ")
 
         # Global
-        self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "GLOBAL", "ConfigCopyPath")
-        self.__CheckKey(cfg, "GLOBAL", "BasePath")
-        self.__CheckKeyCount(cfg, "GLOBAL")
+        self.CheckedKeyCount = 0
+        self.CheckKey("GLOBAL", "ConfigCopyPath")
+        self.CheckKey("GLOBAL", "BasePath")
+        self.CheckKeyCount("GLOBAL")
 
         # Data generator General
-        self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "DATAGENERATOR", "TextPath")
-        self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadPath")
-        self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadName")
-        self.__CheckKey(cfg, "DATAGENERATOR", "LetterDownloadURL")
-        self.__CheckKey(cfg, "DATAGENERATOR", "TextDownloadURLS")
-        self.__CheckKeyCount(cfg, "DATAGENERATOR")
+        self.CheckedKeyCount = 0
+        self.CheckKey("DATAGENERATOR", "TextPath")
+        self.CheckKey("DATAGENERATOR", "LetterDownloadPath")
+        self.CheckKey("DATAGENERATOR", "LetterDownloadName")
+        self.CheckKey("DATAGENERATOR", "LetterDownloadURL")
+        self.CheckKey("DATAGENERATOR", "TextDownloadURLS")
+        self.CheckKeyCount("DATAGENERATOR")
 
         # CGAN Data Generator
-        self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "OutputPath")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "LetterOutputFormat")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "PurgePreviousData")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "IncludeNumbers")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "IncludeLetters")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "DistributionPath")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "PrintDistribution")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "MinimumLetterCount")
-        self.__CheckKey(cfg, "CGANDATAGENERATOR", "MaximumLetterCount")
-        self.__CheckKeyCount(cfg, "CGANDATAGENERATOR")
+        self.CheckedKeyCount = 0
+        self.CheckKey("CGANDATAGENERATOR", "OutputPath")
+        self.CheckKey("CGANDATAGENERATOR", "LetterOutputFormat")
+        self.CheckKey("CGANDATAGENERATOR", "PurgePreviousData")
+        self.CheckKey("CGANDATAGENERATOR", "IncludeNumbers")
+        self.CheckKey("CGANDATAGENERATOR", "IncludeLetters")
+        self.CheckKey("CGANDATAGENERATOR", "DistributionPath")
+        self.CheckKey("CGANDATAGENERATOR", "PrintDistribution")
+        self.CheckKey("CGANDATAGENERATOR", "MinimumLetterCount")
+        self.CheckKey("CGANDATAGENERATOR", "MaximumLetterCount")
+        self.CheckKeyCount("CGANDATAGENERATOR")
 
         # Classifier Data Generator
-        self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "OutputPath")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "LetterOutputFormat")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "PurgePreviousData")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "IncludeNumbers")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "IncludeLetters")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "DistributionPath")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "PrintDistribution")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "MinimumLetterCount")
-        self.__CheckKey(cfg, "CLASSIFIERDATAGENERATOR", "MaximumLetterCount")
-        self.__CheckKeyCount(cfg, "CLASSIFIERDATAGENERATOR")
+        self.CheckedKeyCount = 0
+        self.CheckKey("CLASSIFIERDATAGENERATOR", "OutputPath")
+        self.CheckKey("CLASSIFIERDATAGENERATOR", "LetterOutputFormat")
+        self.CheckKey("CLASSIFIERDATAGENERATOR", "PurgePreviousData")
+        self.CheckKey("CLASSIFIERDATAGENERATOR", "IncludeNumbers")
+        self.CheckKey("CLASSIFIERDATAGENERATOR", "IncludeLetters")
+        self.CheckKey("CLASSIFIERDATAGENERATOR", "DistributionPath")
+        self.CheckKey("CLASSIFIERDATAGENERATOR", "PrintDistribution")
+        self.CheckKey("CLASSIFIERDATAGENERATOR", "MinimumLetterCount")
+        self.CheckKey("CLASSIFIERDATAGENERATOR", "MaximumLetterCount")
+        self.CheckKeyCount("CLASSIFIERDATAGENERATOR")
 
         # CGAN Training
-        self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "CGANTRAINING", "TrainDatasetDir")
-        self.__CheckKey(cfg, "CGANTRAINING", "ImageSize")
-        self.__CheckKey(cfg, "CGANTRAINING", "ImageChannels")
-        self.__CheckKey(cfg, "CGANTRAINING", "BatchSize")
-        self.__CheckKey(cfg, "CGANTRAINING", "LatentDimension")
-        self.__CheckKey(cfg, "CGANTRAINING", "EpochCount")
-        self.__CheckKey(cfg, "CGANTRAINING", "RefreshUIEachXIteration")
-        self.__CheckKey(cfg, "CGANTRAINING", "CheckpointPath")
-        self.__CheckKey(cfg, "CGANTRAINING", "LatestCheckpointPath")
-        self.__CheckKey(cfg, "CGANTRAINING", "SaveCheckpoints")
-        self.__CheckKey(cfg, "CGANTRAINING", "UseSavedModel")
-        self.__CheckKey(cfg, "CGANTRAINING", "LogPath")
-        self.__CheckKey(cfg, "CGANTRAINING", "EpochImgDir")
-        self.__CheckKey(cfg, "CGANTRAINING", "DatasetSplit")
-        self.__CheckKey(cfg, "CGANTRAINING", "LRScheduler")
-        self.__CheckKey(cfg, "CGANTRAINING", "LearningRateDiscriminator")
-        self.__CheckKey(cfg, "CGANTRAINING", "LearningRateGenerator")
-        self.__CheckKey(cfg, "CGANTRAINING", "FormatImages")
-        self.__CheckKey(cfg, "CGANTRAINING", "TrackModeCollapse")
-        self.__CheckKey(cfg, "CGANTRAINING", "ModeCollpseThreshold")
-        self.__CheckKeyCount(cfg, "CGANTRAINING")
+        self.CheckedKeyCount = 0
+        self.CheckKey("CGANTRAINING", "TrainDatasetDir")
+        self.CheckKey("CGANTRAINING", "ImageSize")
+        self.CheckKey("CGANTRAINING", "ImageChannels")
+        self.CheckKey("CGANTRAINING", "BatchSize")
+        self.CheckKey("CGANTRAINING", "LatentDimension")
+        self.CheckKey("CGANTRAINING", "EpochCount")
+        self.CheckKey("CGANTRAINING", "RefreshUIEachXIteration")
+        self.CheckKey("CGANTRAINING", "CheckpointPath")
+        self.CheckKey("CGANTRAINING", "LatestCheckpointPath")
+        self.CheckKey("CGANTRAINING", "SaveCheckpoints")
+        self.CheckKey("CGANTRAINING", "UseSavedModel")
+        self.CheckKey("CGANTRAINING", "LogPath")
+        self.CheckKey("CGANTRAINING", "EpochImgDir")
+        self.CheckKey("CGANTRAINING", "DatasetSplit")
+        self.CheckKey("CGANTRAINING", "LRScheduler")
+        self.CheckKey("CGANTRAINING", "LearningRateDiscriminator")
+        self.CheckKey("CGANTRAINING", "LearningRateGenerator")
+        self.CheckKey("CGANTRAINING", "FormatImages")
+        self.CheckKey("CGANTRAINING", "TrackModeCollapse")
+        self.CheckKey("CGANTRAINING", "ModeCollpseThreshold")
+        self.CheckKeyCount("CGANTRAINING")
 
         # CGAN Output
-        self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "CGANOUTPUT", "OutputDir")
-        self.__CheckKey(cfg, "CGANOUTPUT", "NumberOfFakeImagesToOutput")
-        self.__CheckKeyCount(cfg, "CGANOUTPUT")
+        self.CheckedKeyCount = 0
+        self.CheckKey("CGANOUTPUT", "OutputDir")
+        self.CheckKey("CGANOUTPUT", "NumberOfFakeImagesToOutput")
+        self.CheckKeyCount("CGANOUTPUT")
 
         # Classifier Training
-        self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "TrainDatasetDir")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "ImageSize")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "ImageChannels")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "BatchSize")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "EpochCount")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "RefreshUIEachXIteration")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "CheckpointPath")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LatestCheckpointPath")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "SaveCheckpoints")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "UseSavedModel")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LogPath")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "DatasetSplit")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LRScheduler")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "LearningRateClassifier")
-        self.__CheckKey(cfg, "CLASSIFIERTRAINING", "FormatImages")
-        self.__CheckKeyCount(cfg, "CLASSIFIERTRAINING")
+        self.CheckedKeyCount = 0
+        self.CheckKey("CLASSIFIERTRAINING", "TrainDatasetDir")
+        self.CheckKey("CLASSIFIERTRAINING", "ImageSize")
+        self.CheckKey("CLASSIFIERTRAINING", "ImageChannels")
+        self.CheckKey("CLASSIFIERTRAINING", "BatchSize")
+        self.CheckKey("CLASSIFIERTRAINING", "EpochCount")
+        self.CheckKey("CLASSIFIERTRAINING", "RefreshUIEachXIteration")
+        self.CheckKey("CLASSIFIERTRAINING", "CheckpointPath")
+        self.CheckKey("CLASSIFIERTRAINING", "LatestCheckpointPath")
+        self.CheckKey("CLASSIFIERTRAINING", "SaveCheckpoints")
+        self.CheckKey("CLASSIFIERTRAINING", "UseSavedModel")
+        self.CheckKey("CLASSIFIERTRAINING", "LogPath")
+        self.CheckKey("CLASSIFIERTRAINING", "DatasetSplit")
+        self.CheckKey("CLASSIFIERTRAINING", "LRScheduler")
+        self.CheckKey("CLASSIFIERTRAINING", "LearningRateClassifier")
+        self.CheckKey("CLASSIFIERTRAINING", "FormatImages")
+        self.CheckKeyCount("CLASSIFIERTRAINING")
 
         # Classifier Output
-        self.__CheckedKeyCount = 0
-        self.__CheckKey(cfg, "CLASSIFIEROUTPUT", "ClassifyDir")
-        self.__CheckKey(cfg, "CLASSIFIEROUTPUT", "LogDir")
-        self.__CheckKey(cfg, "CLASSIFIEROUTPUT", "FormatImages")
-        self.__CheckKeyCount(cfg, "CLASSIFIEROUTPUT")
+        self.CheckedKeyCount = 0
+        self.CheckKey("CLASSIFIEROUTPUT", "ClassifyDir")
+        self.CheckKey("CLASSIFIEROUTPUT", "LogDir")
+        self.CheckKey("CLASSIFIEROUTPUT", "FormatImages")
+        self.CheckKeyCount("CLASSIFIEROUTPUT")
 
         print(" --- Done! --- ")
-
-    def __CheckKey(self, cfg : cfgh.ConfigHelper, category, key):
-        if self.ThrowIfConfigFileBad == True:
-            cfg.CheckIfKeyExists(category, key)
-        else:
-            try:
-                cfg.CheckIfKeyExists(category, key)
-            except (cfgh.CategoryNotFoundException, cfgh.KeyNotFoundException) as e:
-                print(f"Warning! A config key/category is missing! (category: {category}, key: {key})")
-        self.__CheckedKeyCount += 1
-
-    def __CheckKeyCount(self, cfg : cfgh.ConfigHelper, category):
-        keyCount = cfg.CategoryKeyCount(category)
-        if keyCount != self.__CheckedKeyCount:
-            if self.ThrowIfConfigFileBad == True:
-                raise Exception(f"Error! Config category '{category}' key count did not match the expected! (expected: {keyCount}, actual {self.__CheckedKeyCount})")
-            else:
-                print(f"Warning! Config category '{category}' key count did not match the expected! (expected: {keyCount}, actual {self.__CheckedKeyCount})")

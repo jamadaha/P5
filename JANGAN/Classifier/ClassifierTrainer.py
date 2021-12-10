@@ -1,13 +1,7 @@
 from ProjectTools import AutoPackageInstaller as ap
 from ProjectTools import BaseKerasModelTrainer as baseKeras
 
-ap.CheckAndInstall("tensorflow")
-ap.CheckAndInstall("time")
-
-import tensorflow as tf
-from tensorflow import keras
 import time
-import os
 from ProjectTools import CSVLogger
 from ProjectTools import TFLogger
 
@@ -45,3 +39,7 @@ class ClassifierTrainer(baseKeras.BaseKerasModelTrainer):
 
     def SetTestProperties(self, returnTest):
         self.__latestAccuracy = float(returnTest['classifier_accuracy'])
+
+    def EpochRun(self, epoch):
+        super().EpochRun(epoch)
+        self.Model.AccuracyTracker.reset_state()
