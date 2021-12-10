@@ -1,7 +1,5 @@
 # Change functions and methods, to fit the goal of the experiment
 from CGAN import CGANTrainer as cgt
-from Classifier import ClassifierMLModel as cf
-from DatasetLoader import DatasetFormatter as dtf
 
 from ProjectTools import AutoPackageInstaller as ap
 
@@ -53,42 +51,19 @@ class newCGANTrainer(cgt.CGANTrainer):
         if takeSize == 0:
             takeSize = 1
         (returnTrainSet, returnTestSet) = data
+
+        returnTrainSet = returnTrainSet.unbatch();
+        returnTestSet = returnTestSet.unbatch();
+
         returnTrainSet = returnTrainSet.shuffle(buffer_size=1024).take(takeSize)
         returnTestSet = returnTestSet.shuffle(buffer_size=1024).take(takeSize)
 
         global batchSize
+        returnTrainSet = returnTrainSet.batch(batchSize);
+        returnTestSet = returnTestSet.batch(batchSize);
+
         data = (returnTrainSet.batch(batchSize), returnTestSet.batch(batchSize))
 
         return data
-
-class newClassifier(cf.ClassifierMLModel):
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages):
-        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages)
-        import DatasetLoader as dl
-        reload(dl.DatasetFormatter)
-        reload(dl.DatasetLoader)
-        reload(dl.DiskReader)
-        reload(dl)
-
-class newDatasetFormatter(dtf.DatasetFormatter):
-    def ProcessData(self):
-        # Scale the pixel values to [0, 1] range, add a channel dimension to
-        # the images, and one-hot encode the labels.
-        self.Images = self.Images.astype("float32") / 255.0
-        self.Images = np.reshape(self.Images, (-1, 28, 28, 1))
-        self.Labels = tf.keras.utils.to_categorical(self.Labels, self.NumberOfLabels)
-
-        # Create tf.data.Dataset.
-        dataset = tf.data.Dataset.from_tensor_slices((self.Images, self.Labels))
-
-        # Shuffle and batch
-        dataset = dataset.shuffle(buffer_size=1024)
-
-        global batchSize
-        batchSize = self.BatchSize
-
-        return dataset
-
+   
 cgt.CGANTrainer = newCGANTrainer
-cf.ClassifierMLModel = newClassifier
-dtf.DatasetFormatter = newDatasetFormatter
