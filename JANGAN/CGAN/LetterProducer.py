@@ -2,7 +2,6 @@ from ProjectTools import AutoPackageInstaller as ap
 
 ap.CheckAndInstall("tensorflow")
 ap.CheckAndInstall("imageio")
-ap.CheckAndInstall("os")
 
 import tensorflow as tf
 import imageio
@@ -45,16 +44,14 @@ class LetterProducer():
         interpolation_noise = tf.repeat(interpolation_noise, repeats=imageCountToProduce)
         interpolation_noise = tf.reshape(interpolation_noise, (imageCountToProduce, self.LatentDimension))
 
-        first_label = tf.keras.utils.to_categorical([classID], self.NumberOfClasses)
-        second_label = tf.keras.utils.to_categorical([classID], self.NumberOfClasses)
-        first_label = tf.cast(first_label, tf.float32)
-        second_label = tf.cast(second_label, tf.float32)
+        label = tf.keras.utils.to_categorical([classID], self.NumberOfClasses)
+        label = tf.cast(label, tf.float32)
 
         # Calculate the interpolation vector between the two labels.
         percent_second_label = tf.linspace(0, 1, imageCountToProduce)[:, None]
         percent_second_label = tf.cast(percent_second_label, tf.float32)
         interpolation_labels = (
-            first_label * (1 - percent_second_label) + second_label * percent_second_label
+            label * (1 - percent_second_label) + label * percent_second_label
         )
 
         # Combine the noise and the labels and run inference with the generator.
