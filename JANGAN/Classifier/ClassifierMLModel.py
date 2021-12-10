@@ -6,12 +6,12 @@ from ProjectTools import AutoPackageInstaller as ap
 from ProjectTools import BaseMLModel as bm
 
 ap.CheckAndInstall("tensorflow")
+ap.CheckAndInstall("keras")
 ap.CheckAndInstall("tqdm")
 ap.CheckAndInstall("numpy")
 
 import tensorflow as tf
 from tensorflow import keras
-import os
 import numpy as np
 from tqdm import tqdm
 
@@ -31,44 +31,42 @@ class ClassifierMLModel(bm.BaseMLModel):
     CorrectPredictions = {}
     IncorrectPredictions = {}
 
-    Classifier = None
+    ClassifierKeras = None
     Logger = None
     SummaryWriter = None
 
-    IncludeLetters = False
-
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages, includeLetters):
-        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages, includeLetters):
+        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ClassifyDir = classifyDir
         self.LearningRateClass = learningRateClass
         self.FormatClassificationImages = formatClassificationImages
         self.Logger = CSVLogger.CSVLogger(logPath, 'TestData')
         self.Logger.InitCSV(['Index', 'Correct', 'Inccorect'])
-        self.IncludeLetters
+        self.IncludeLetters = includeLetters
         self.SummaryWriter = {
             'ConfMatrix': TFLogger.TFLogger(logPath, 'ConfMatrix', 'CPredictions')
         }
 
     def SetupModel(self):
-        layerDefiniton = ld.LayerDefinition(self.NumberOfClasses)
+        layerDefiniton = ld.LayerDefinition(self.NumberOfClasses, self.ImageSize, self.NumberOfChannels)
 
-        self.Classifier = cm.ClassifierModel(
-            classifier=layerDefiniton.GetClassifier(), 
-            imageSize=self.ImageSize, 
-            numberOfClasses=self.NumberOfClasses
+        self.ClassifierKeras = cm.ClassifierKerasModel(
+            layerDefiniton.GetClassifier(), 
+            self.ImageSize, 
+            self.NumberOfClasses
         )
 
         self.__Compile()
 
-        self.Trainer = ct.ClassifierTrainer(self.Classifier, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
+        self.Trainer = ct.ClassifierTrainer(self.ClassifierKeras, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath)
 
     def __Compile(self):
         optimizer = self.__GetOptimizer()
         lossFunc = self.__GetLossFunction()
 
-        self.Classifier.compile(
-            optimizer=optimizer,
-            loss_fn=lossFunc
+        self.ClassifierKeras.compile(
+            optimizer,
+            lossFunc
         )
     
     def __GetOptimizer(self):
@@ -94,16 +92,15 @@ class ClassifierMLModel(bm.BaseMLModel):
     
     def ProduceOutput(self):
         self.UseSavedModel = True
-        if self.Classifier == None:
+        if self.ClassifierKeras == None:
             self.TrainModel()
 
         dataLoader = dl.DatasetLoader(
             self.ClassifyDir,
-            "",
             (self.ImageSize,self.ImageSize),
             self.FormatClassificationImages)
         dataLoader.DataSets = []
-        dataLoader.LoadTrainDatasets()
+        dataLoader.LoadDatasets()
         dataArray = dataLoader.DataSets
 
         predictionArray = []
@@ -131,7 +128,7 @@ class ClassifierMLModel(bm.BaseMLModel):
                 if not str(currentClass) in self.PredictionCount:
                     self.PredictionCount[str(currentClass)] = 0
 
-                predictions = self.Classifier.classifier(images, training=False)
+                predictions = self.ClassifierKeras.Classifier(images, training=False)
                 for prediction in predictions:
                     predictedClass = np.argmax(prediction)
                     predictionArray.append(predictedClass)

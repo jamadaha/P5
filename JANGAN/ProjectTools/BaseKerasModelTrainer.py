@@ -119,7 +119,6 @@ class BaseKerasModelTrainer():
                 else:
                     self.Model.test_step(image_batch, False)
                 iteration += 1
-            self.Model.Accuracy_tracker.reset_state()
 
             self.PrintTestStatus(totalTrainIterations, totalTrainIterations, epochTime)
             print("")

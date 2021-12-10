@@ -1,14 +1,16 @@
-import importlib
-import os
+from ProjectTools import AutoPackageInstaller as ap
 from JANGANConfigChecker import JANGANConfigChecker
-
 from ProjectTools import ConfigHelper as ch
 from ProjectTools import HelperFunctions as hf
-
 from CGAN import CGANMLModel as cg
 from Classifier import ClassifierMLModel as cf
 import DataGenerator as dg
 
+ap.CheckAndInstall("importlib")
+ap.CheckAndInstall("os")
+
+import importlib
+import os
 
 class JANGAN():
     ExperimentName = ""
@@ -28,13 +30,15 @@ class JANGAN():
     def LoadConfig(self, configFile):
         print(" --- Loading experiment config file --- ")
         self.cfg = ch.ConfigHelper(configFile)
+        self.cfg.LoadConfig()
         newTokens = self.cfg.TokenReplacements.copy()
         newTokens.append(("{EXPERIMENTNAME}", self.ExperimentName))
+        newTokens.append(("{BASEPATH}", self.cfg.GetStringValue("GLOBAL", "BasePath")))
         self.cfg.UpdateTokenReplacements(newTokens)
         self.cfg.LoadConfig()
         print(" --- Done! --- ")
-        cfgChecker = JANGANConfigChecker()
-        cfgChecker.CheckConfig(self.cfg, self.ThrowIfConfigFileBad)
+        cfgChecker = JANGANConfigChecker(self.cfg, self.ThrowIfConfigFileBad)
+        cfgChecker.CheckConfig()
         self.cfg.CopyConfigToPath(self.cfg.GetStringValue("GLOBAL", "ConfigCopyPath"))
         print("")
 
@@ -47,20 +51,20 @@ class JANGAN():
 
     def MakeCGANDataset(self):
         if self.cfg.GetBoolValue("CGANDATAGENERATOR", "PurgePreviousData"):
-            self.PurgeRunDataFolder(self.cfg.GetStringValue("CGANDATAGENERATOR","LetterPath"))
+            self.PurgeRunDataFolder(self.cfg.GetStringValue("CGANDATAGENERATOR","OutputPath"))
             
         print(" --- Generating dataset for CGAN if not there --- ")
 
         datagen = dg.DataGenerator(
-            self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterDownloadURL"),
-            self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterDownloadPath"),
-            self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterDownloadName"),
-            self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterPath"),
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadURL"),
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadPath"),
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadName"),
+            self.cfg.GetStringValue("CGANDATAGENERATOR", "OutputPath"),
             self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterOutputFormat"),
             self.cfg.GetIntValue("CGANDATAGENERATOR", "MinimumLetterCount"),
             self.cfg.GetIntValue("CGANDATAGENERATOR", "MaximumLetterCount"),
-            self.cfg.GetJsonValue("CGANDATAGENERATOR", "TextDownloadURLS"),
-            self.cfg.GetStringValue("CGANDATAGENERATOR", "TextPath"),
+            self.cfg.GetJsonValue("DATAGENERATOR", "TextDownloadURLS"),
+            self.cfg.GetStringValue("DATAGENERATOR", "TextPath"),
             self.cfg.GetStringValue("CGANDATAGENERATOR", "DistributionPath"),
             self.cfg.GetBoolValue("CGANDATAGENERATOR", "PrintDistribution"),
             self.cfg.GetBoolValue("CGANDATAGENERATOR", "IncludeNumbers"),
@@ -73,20 +77,20 @@ class JANGAN():
 
     def MakeClassifyerDataset(self):
         if self.cfg.GetBoolValue("CLASSIFIERDATAGENERATOR", "PurgePreviousData"):
-            self.PurgeRunDataFolder(self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR","LetterPath"))
+            self.PurgeRunDataFolder(self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR","OutputPath"))
 
         print(" --- Generating dataset for Classifier if not there --- ")
 
         datagen = dg.DataGenerator(
-            self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "LetterDownloadURL"),
-            self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "LetterDownloadPath"),
-            self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "LetterDownloadName"),
-            self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "LetterPath"),
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadURL"),
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadPath"),
+            self.cfg.GetStringValue("DATAGENERATOR", "LetterDownloadName"),
+            self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "OutputPath"),
             self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "LetterOutputFormat"),
             self.cfg.GetIntValue("CLASSIFIERDATAGENERATOR", "MinimumLetterCount"),
             self.cfg.GetIntValue("CLASSIFIERDATAGENERATOR", "MaximumLetterCount"),
-            self.cfg.GetJsonValue("CLASSIFIERDATAGENERATOR", "TextDownloadURLS"),
-            self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "TextPath"),
+            self.cfg.GetJsonValue("DATAGENERATOR", "TextDownloadURLS"),
+            self.cfg.GetStringValue("DATAGENERATOR", "TextPath"),
             self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "DistributionPath"),
             self.cfg.GetBoolValue("CLASSIFIERDATAGENERATOR", "PrintDistribution"),
             self.cfg.GetBoolValue("CLASSIFIERDATAGENERATOR", "IncludeNumbers"),
@@ -99,13 +103,13 @@ class JANGAN():
 
     def __GetNumberOfCGANClasses(self):
         self.NumberOfClasses = 0
-        for entry in os.scandir(self.cfg.GetStringValue("CGANDATAGENERATOR", "LetterPath")):
+        for entry in os.scandir(self.cfg.GetStringValue("CGANDATAGENERATOR", "OutputPath")):
             if entry.is_dir():
                 self.NumberOfClasses += 1
 
     def __GetNumberOfClassifierClasses(self):
         self.NumberOfClasses = 0
-        for entry in os.scandir(self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "LetterPath")):
+        for entry in os.scandir(self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "OutputPath")):
             if entry.is_dir():
                 self.NumberOfClasses += 1
     
@@ -120,7 +124,7 @@ class JANGAN():
 
         self.cgan = cg.CGANMLModel(
             self.cfg.GetIntValue("CGANTRAINING", "BatchSize"),
-            1,
+            self.cfg.GetIntValue("CGANTRAINING", "ImageChannels"),
             self.NumberOfClasses,
             self.cfg.GetIntValue("CGANTRAINING", "ImageSize"),
             self.cfg.GetIntValue("CGANTRAINING", "LatentDimension"),
@@ -128,7 +132,6 @@ class JANGAN():
             self.cfg.GetIntValue("CGANTRAINING", "RefreshUIEachXIteration"),
             self.cfg.GetIntValue("CGANOUTPUT", "NumberOfFakeImagesToOutput"),
             self.cfg.GetStringValue("CGANTRAINING", "TrainDatasetDir"),
-            self.cfg.GetStringValue("CGANTRAINING", "TestDatasetDir"),
             self.cfg.GetStringValue("CGANOUTPUT", "OutputDir"),
             self.cfg.GetStringValue("CGANTRAINING", "EpochImgDir"),
             self.cfg.GetBoolValue("CGANTRAINING", "SaveCheckpoints"),
@@ -140,7 +143,9 @@ class JANGAN():
             self.cfg.GetStringValue("CGANTRAINING", "LRScheduler"),
             self.cfg.GetFloatValue("CGANTRAINING", "LearningRateDiscriminator"),
             self.cfg.GetFloatValue("CGANTRAINING", "LearningRateGenerator"),
-            self.cfg.GetBoolValue("CGANTRAINING", "FormatImages")
+            self.cfg.GetBoolValue("CGANTRAINING", "FormatImages"),
+            self.cfg.GetBoolValue("CGANTRAINING", "TrackModeCollapse"),
+            self.cfg.GetIntValue("CGANTRAINING", "ModeCollpseThreshold"),
             )
 
     def TrainCGAN(self):
@@ -169,13 +174,12 @@ class JANGAN():
 
         self.classifier = cf.ClassifierMLModel(
             self.cfg.GetIntValue("CLASSIFIERTRAINING", "BatchSize"),
-            1,
+            self.cfg.GetIntValue("CGANTRAINING", "ImageChannels"),
             self.NumberOfClasses,
             self.cfg.GetIntValue("CLASSIFIERTRAINING", "ImageSize"),
             self.cfg.GetIntValue("CLASSIFIERTRAINING", "EpochCount"),
             self.cfg.GetIntValue("CLASSIFIERTRAINING", "RefreshUIEachXIteration"),
             self.cfg.GetStringValue("CLASSIFIERTRAINING", "TrainDatasetDir"),
-            self.cfg.GetStringValue("CLASSIFIERTRAINING", "TestDatasetDir"),
             self.cfg.GetStringValue("CLASSIFIEROUTPUT", "ClassifyDir"),
             self.cfg.GetStringValue("CLASSIFIEROUTPUT", "LogDir"),
             self.cfg.GetBoolValue("CLASSIFIERTRAINING", "SaveCheckpoints"),

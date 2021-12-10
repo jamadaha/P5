@@ -1,4 +1,3 @@
-from numpy.core.numeric import normalize_axis_tuple
 from ProjectTools import AutoPackageInstaller as ap
 from ProjectTools import LabelHelper as lh
 from DataGenerator import DataExtractor as de
@@ -6,8 +5,17 @@ import tensorflow as tf
 import os
 
 ap.CheckAndInstall("time")
+ap.CheckAndInstall("numpy")
 ap.CheckAndInstall("matplotlib")
 ap.CheckAndInstall("tensorflow")
+ap.CheckAndInstall("io")
+
+from numpy.core.numeric import normalize_axis_tuple
+import tensorflow as tf
+import os
+import matplotlib.pyplot as plt
+import numpy
+import io
 
 class TFLogger:
     __Scope = ''
@@ -42,8 +50,7 @@ class TFLogger:
 
         letters = []
         labelHelper = lh.LabelHelper()
-        if includeLetters:
-            letters = labelHelper.LetterLabelArray()
+        letters = labelHelper.LetterLabelArray()
 
         tickMarks = numpy.arange(len(letters))
         plt.xticks(tickMarks, letters, rotation=45)
@@ -57,8 +64,6 @@ class TFLogger:
 
     #https://www.tensorflow.org/tensorboard/image_summaries
     def __PlotToImage(self, figure):
-        import io
-        import matplotlib.pyplot as plt
         """Converts the matplotlib plot specified by 'figure' to a PNG image and
         returns it. The supplied figure is closed and inaccessible after this call."""
         # Save the plot to a PNG in memory.
@@ -73,8 +78,6 @@ class TFLogger:
         return image
 
     def SaveMatplot(self, basePath, id):
-        import matplotlib.pyplot as plt
-
         if not os.path.isdir(basePath):
             os.makedirs(basePath)
 
