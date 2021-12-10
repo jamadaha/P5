@@ -56,6 +56,8 @@ class newCGANTrainer(cgt.CGANTrainer):
 
     def TakePartOfDataset(self, index, data):
         takeSize = int(self.CSVData[str(index)])
+        if takeSize == 0:
+            takeSize = 1
         (returnTrainSet, returnTestSet) = data
         returnTrainSet = returnTrainSet.shuffle(buffer_size=1024).take(takeSize)
         returnTestSet = returnTestSet.shuffle(buffer_size=1024).take(takeSize)
