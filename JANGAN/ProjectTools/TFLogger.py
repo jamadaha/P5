@@ -1,5 +1,7 @@
 from numpy.core.numeric import normalize_axis_tuple
 from ProjectTools import AutoPackageInstaller as ap
+from ProjectTools import LabelHelper as lh
+from DataGenerator import DataExtractor as de
 import tensorflow as tf
 import os
 
@@ -12,8 +14,6 @@ class TFLogger:
     __Name = ''
     
     __SummaryWriter = None
-
-    __Letters = []
 
     def __init__(self, outputDir: str, scope: str, name: str) -> None:
         self.OutputDir = outputDir
@@ -30,7 +30,7 @@ class TFLogger:
         with self.__SummaryWriter.as_default():
             tf.summary.image("Epoch samples", self.__PlotToImage(figure), step=step)
 
-    def LogConfusionMatrix(self, matrix, step, saveFig, distributionPath):
+    def LogConfusionMatrix(self, matrix, step, saveFig, includeLetters):
         import matplotlib.pyplot as plt
         import numpy
         figure = plt.figure(figsize=(8, 8))
@@ -40,12 +40,14 @@ class TFLogger:
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
 
-        if not self.__Letters:
-            self.__GetLabels(distributionPath)
+        letters = []
+        labelHelper = lh.LabelHelper()
+        if includeLetters:
+            letters = labelHelper.LetterLabelArray()
 
-        tickMarks = numpy.arange(len(self.__Letters))
-        plt.xticks(tickMarks, self.__Letters, rotation=45)
-        plt.yticks(tickMarks, self.__Letters)
+        tickMarks = numpy.arange(len(letters))
+        plt.xticks(tickMarks, letters, rotation=45)
+        plt.yticks(tickMarks, letters)
 
         if saveFig:
             self.SaveMatplot(self.OutputDir, 'Confusion matrix')
@@ -81,11 +83,3 @@ class TFLogger:
             format='png'
         )
     
-    def __GetLabels(self, distributionPath):
-        if not distributionPath:
-            return
-        import csv
-        with open(distributionPath, "r") as file:
-            dataReader = csv.reader(file)
-            for row in dataReader:
-                self.__Letters.append(str(row[0]))

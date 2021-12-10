@@ -36,17 +36,15 @@ class ClassifierMLModel(bm.BaseMLModel):
     SummaryWriter = None
 
     IncludeLetters = False
-    DistributionPath = ""
 
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages, includeLetters, distributionPath):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages, includeLetters):
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, None, epochCount, refreshEachStep, trainingDataDir, testingDataDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, formatImages)
         self.ClassifyDir = classifyDir
         self.LearningRateClass = learningRateClass
         self.FormatClassificationImages = formatClassificationImages
         self.Logger = CSVLogger.CSVLogger(logPath, 'TestData')
         self.Logger.InitCSV(['Index', 'Correct', 'Inccorect'])
-        self.IncludeLetters = includeLetters
-        self.DistributionPath = distributionPath
+        self.IncludeLetters
         self.SummaryWriter = {
             'ConfMatrix': TFLogger.TFLogger(logPath, 'ConfMatrix', 'CPredictions')
         }
@@ -162,7 +160,7 @@ class ClassifierMLModel(bm.BaseMLModel):
         print(f"Total accuracy of classified dataset: {totalCorrectPredictions} correct, {totalIncorrectPredictions} incorrect, {((totalCorrectPredictions/totalPredictionsCount)*100):.2f}%")
 
         confMatrix = tf.math.confusion_matrix(labelArray, predictionArray, self.NumberOfClasses)
-        self.SummaryWriter["ConfMatrix"].LogConfusionMatrix(confMatrix, 0, True, self.DistributionPath)
+        self.SummaryWriter["ConfMatrix"].LogConfusionMatrix(confMatrix, 0, True, self.IncludeLetters)
     def __LogData(self, index, correct, incorrect):
         self.Logger.AppendToCSV([index, correct, incorrect])
         

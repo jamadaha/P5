@@ -1,4 +1,5 @@
 from ProjectTools import AutoPackageInstaller as ap
+from ProjectTools import LabelHelper as lh
 from DataGenerator import TextSequence as ts
 
 ap.CheckAndInstall("tqdm")
@@ -68,8 +69,6 @@ class DataExtractor:
                     fileInfo = zipInfos[self.Letters[letter]['StartIndex'] + i]
                     self.ExtractFile(outputFormat, zf, fileInfo, letter)
                     
-
-    
     def ExtractFile(self, outputFormat, zipFile, fileInfo, letter):
         fileInfo.filename = str(self.Letters[letter]['Index']) + '.png'
         outputPath = self.CreateOutputPath(
@@ -103,20 +102,11 @@ class DataExtractor:
         from tqdm import tqdm
         print("Counting letters")
 
-        # Populate lettercount with zeros
-        allowedRange = []
+        labelHelper = lh.LabelHelper()
         if (self.IncludeNumbers):
-            allowedRange += self.NUMBER_RANGE 
+            self.Letters = labelHelper.NumberLabels()
         if (self.IncludeLetters):
-            allowedRange += self.LETTER_RANGE
-        for i in allowedRange:
-            hexLetter = hex(i).split('x')[-1]
-            self.Letters[chr(i)] = {}
-            self.Letters[chr(i)]['HexLetter'] = hexLetter
-            self.Letters[chr(i)]['StartIndex'] = -1
-            self.Letters[chr(i)]['DistributionCount'] = 0
-            self.Letters[chr(i)]['Index'] = 0
-            self.Letters[chr(i)]['Count'] = 0
+            self.Letters = labelHelper.LetterLabels()
 
         # Count how often this matches
         for letter in tqdm(iterable=self.Letters, total=len(self.Letters)):
@@ -129,6 +119,19 @@ class DataExtractor:
                             info)
                     self.Letters[letter]['Count'] += 1
 
+    def GetLabelNames(self):
+        letters = {}
+        allowedRange = []
+        allowedRange = self.LETTER_RANGE
+        for i in allowedRange:
+            hexLetter = hex(i).split('x')[-1]
+            letters[chr(i)] = {}
+            letters[chr(i)]['HexLetter'] = hexLetter
+            letters[chr(i)]['Index'] = 0
+            letters[chr(i)]['Count'] = 0
+
+        return letters
+            
     def HandleDistributionFile(self, forceCount, format):
         if self.PrintDistribution:
             self.CountDistribution()

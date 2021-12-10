@@ -189,7 +189,6 @@ class JANGAN():
             self.cfg.GetBoolValue("CLASSIFIERTRAINING", "FormatImages"),
             self.cfg.GetBoolValue("CLASSIFIEROUTPUT", "FormatImages"),
             self.cfg.GetBoolValue("CLASSIFIERDATAGENERATOR", "IncludeLetters"),
-            self.cfg.GetStringValue("CLASSIFIERDATAGENERATOR", "DistributionPath"),
             )
 
     def TrainClassifier(self):
