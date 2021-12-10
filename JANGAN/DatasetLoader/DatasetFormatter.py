@@ -62,10 +62,10 @@ class BulkDatasetFormatter():
         return tensorDatasets
 
     def SplitDataset(self, dataset, dataSize):
-        train_size = int(self.DatasetSplit * dataSize)
-        test_size = int((1 - self.DatasetSplit) * dataSize)
+        train_size = int(self.DatasetSplit * (dataSize / self.BatchSize))
+        test_size = int((1 - self.DatasetSplit) * (dataSize / self.BatchSize))
 
         train_dataset = dataset.take(train_size)
-        test_dataset = dataset.take(test_size)
+        test_dataset = dataset.skip(train_size).take(test_size)
 
         return (train_dataset, test_dataset)
