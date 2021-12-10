@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="ExperimentQueue\Experiment3\BalancedDatasetAccuracy.py" />
     <Compile Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.py" />
+    <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.py" />
     <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.py" />
     <Compile Include="ExperimentQueue\Experiment4\DomainSpecificNoise.py" />
     <Compile Include="ExperimentQueue\BaseRun.py">
@@ -103,6 +104,7 @@
     <Content Include="ExperimentQueueConfig.ini" />
     <Content Include="ExperimentQueue\Experiment3\BalancedDatasetAccuracy.ini" />
     <Content Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.ini" />
+    <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.ini" />
     <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.ini" />
     <Content Include="ExperimentQueue\Experiment4\DomainSpecificNoise.ini" />
     <Content Include="ExperimentQueue\BaseRunConfig.ini">
