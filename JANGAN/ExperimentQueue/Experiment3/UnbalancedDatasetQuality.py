@@ -1,5 +1,6 @@
 # Change functions and methods, to fit the goal of the experiment
 from CGAN import CGANTrainer as cgt
+from DatasetLoader import DatasetFormatter as dtf
 
 from ProjectTools import AutoPackageInstaller as ap
 
@@ -47,24 +48,23 @@ class newCGANTrainer(cgt.CGANTrainer):
         return (returnTrainSet, returnTestSet)
 
     def TakePartOfDataset(self, index, data):
+        global batchSize
         takeSize = int(self.CSVData[str(index)])
-        if takeSize == 0:
-            takeSize = 1
+        if takeSize < batchSize:
+            takeSize = batchSize
+        takeSize = int(takeSize / batchSize)
         (returnTrainSet, returnTestSet) = data
-
-        returnTrainSet = returnTrainSet.unbatch();
-        returnTestSet = returnTestSet.unbatch();
 
         returnTrainSet = returnTrainSet.shuffle(buffer_size=1024).take(takeSize)
         returnTestSet = returnTestSet.shuffle(buffer_size=1024).take(takeSize)
 
+        return (returnTrainSet, returnTestSet)
+
+class newDatasetFormatter(dtf.DatasetFormatter):
+    def ProcessData(self):
         global batchSize
-        returnTrainSet = returnTrainSet.batch(batchSize);
-        returnTestSet = returnTestSet.batch(batchSize);
-
-        data = (returnTrainSet.batch(batchSize), returnTestSet.batch(batchSize))
-
-        return data
-
+        batchSize = self.BatchSize
+        return super().ProcessData()
 
 cgt.CGANTrainer = newCGANTrainer
+dtf.DatasetFormatter = newDatasetFormatter
