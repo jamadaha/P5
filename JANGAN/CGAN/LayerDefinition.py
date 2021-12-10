@@ -48,7 +48,7 @@ class LayerDefinition():
     
     def ConvLayer(self, model, init, activation, filterCount = 64, kernelSize = 4, stride = 2, padding="same", bias=True, batchNorm=True, dropout=True, dropAmount=0.5):
         model.add(
-            tf.keras.layers.Conv2D(
+            keras.layers.Conv2D(
             filters=filterCount,
             kernel_size=kernelSize,
             strides=stride,
@@ -61,7 +61,7 @@ class LayerDefinition():
 
         if (batchNorm):
             model.add(
-                tf.keras.layers.BatchNormalization()
+                keras.layers.BatchNormalization()
             )
 
         model.add(
@@ -70,14 +70,14 @@ class LayerDefinition():
 
         if (dropout):
             model.add(
-                tf.keras.layers.Dropout(dropAmount)
+                keras.layers.Dropout(dropAmount)
             )
 
         return model
 
     def ConvTransLayer(self, model, init, activation, filterCount = 64, kernelSize = 4, stride = 2, padding="same", bias=True, batchNorm=True, dropout=True, dropAmount=0.5):
         model.add(
-            tf.keras.layers.Conv2DTranspose(
+            keras.layers.Conv2DTranspose(
             filters=filterCount,
             kernel_size=kernelSize,
             strides=stride,
@@ -90,7 +90,7 @@ class LayerDefinition():
 
         if (batchNorm):
             model.add(
-                tf.keras.layers.BatchNormalization()
+                keras.layers.BatchNormalization()
             )
 
         model.add(
@@ -99,7 +99,7 @@ class LayerDefinition():
 
         if (dropout):
             model.add(
-                tf.keras.layers.Dropout(dropAmount)
+                keras.layers.Dropout(dropAmount)
             )
 
         return model
