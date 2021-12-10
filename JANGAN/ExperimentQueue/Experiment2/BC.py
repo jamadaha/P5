@@ -28,6 +28,9 @@ class LayerDefinition(Classifier.LayerDefinition.LayerDefinition):
             keras.layers.LeakyReLU()
         )
         model.add(
+            keras.layers.Flatten()
+        )
+        model.add(
             keras.layers.Dense(self.NumberOfClasses)
         )
         
