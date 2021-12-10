@@ -16,13 +16,13 @@ class LayerDefinition(Classifier.LayerDefinition.LayerDefinition):
             keras.layers.InputLayer((self.ImageSize, self.ImageSize, self.ImageChannels))
         )
         model.add(
-            keras.layers.Conv2D(64, kernel_size=(4, 4), strides=(2, 2), padding="same", kernel_initializer=init)
+            keras.layers.Conv2D(128, kernel_size=(3, 3), strides=(2, 2), padding="same", kernel_initializer=init)
         )
         model.add(
             keras.layers.LeakyReLU()
         )
         model.add(
-            keras.layers.Conv2D(64, kernel_size=(4, 4), strides=(2, 2), padding="same", kernel_initializer=init)
+            keras.layers.Conv2D(128, kernel_size=(3, 2), strides=(2, 2), padding="same", kernel_initializer=init)
         )
         model.add(
             keras.layers.LeakyReLU()
