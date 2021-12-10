@@ -32,6 +32,7 @@
     <Compile Include="CGAN\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CheckMemoryLeak\__init__.py" />
     <Compile Include="Classifier\ClassifierMLModel.py" />
     <Compile Include="Classifier\ClassifierKerasModel.py" />
     <Compile Include="Classifier\ClassifierTrainer.py" />
@@ -72,6 +73,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ProjectTools\AutoPackageInstaller.py" />
+    <Compile Include="ProjectTools\BaseConfigChecker.py" />
     <Compile Include="ProjectTools\BaseKerasModelTrainer.py" />
     <Compile Include="ProjectTools\BaseMLModel.py" />
     <Compile Include="ProjectTools\ConfigHelper.py" />
@@ -79,7 +81,6 @@
     <Compile Include="ProjectTools\HelperFunctions.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ProjectTools\InstallScript.py" />
     <Compile Include="ProjectTools\ConfigHelperTests.py" />
     <Compile Include="ProjectTools\TFLogger.py" />
     <Compile Include="ProjectTools\__init__.py" />
@@ -104,7 +105,6 @@
     <Content Include="ExperimentQueue\BaseRunConfig.ini">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="ProjectTools\TestFiles\override-test-config.ini" />
     <Content Include="ProjectTools\TestFiles\test-config.ini" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

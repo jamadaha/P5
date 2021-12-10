@@ -1,6 +1,12 @@
-def DeleteFolderAndAllContents(folder):
-    import os, shutil
+from ProjectTools import AutoPackageInstaller as ap
 
+ap.CheckAndInstall("shutil")
+ap.CheckAndInstall("os")
+
+import os
+import shutil
+
+def DeleteFolderAndAllContents(folder):
     if os.path.exists(folder):
         for filename in os.listdir(folder):
             file_path = os.path.join(folder, filename)
