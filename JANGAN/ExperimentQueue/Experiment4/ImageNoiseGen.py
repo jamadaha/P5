@@ -18,18 +18,7 @@ class ImageNoiseGen:
             actionsToPerform = 3
 
         for i in range(actionsToPerform):
-            
-            #cv2.imshow("Original image: ", image)
             image = self.ApplyRandomTransformation(image)
-            #cv2.imshow("Transformed image: ", image)
-
-            #self.transformId = self.transformId + 1
-            #saveImg = image.astype(np.uint8)
-            #savedSuccess = cv2.imwrite(str(f"../../transformedImages/Transformed_{self.transformId}.jpg"), saveImg)
-            #savedSuccess = cv2.imwrite(str(f"C:/Users/Henrik/source/repos/jamadaha/transformedImages/Transformed_{self.transformId}.jpg"), saveImg)
-            
-            #cv2.waitKey(0)
-            #cv2.destroyAllWindows()
 
         return image
 
@@ -53,8 +42,6 @@ class ImageNoiseGen:
         return result
 
     def Zoom(self, image, factor):
-        #return cv2.resize(image, None, fx=factor, fy=factor)
-    
         newImage = cv2.resize(image, None, fx=factor, fy=factor)
         newImage = self.__SetResolutionWithCropOrPad(image, 28, 28, [0])
         return newImage
