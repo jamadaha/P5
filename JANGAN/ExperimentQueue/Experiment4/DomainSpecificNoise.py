@@ -2,6 +2,8 @@
 
 from ProjectTools import AutoPackageInstaller as ap
 from ExperimentQueue.Experiment4.ImageNoiseGen import ImageNoiseGen as imgNoiseGen
+from Classifier import ClassifierMLModel as cf
+from importlib import reload
 
 ap.CheckAndInstall("csv")
 ap.CheckAndInstall("tqdm")
@@ -87,8 +89,14 @@ class NewDatasetLoader(DatasetLoader.DatasetLoader):
                 np.append(dataset[1], newLabels)
                 )
 
-        
 
+class newClassifier(cf.ClassifierMLModel):
+    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages):
+        import DatasetLoader as dl
+        reload(dl.DatasetLoader)
+        reload(dl.DatasetLoader.LoadTrainDatasets)
+        reload(dl)
+        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages)
 
 DatasetLoader.DatasetLoader = NewDatasetLoader;
 
