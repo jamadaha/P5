@@ -31,8 +31,6 @@ def getDistribution(csvPath):
 
 
 class NewDatasetLoader(DatasetLoader.DatasetLoader):
-    def __init__(self, trainDir, testDir, imageSize, formatImages):
-        super().__init__(trainDir, testDir, imageSize, formatImages)
     
     def __limitDataSetsToDistribution(self, distribution):
         highestInstanceCount = max(distribution)
