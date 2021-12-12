@@ -11,26 +11,21 @@ from tqdm import tqdm
 
 class DatasetLoader():
     TotalImageCount = 0
-    TrainDir = ""
-    TestDir = ""
+    Dir = ""
     DataSets = []
     ImageSize = ()
     NumberOfLabels = 0
     FormatImages = True
 
-    def __init__(self, trainDir, testDir, imageSize, formatImages):
-        self.TrainDir = trainDir
-        self.TestDir = testDir
+    def __init__(self, dir, imageSize, formatImages):
+        self.Dir = dir
         self.ImageSize = imageSize
         self.FormatImages = formatImages
 
-    def LoadTestDatasets(self):
-        self.LoadDataset(self.TestDir)
+    def LoadDatasets(self):
+        self.__LoadDataset(self.Dir)
 
-    def LoadTrainDatasets(self):
-        self.LoadDataset(self.TrainDir)
-
-    def LoadDataset(self,dir):
+    def __LoadDataset(self,dir):
         dataDir = os.listdir(dir)
         imageCount = 0
         print(f"Loading data from '{dir}'...")

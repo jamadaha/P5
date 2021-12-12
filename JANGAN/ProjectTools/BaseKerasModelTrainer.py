@@ -114,14 +114,13 @@ class BaseKerasModelTrainer():
                 if iteration % self.RefreshUIEachXStep == 0:
                     returnTest = self.Model.test_step(image_batch, True)
                     self.SetTestProperties(returnTest)
-                    self.PrintTestStatus(iteration, totalTrainIterations, epochTime)
+                    self.PrintTestStatus(iteration, totalTestIterations, epochTime)
                     epochTime = time.time()
                 else:
                     self.Model.test_step(image_batch, False)
                 iteration += 1
-            self.Model.Accuracy_tracker.reset_state()
 
-            self.PrintTestStatus(totalTrainIterations, totalTrainIterations, epochTime)
+            self.PrintTestStatus(totalTestIterations, totalTestIterations, epochTime)
             print("")
             print("Done!")
 
