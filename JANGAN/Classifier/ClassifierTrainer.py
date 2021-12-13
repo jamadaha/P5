@@ -15,7 +15,7 @@ class ClassifierTrainer(baseKeras.BaseKerasModelTrainer):
     def __init__(self, model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath):
         super().__init__(model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath)
         self.Logger = CSVLogger.CSVLogger(logPath, 'TrainingData')
-        self.Logger.InitCSV(['Epoch', 'Loss'])
+        self.Logger.InitCSV(['Epoch', 'Loss', 'Accuracy'])
         self.SummaryWriter = {
             'CLoss': TFLogger.TFLogger(logPath, 'Loss', 'CLoss'),
             'Accuracy': TFLogger.TFLogger(logPath, 'Accuracy', 'Classifier')
