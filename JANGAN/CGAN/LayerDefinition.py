@@ -45,3 +45,61 @@ class LayerDefinition():
             ],
             name="generator",
         )
+    
+    def ConvLayer(self, model, init, activation, filterCount = 64, kernelSize = 4, stride = 2, padding="same", bias=True, batchNorm=True, dropout=True, dropAmount=0.5):
+        model.add(
+            keras.layers.Conv2D(
+            filters=filterCount,
+            kernel_size=kernelSize,
+            strides=stride,
+            padding=padding,
+            use_bias=bias,
+            kernel_initializer=init,
+            bias_initializer=init
+            )
+        )
+
+        if (batchNorm):
+            model.add(
+                keras.layers.BatchNormalization()
+            )
+
+        model.add(
+            activation
+        )
+
+        if (dropout):
+            model.add(
+                keras.layers.Dropout(dropAmount)
+            )
+
+        return model
+
+    def ConvTransLayer(self, model, init, activation, filterCount = 64, kernelSize = 4, stride = 2, padding="same", bias=True, batchNorm=True, dropout=True, dropAmount=0.5):
+        model.add(
+            keras.layers.Conv2DTranspose(
+            filters=filterCount,
+            kernel_size=kernelSize,
+            strides=stride,
+            padding=padding,
+            use_bias=bias,
+            kernel_initializer=init,
+            bias_initializer=init
+            )
+        )
+
+        if (batchNorm):
+            model.add(
+                keras.layers.BatchNormalization()
+            )
+
+        model.add(
+            activation
+        )
+
+        if (dropout):
+            model.add(
+                keras.layers.Dropout(dropAmount)
+            )
+
+        return model
