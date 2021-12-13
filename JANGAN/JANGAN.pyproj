@@ -70,9 +70,13 @@
     <Compile Include="ExperimentQueue\Experiment2\SC2Wide.py" />
     <Compile Include="ExperimentQueue\Experiment3\BalancedDatasetAccuracy.py" />
     <Compile Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.py" />
-    <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.py" />
     <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.py" />
+    <Compile Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.py" />
+    <Compile Include="ExperimentQueue\Experiment4\DomainSpecificNoise.py" />
     <Compile Include="ExperimentQueue\BaseRun.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExperimentQueue\Experiment4\ImageNoiseGen.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ExperimentQueue\__init__.py">
@@ -112,6 +116,7 @@
     <Folder Include="ExperimentQueue\Experiment2\LatentAmount\" />
     <Folder Include="ExperimentQueue\Experiment3\" />
     <Folder Include="Classifier\" />
+    <Folder Include="ExperimentQueue\Experiment4\" />
     <Folder Include="ProjectTools\" />
     <Folder Include="ProjectTools\TestFiles\" />
   </ItemGroup>
@@ -132,8 +137,10 @@
     <Content Include="ExperimentQueue\Experiment2\SC2.ini" />
     <Content Include="ExperimentQueue\Experiment3\BalancedDatasetAccuracy.ini" />
     <Content Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.ini" />
-    <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.ini" />
     <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.ini" />
+    <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.ini" />
+    <Content Include="ExperimentQueue\Experiment4\DomainSpecificNoiseQuality.ini" />
+    <Content Include="ExperimentQueue\Experiment4\DomainSpecificNoiseAccuracy.ini" />
     <Content Include="ExperimentQueue\BaseRunConfig.ini">
       <SubType>Code</SubType>
     </Content>
