@@ -30,5 +30,5 @@ class CSVLogger:
     
     def __WriteToCSV(self, writeMode: str, data: list) -> None:
         with open(self.OutputDir + self.Name + '.csv', writeMode) as file:
-                csv_writer = csv.writer(file)
+                csv_writer = csv.writer(file, delimiter=',', lineterminator='\n')
                 csv_writer.writerow(data)
