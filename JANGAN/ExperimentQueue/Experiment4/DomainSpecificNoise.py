@@ -46,8 +46,8 @@ class NewDatasetLoader(DatasetLoader.DatasetLoader):
                 )
 
 
-    def LoadTrainDatasets(self):
-        super().LoadTrainDatasets()
+    def LoadDatasets(self):
+        super().LoadDatasets()
 
         distribution = getDistribution("../../Data/Distribution.csv")
         self.__limitDataSetsToDistribution(distribution)
@@ -92,7 +92,7 @@ class newClassifier(cf.ClassifierMLModel):
     def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages):
         import DatasetLoader as dl
         reload(dl.DatasetLoader)
-        reload(dl.DatasetLoader.LoadTrainDatasets)
+        reload(dl.DatasetLoader.LoadDatasets)
         reload(dl)
         super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages)
 
