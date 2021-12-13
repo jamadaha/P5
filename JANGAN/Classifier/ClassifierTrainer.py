@@ -43,3 +43,6 @@ class ClassifierTrainer(baseKeras.BaseKerasModelTrainer):
     def EpochRun(self, epoch):
         super().EpochRun(epoch)
         self.Model.AccuracyTracker.reset_state()
+
+    def SaveCheckpoint(self, ckptPath):
+        self.Model.Classifier.save_weights(ckptPath)

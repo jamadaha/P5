@@ -78,7 +78,7 @@ class BaseMLModel():
 
         if self.UseSavedModel:
             print("Attempting to load model from checkpoint...")
-            self.Trainer.Model.load_weights(checkpointPath).expect_partial()
+            self.LoadCheckpoint(checkpointPath)
             print("Checkpoint loaded!")
         else:
             if self.TensorDatasets == None:
@@ -100,4 +100,7 @@ class BaseMLModel():
 
     def ProduceOutput(self):
         raise Exception("ML Model not set to produce output!")
+
+    def LoadCheckpoint(self, checkpointPath):
+        raise Exception("Checkpoint loading not implemented")
            

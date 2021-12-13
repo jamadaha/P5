@@ -158,3 +158,6 @@ class ClassifierMLModel(bm.BaseMLModel):
 
     def __LogData(self, index, correct, incorrect):
         self.Logger.AppendToCSV([index, correct, incorrect])
+
+    def LoadCheckpoint(self, checkpointPath):
+        self.Trainer.Model.Classifier.load_weights(checkpointPath).expect_partial()
