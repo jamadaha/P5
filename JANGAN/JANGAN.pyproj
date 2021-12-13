@@ -139,7 +139,8 @@
     <Content Include="ExperimentQueue\Experiment3\BalancedDatasetQuality.ini" />
     <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetAccuracy.ini" />
     <Content Include="ExperimentQueue\Experiment3\UnbalancedDatasetQuality.ini" />
-    <Content Include="ExperimentQueue\Experiment4\DomainSpecificNoise.ini" />
+    <Content Include="ExperimentQueue\Experiment4\DomainSpecificNoiseQuality.ini" />
+    <Content Include="ExperimentQueue\Experiment4\DomainSpecificNoiseAccuracy.ini" />
     <Content Include="ExperimentQueue\BaseRunConfig.ini">
       <SubType>Code</SubType>
     </Content>
