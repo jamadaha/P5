@@ -15,33 +15,153 @@ class LayerDefinition():
         self.ImageSize = imageSize
 
     def GetDiscriminator(self):
-        return keras.Sequential(
-            [
-                keras.layers.InputLayer((self.ImageSize, self.ImageSize, self.DiscriminatorInChannels)),
-                keras.layers.Conv2D(64, (3, 3), strides=(2, 2), padding="same"),
-                keras.layers.LeakyReLU(alpha=0.2),
-                keras.layers.Conv2D(128, (3, 3), strides=(2, 2), padding="same"),
-                keras.layers.LeakyReLU(alpha=0.2),
-                keras.layers.GlobalMaxPooling2D(),
-                keras.layers.Dense(1),
-            ],
-            name="discriminator",
+        init = keras.initializers.RandomNormal(stddev=0.02)
+        model = keras.Sequential(
+            name='discriminator'
         )
+        model.add(
+            keras.layers.InputLayer((28, 28, self.DiscriminatorInChannels))
+        )
+        model = self.ConvLayer(
+            model=model,
+            init=init,
+            activation=keras.layers.LeakyReLU(alpha=0.2),
+            filterCount=64,
+            kernelSize=3,
+            stride=2,
+            padding="same",
+            batchNorm=False,
+            dropout=False,
+            dropAmount=0.2
+        )
+        model.add(
+            keras.layers.AveragePooling2D()
+        )
+        model = self.ConvLayer(
+            model=model,
+            init=init,
+            activation=keras.layers.LeakyReLU(alpha=0.2),
+            filterCount=128,
+            kernelSize=3,
+            stride=2,
+            padding="same",
+            batchNorm=False,
+            dropout=False
+        )
+        model.add(
+            keras.layers.GlobalMaxPooling2D()
+        )
+        model.add(
+            keras.layers.Dense(1)
+        )
+        return model
 
     def GetGenerator(self):
-        return keras.Sequential(
-            [
-                keras.layers.InputLayer((self.GeneratorInChannels,)),
-                # We want to generate latent_dim + num_classes coefficients to reshape into a
-                # 7x7x(latent_dim + num_classes) map.
-                keras.layers.Dense(7 * 7 * self.GeneratorInChannels),
-                keras.layers.LeakyReLU(alpha=0.2),
-                keras.layers.Reshape((7, 7, self.GeneratorInChannels)),
-                keras.layers.Conv2DTranspose(128, (4, 4), strides=(2, 2), padding="same"),
-                keras.layers.LeakyReLU(alpha=0.2),
-                keras.layers.Conv2DTranspose(128, (4, 4), strides=(2, 2), padding="same"),
-                keras.layers.LeakyReLU(alpha=0.2),
-                keras.layers.Conv2D(1, (7, 7), padding="same", activation="sigmoid"),
-            ],
-            name="generator",
+        init = keras.initializers.RandomNormal(stddev=0.02)
+        model = keras.Sequential(
+            name='generator'
         )
+        model.add(
+            keras.layers.InputLayer((self.GeneratorInChannels,))
+        )
+        model.add(
+            keras.layers.Dense(7 * 7 * self.GeneratorInChannels, kernel_initializer=init)
+        )
+        model.add(
+            keras.layers.LeakyReLU(alpha=0.2)
+        )
+        model.add(
+            keras.layers.Reshape((7, 7, self.GeneratorInChannels))
+        )
+        model = self.ConvTransLayer(
+            model=model,
+            init=init,
+            activation=keras.layers.LeakyReLU(alpha=0.2),
+            filterCount=64,
+            kernelSize=4,
+            stride=2,
+            padding="same",
+            batchNorm=False,
+            dropout=False,
+            dropAmount=0.5
+        )
+        model = self.ConvTransLayer(
+            model=model,
+            init=init,
+            activation=keras.layers.LeakyReLU(alpha=0.2),
+            filterCount=64,
+            kernelSize=4,
+            stride=2,
+            padding="same",
+            batchNorm=False,
+            dropout=False,
+            dropAmount=0.5
+        )
+        model.add(
+            keras.layers.Conv2D(
+                1, 
+                (7, 7), 
+                padding="same",
+                activation="sigmoid"
+            )
+        )
+        return model
+
+    
+    def ConvLayer(self, model, init, activation, filterCount = 64, kernelSize = 4, stride = 2, padding="same", bias=True, batchNorm=True, dropout=True, dropAmount=0.5):
+        model.add(
+            keras.layers.Conv2D(
+            filters=filterCount,
+            kernel_size=kernelSize,
+            strides=stride,
+            padding=padding,
+            use_bias=bias,
+            kernel_initializer=init,
+            bias_initializer=init
+            )
+        )
+
+        if (batchNorm):
+            model.add(
+                keras.layers.BatchNormalization()
+            )
+
+        model.add(
+            activation
+        )
+
+        if (dropout):
+            model.add(
+                keras.layers.Dropout(dropAmount)
+            )
+
+        return model
+
+    def ConvTransLayer(self, model, init, activation, filterCount = 64, kernelSize = 4, stride = 2, padding="same", bias=True, batchNorm=True, dropout=True, dropAmount=0.5):
+        model.add(
+            keras.layers.Conv2DTranspose(
+            filters=filterCount,
+            kernel_size=kernelSize,
+            strides=stride,
+            padding=padding,
+            use_bias=bias,
+            kernel_initializer=init,
+            bias_initializer=init
+            )
+        )
+
+        if (batchNorm):
+            model.add(
+                keras.layers.BatchNormalization()
+            )
+
+        model.add(
+            activation
+        )
+
+        if (dropout):
+            model.add(
+                keras.layers.Dropout(dropAmount)
+            )
+
+        return model

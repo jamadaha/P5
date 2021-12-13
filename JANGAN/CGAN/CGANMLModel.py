@@ -48,26 +48,26 @@ class CGANMLModel(bm.BaseMLModel):
             self.TrackModeCollapse
         )
 
-        self.__Compile()
+        self.Compile()
 
         self.Trainer = ct.CGANTrainer(self.KerasModel, self.TensorDatasets, self.EpochCount, self.RefreshEachStep, self.SaveCheckpoints, self.CheckpointPath, self.LatestCheckpointPath, self.LogPath, self.NumberOfClasses, self.LatentDimension, self.EpochImgDir, self.TrackModeCollapse, self.ModeCollapseThreshold)
 
-    def __Compile(self):
-        (disOptimizer, genOptimizer) = self.__GetOptimizer()
+    def Compile(self):
+        (disOptimizer, genOptimizer) = self.GetOptimizer()
         self.KerasModel.compile(
                 disOptimizer,
                 genOptimizer,
-                self.__GetLossFunction()
+                self.GetLossFunction()
         )
 
-    def __GetOptimizer(self):
-        (disSchedule, genSchedule) = self.__GetLearningSchedule()
+    def GetOptimizer(self):
+        (disSchedule, genSchedule) = self.GetLearningSchedule()
         return (
             keras.optimizers.Adam(learning_rate=disSchedule),
             keras.optimizers.Adam(learning_rate=genSchedule)
         )
 
-    def __GetLearningSchedule(self):
+    def GetLearningSchedule(self):
         if self.LRScheduler == 'Constant':
             return (self.LearningRateDis, self.LearningRateGen) 
         elif self.LRScheduler == 'ExponentialDecay':
@@ -84,7 +84,7 @@ class CGANMLModel(bm.BaseMLModel):
                 )   
             )
 
-    def __GetLossFunction(self): 
+    def GetLossFunction(self): 
         return keras.losses.BinaryCrossentropy(from_logits=True)
         
     def TrainModel(self):
