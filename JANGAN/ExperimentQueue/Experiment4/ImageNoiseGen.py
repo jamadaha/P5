@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import random
+import math
 
 class ImageNoiseGen:
     def __init__(self):
@@ -8,6 +9,12 @@ class ImageNoiseGen:
     def ApplyNoise(self, image, randomNumber):
 
         rand = random.randint(0, 10) #Includes endpoints
+
+        #cv2.imshow("Vert Stretch", self.Stretch(image, 1, 1.5))
+        #cv2.imshow("Vert Squish" , self.Stretch(image, 1, 0.5))
+        #cv2.imshow("Hori Stretch", self.Stretch(image, 1.5, 1))
+        #cv2.imshow("Hori Squish" , self.Stretch(image, 0.5, 1))
+        #cv2.waitKey(0)
 
         actionsToPerform = 0
         if rand<4:
@@ -43,20 +50,20 @@ class ImageNoiseGen:
 
     def Zoom(self, image, factor):
         newImage = cv2.resize(image, None, fx=factor, fy=factor)
-        newImage = self.__SetResolutionWithCropOrPad(image, 28, 28, [0])
+        newImage = self.__SetResolutionWithCropOrPad(newImage, 28, 28, [0])
         return newImage
 
     def Stretch(self, image, zoomFactorX, zoomFactorY):
         newImage = cv2.resize(image, None, fx=zoomFactorX, fy=zoomFactorY)
-        newImage = self.__SetResolutionWithCropOrPad(image, 28, 28, [0])
+        newImage = self.__SetResolutionWithCropOrPad(newImage, 28, 28, [0])
         return newImage
 
     def __SetResolutionWithCropOrPad(self, image, width, height, backgroundColor):
-
-
-        #sizeDif = image.shape - (width, height) # Negative = image currently too big
-
-        return self.__PadImage(image, width, height, backgroundColor)
+        newImage = image
+        newImage = self.__CropImage(newImage, width, height)
+        newImage = self.__PadImage(newImage, width, height, backgroundColor)
+ 
+        return newImage
 
     def __PadImage(self, image, width, height, fillColor):
         # https://stackoverflow.com/questions/43391205/add-padding-to-images-to-get-them-into-the-same-shape
@@ -76,6 +83,26 @@ class ImageNoiseGen:
 
         return result
         
+    def __CropImage(self, image, width, height):
+        oldHeight, oldWidth = image.shape
 
+        # How much the image is too big
+        widthCrop = max(0, oldWidth-width)
+        heightCrop = max(0, oldHeight-height)
+
+        # Where to crop
+        left = math.floor(widthCrop/2)
+        right = oldWidth - math.ceil(widthCrop/2)
+
+        top = math.floor(heightCrop/2)
+        bottom = oldHeight - math.ceil(heightCrop/2)
+        
+        #Crop
+        croppedImage = image[
+            top: bottom,
+            left: right
+        ]
+
+        return croppedImage
 
 
