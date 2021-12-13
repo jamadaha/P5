@@ -89,12 +89,12 @@ class NewDatasetLoader(DatasetLoader.DatasetLoader):
 
 
 class newClassifier(cf.ClassifierMLModel):
-    def __init__(self, batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages):
+    def __init__(self, *args, **kwargs):
         import DatasetLoader as dl
         reload(dl.DatasetLoader)
-        reload(dl.DatasetLoader.LoadDatasets)
         reload(dl)
-        super().__init__(batchSize, numberOfChannels, numberOfClasses, imageSize, epochCount, refreshEachStep, trainingDataDir, testingDataDir, classifyDir, outputDir, saveCheckpoints, useSavedModel, checkpointPath, latestCheckpointPath, logPath, datasetSplit, LRScheduler, learningRateClass, formatImages, formatClassificationImages)
+        super().__init__(*args, **kwargs)
 
 DatasetLoader.DatasetLoader = NewDatasetLoader;
+cf.ClassifierMLModel = newClassifier;
 
