@@ -1,70 +1,61 @@
-# Change functions and methods, to fit the goal of the experiment
-from CGAN import CGANTrainer as cgt
-from DatasetLoader import DatasetFormatter as dtf
-
 from ProjectTools import AutoPackageInstaller as ap
+from ExperimentQueue.Experiment4.ImageNoiseGen import ImageNoiseGen as imgNoiseGen
+from Classifier import ClassifierMLModel as cf
+from importlib import reload
 
-ap.CheckAndInstall("tensorflow")
-ap.CheckAndInstall("time")
 ap.CheckAndInstall("csv")
 ap.CheckAndInstall("tqdm")
 
-import tensorflow as tf
-import numpy as np
-from importlib import reload
-
 import csv
+import numpy as np
+import random
+from tqdm import tqdm
 
-batchSize = 0
+from DatasetLoader import DatasetLoader as DatasetLoader
 
-class newCGANTrainer(cgt.CGANTrainer):
-    CSVPath = ""
-    CSVData = {}
-    CSVDataLabels = {}
-
-    def __init__(self, model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath, numberOfClasses, latentDimension, epochImgDir, trackModeCollapse, modeCollapseThreshold):
-        super().__init__(model, datasets, epochs, refreshUIEachXStep, saveCheckPoints, checkpointPath, latestCheckpointPath, logPath, numberOfClasses, latentDimension, epochImgDir, trackModeCollapse, modeCollapseThreshold)
-        self.CSVPath = "../../Data/Distribution.csv"
-        with open(self.CSVPath, newline='') as csvfile:
-            spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-            lineCount = 0
-            for row in spamreader:
-                if lineCount > 0:
-                    self.CSVData[row[1]] = row[2]
-                    self.CSVDataLabels[row[1]] = row[0]
-                lineCount += 1
-
-    def CreateDataSet(self, dataArray):
-        index = 1
-        (returnTrainSet, returnTestSet) = self.TakePartOfDataset(0, dataArray[0])
-        for data in dataArray[1:]:
-            (addTrainSet, addTestSet) = self.TakePartOfDataset(index, data)
-            returnTrainSet = returnTrainSet.concatenate(addTrainSet)
-            returnTestSet = returnTestSet.concatenate(addTestSet)
-            index += 1
+def getDistribution(csvPath):
+    with open(csvPath, newline='') as csvfile:
+        csvReader = csv.reader(csvfile, delimiter=',', quotechar='|')
         
-        returnTrainSet = returnTrainSet.shuffle(buffer_size=1024)
-        returnTestSet = returnTestSet.shuffle(buffer_size=1024)
-        return (returnTrainSet, returnTestSet)
+        distribution = {}
+        for row in csvReader:
+            letter = row[0]
+            classId = row[1]
+            count = row[2]
 
-    def TakePartOfDataset(self, index, data):
-        global batchSize
-        takeSize = int(self.CSVData[str(index)])
-        if takeSize < batchSize:
-            takeSize = batchSize
-        takeSize = int(takeSize / batchSize)
-        (returnTrainSet, returnTestSet) = data
+            distribution[classId] = count
+            
+        return distribution
 
-        returnTrainSet = returnTrainSet.shuffle(buffer_size=1024).take(takeSize)
-        returnTestSet = returnTestSet.shuffle(buffer_size=1024).take(takeSize)
 
-        return (returnTrainSet, returnTestSet)
+class NewDatasetLoader(DatasetLoader.DatasetLoader):
+    
+    def __limitDataSetsToDistribution(self, distribution):
+        for i in tqdm(range(len(self.DataSets)), "Limiting datasets to distribution"):
+            label = str(int(self.DataSets[i][1][0])) #first label
+            wantedInstanceCount = min(int(distribution[label]), len(self.DataSets[i][0]))
+            wantedInstanceCount = max(1, wantedInstanceCount) # Keep at least 1 instace of every class
 
-class newDatasetFormatter(dtf.DatasetFormatter):
-    def ProcessData(self):
-        global batchSize
-        batchSize = self.BatchSize
-        return super().ProcessData()
+            self.DataSets[i] = (
+                self.DataSets[i][0][:wantedInstanceCount], #images
+                self.DataSets[i][1][:wantedInstanceCount]  #labels
+                )
 
-cgt.CGANTrainer = newCGANTrainer
-dtf.DatasetFormatter = newDatasetFormatter
+
+    def LoadDatasets(self):
+        super().LoadDatasets()
+
+        distribution = getDistribution("../../Data/Distribution.csv")
+        self.__limitDataSetsToDistribution(distribution)
+
+
+class newClassifier(cf.ClassifierMLModel):
+    def __init__(self, *args, **kwargs):
+        import DatasetLoader as dl
+        reload(dl.DatasetLoader)
+        reload(dl)
+        super().__init__(*args, **kwargs)
+
+DatasetLoader.DatasetLoader = NewDatasetLoader;
+cf.ClassifierMLModel = newClassifier;
+
