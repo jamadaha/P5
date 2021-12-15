@@ -65,3 +65,6 @@ class CGANTrainer(baseKeras.BaseKerasModelTrainer):
 
     def ProduceGridImage(self, id):
         return self.LetterProducer.ProduceGridLetters(id)
+
+    def SaveCheckpoint(self, ckptPath):
+        self.Model.Generator.save_weights(ckptPath)

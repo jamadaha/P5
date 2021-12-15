@@ -63,15 +63,18 @@ class BaseKerasModelTrainer():
     def PrintTestStatus(self, iteration, totalIterations, epochTime):
         raise Exception("No Test accuracy text implemented.")
 
-    def SaveCheckpoint(self):
+    def PrepareCheckpoint(self):
         if os.path.exists(self.CheckpointPath + 'checkpoint.index'):
             from ProjectTools import HelperFunctions as hf
             hf.DeleteFolderAndAllContents(self.CheckpointPath)
 
         ckptPath = self.CheckpointPath + 'checkpoint_' + str(self.CurrentEpoch)
 
-        self.Model.save_weights(ckptPath)
+        self.SaveCheckpoint(ckptPath);
         self.MakeCheckpointRef(ckptPath, self.LatestCheckpointPath)
+
+    def SaveCheckpoint(self, ckptPath):
+        raise Exception("Checkpoint saving not implemented.")
 
     def MakeCheckpointRef(self, ckptPathSrc, ckptPathDest):
         relPath = os.path.relpath(os.path.abspath(ckptPathSrc), os.path.abspath(ckptPathDest))
@@ -125,7 +128,7 @@ class BaseKerasModelTrainer():
             print("Done!")
 
         if self.SaveCheckpoints:
-            self.SaveCheckpoint()
+            self.PrepareCheckpoint()
 
         self.LogData(epoch)
 
