@@ -51,6 +51,7 @@
     <Compile Include="DatasetLoader\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ExperimentQueue\MasterClassifier.py" />
     <Compile Include="ExperimentQueue\Experiment2\BC.py" />
     <Compile Include="ExperimentQueue\Experiment2\Noise.py" />
     <Compile Include="ExperimentQueue\Experiment2\NoPooling.py" />
@@ -122,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ExperimentQueueConfig.ini" />
+    <Content Include="ExperimentQueue\MasterClassifier.ini" />
     <Content Include="ExperimentQueue\Experiment2\BC.ini" />
     <Content Include="ExperimentQueue\Experiment2\LatentAmount\128.ini" />
     <Content Include="ExperimentQueue\Experiment2\LatentAmount\256.ini" />

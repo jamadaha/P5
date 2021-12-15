@@ -98,3 +98,6 @@ class CGANMLModel(bm.BaseMLModel):
 
         letterProducer = LetterProducer.LetterProducer(self.OutputDir, self.TrainedGenerator, self.NumberOfClasses, self.LatentDimension, self.ImageCountToProduce)
         letterProducer.ProduceLetters()
+
+    def LoadCheckpoint(self, checkpointPath):
+        self.Trainer.Model.Generator.load_weights(checkpointPath).expect_partial()
